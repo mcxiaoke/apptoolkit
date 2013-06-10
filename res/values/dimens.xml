@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- common font size -->
+    <dimen name="font_size_micro">10dp</dimen>
+    <dimen name="font_size_tiny">12dp</dimen>
+    <dimen name="font_size_small">14dp</dimen>
+    <dimen name="font_size_medium">16dp</dimen>
+    <dimen name="font_size_large">18dp</dimen>
+    <dimen name="font_size_xlarge">20dp</dimen>
+    <dimen name="font_size_huge">24dp</dimen>
+
+</resources>

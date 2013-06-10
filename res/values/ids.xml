@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Common UI -->
+    <item type="id" name="image"/>
+    <item type="id" name="text"/>
+    <item type="id" name="root"/>
+    <item type="id" name="gallery"/>
+    <item type="id" name="viewpager"/>
+    <item type="id" name="scrollview"/>
+    <item type="id" name="listview"/>
+    <item type="id" name="webview"/>
+    <item type="id" name="progressbar"/>
+    <item type="id" name="container"/>
+
+    <!-- Empty UI -->
+    <item type="id" name="empty_text"/>
+    <item type="id" name="empty_progress"/>
+    <item type="id" name="empty_progress_bar"/>
+    <item type="id" name="empty_progress_text"/>
+
+    <!--MENU IDS-->
+    <item type="id" name="menu_refresh"/>
+    <item type="id" name="menu_compose"/>
+    <item type="id" name="menu_share"/>
+    <item type="id" name="menu_search"/>
+    <item type="id" name="menu_logout"/>
+    <item type="id" name="menu_debug"/>
+
+</resources>

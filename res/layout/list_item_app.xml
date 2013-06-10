@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="8dp">
+
+    <TextView
+            android:id="@+id/app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AppName"
+            android:textSize="@dimen/font_size_large"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"/>
+
+    <TextView
+            android:id="@+id/version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1.0.0"
+            android:textSize="@dimen/font_size_small"
+            android:layout_alignBaseline="@id/app_name"
+            android:layout_toRightOf="@id/app_name"
+            android:layout_marginLeft="4dp"/>
+
+    <TextView
+            android:id="@+id/source_dir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SourceDir"
+            android:textSize="@dimen/font_size_small"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/app_name"/>
+
+    <TextView
+            android:id="@+id/size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1.8M"
+            android:textSize="@dimen/font_size_tiny"
+            android:layout_below="@id/source_dir"
+            android:layout_alignParentLeft="true"/>
+
+    <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2013.06.10"
+            android:textSize="@dimen/font_size_tiny"
+            android:layout_below="@id/source_dir"
+            android:layout_alignParentRight="true"/>
+
+</RelativeLayout>

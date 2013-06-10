@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common Colors -->
+    <color name="white">#ffffffff</color>
+    <color name="black">#ff000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="dark_gray">#333333</color>
+    <color name="light_gray">#EEEEEE</color>
+    <color name="gray">#999999</color>
+
+    <!-- Holo Colors -->
+    <color name="holo_blue_light">#ff33b5e5</color>
+    <color name="holo_green_light">#ff99cc00</color>
+    <color name="holo_red_light">#ffff4444</color>
+    <color name="holo_blue_dark">#ff0099cc</color>
+    <color name="holo_green_dark">#ff669900</color>
+    <color name="holo_red_dark">#ffcc0000</color>
+    <color name="holo_purple">#ffaa66cc</color>
+    <color name="holo_orange_light">#ffffbb33</color>
+    <color name="holo_orange_dark">#ffff8800</color>
+    <color name="holo_blue_bright">#ff00ddff</color>
+
+    <!-- Colors -->
+    <color name="text_primary">#ff000000</color>
+    <color name="text_secondary">#ff666666</color>
+    <color name="background_primary">#ffffffff</color>
+    <color name="background_secondary">#ffeeeeee</color>
+
+</resources>

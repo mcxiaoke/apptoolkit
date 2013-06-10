@@ -1,7 +1,9 @@
 package com.mcxiaoke.appmanager.app;
 
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,6 +13,7 @@ import android.widget.ListView;
 import com.mcxiaoke.appmanager.AppContext;
 import com.mcxiaoke.appmanager.R;
 import com.mcxiaoke.appmanager.adapter.AppInfosAdapter;
+import com.mcxiaoke.appmanager.cache.AppIconCache;
 import com.mcxiaoke.appmanager.model.AppInfo;
 import com.mcxiaoke.appmanager.util.Utils;
 import com.stericson.RootTools.RootTools;
@@ -145,6 +148,9 @@ public class UIHome extends UIBaseSupport {
                     if (info != null) {
                         apps.add(app);
                     }
+                    ApplicationInfo ainfo = info.applicationInfo;
+                    Drawable icon = pm.getApplicationIcon(ainfo);
+                    AppIconCache.getInstance().put(info.packageName, icon);
                 }
             }
             return apps;

@@ -1,9 +1,10 @@
 package com.mcxiaoke.appmanager.adapter;
 
 import android.content.Context;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +12,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.mcxiaoke.appmanager.R;
+import com.mcxiaoke.appmanager.cache.AppIconCache;
 import com.mcxiaoke.appmanager.model.AppInfo;
 import com.mcxiaoke.appmanager.util.Utils;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -28,14 +29,16 @@ public class AppInfosAdapter extends ArrayAdapter<AppInfo> {
     private Context mContext;
     private LayoutInflater mInflater;
     private PackageManager mPackageManager;
-    private HashMap<String, Drawable> mIconCache;
+    private AppIconCache mIconCache;
+    private Handler mUiHandler;
 
     public AppInfosAdapter(Context context, List<AppInfo> objects) {
         super(context, 0, objects);
         mContext = context;
         mInflater = LayoutInflater.from(context);
         mPackageManager = context.getPackageManager();
-        mIconCache = new HashMap<String, Drawable>();
+        mIconCache = AppIconCache.getInstance();
+        mUiHandler = new Handler(Looper.getMainLooper());
     }
 
     @Override
@@ -68,25 +71,8 @@ public class AppInfosAdapter extends ArrayAdapter<AppInfo> {
         return convertView;
     }
 
-    private String getInfo(int position) {
-        AppInfo info = getItem(position);
-        return info.toString();
-    }
-
-    private Drawable getIcon(AppInfo app) {
-        Drawable icon = mIconCache.get(app.packageName);
-        if (icon == null) {
-            try {
-                PackageInfo info = mPackageManager.getPackageInfo(app.packageName, 0);
-                icon = Utils.getAppIcon(mPackageManager, info);
-                if (icon != null) {
-                    mIconCache.put(app.packageName, icon);
-                }
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        return icon;
+    private Drawable getIcon(final AppInfo app) {
+        return mIconCache.get(app.packageName);
     }
 
     static class ViewHolder {

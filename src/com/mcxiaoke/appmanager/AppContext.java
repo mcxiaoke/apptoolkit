@@ -7,6 +7,9 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  * Project: filemanager
  * Package: com.mcxiaoke.appmanager
@@ -19,10 +22,13 @@ public class AppContext extends Application {
 
     private static Gson sGson;
 
+    private static ExecutorService mExecutor;
+
 
     @Override
     public void onCreate() {
         super.onCreate();
+        mExecutor = Executors.newCachedThreadPool();
     }
 
 
@@ -39,6 +45,13 @@ public class AppContext extends Application {
                     .create();
         }
         return sGson;
+    }
+
+    public static ExecutorService getExecutor() {
+        if (mExecutor == null) {
+            mExecutor = Executors.newCachedThreadPool();
+        }
+        return mExecutor;
     }
 
     public static void showToast(Context context, int resId) {
@@ -62,4 +75,6 @@ public class AppContext extends Application {
     public static void e(Throwable t) {
         Log.e(DEFAULT_TAG, "Exception: " + t);
     }
+
+
 }

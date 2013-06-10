@@ -37,6 +37,13 @@
             <artifactId>roottools</artifactId>
             <version>2.6</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.nostra13.universalimageloader</groupId>
+            <artifactId>universal-image-loader</artifactId>
+            <version>1.8.4</version>
+        </dependency>
+
     </dependencies>
 
 

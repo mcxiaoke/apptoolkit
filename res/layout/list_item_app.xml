@@ -1,55 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="8dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="8dp">
 
-    <TextView
-            android:id="@+id/app_name"
+    <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="AppName"
-            android:textSize="@dimen/font_size_large"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"/>
+            android:id="@+id/icon"
+            android:scaleType="center"
+            android:adjustViewBounds="true"
+            android:minWidth="@dimen/app_icon_minsize"
+            android:minHeight="@dimen/app_icon_minsize"
+            android:layout_marginRight="8dp"
+            android:maxWidth="@dimen/app_icon_maxsize"
+            android:maxHeight="@dimen/app_icon_maxsize"/>
 
-    <TextView
-            android:id="@+id/version"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1.0.0"
-            android:textSize="@dimen/font_size_small"
-            android:layout_alignBaseline="@id/app_name"
-            android:layout_toRightOf="@id/app_name"
-            android:layout_marginLeft="4dp"/>
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
-    <TextView
-            android:id="@+id/source_dir"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="SourceDir"
-            android:textSize="@dimen/font_size_small"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/app_name"/>
+        <TextView
+                android:id="@+id/app_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AppName"
+                android:textSize="@dimen/font_size_large"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:textStyle="bold"
+                android:layout_marginBottom="2dp"
+                android:textColor="@color/text_primary_selectable"
+                android:singleLine="true"
+                android:ellipsize="end"/>
 
-    <TextView
-            android:id="@+id/size"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1.8M"
-            android:textSize="@dimen/font_size_tiny"
-            android:layout_below="@id/source_dir"
-            android:layout_alignParentLeft="true"/>
+        <TextView
+                android:id="@+id/version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1.0.0"
+                android:textSize="@dimen/font_size_small"
+                android:layout_alignBaseline="@id/app_name"
+                android:layout_toRightOf="@id/app_name"
+                android:layout_marginLeft="4dp"
+                android:textColor="@color/text_secondary_selectable"
+                android:singleLine="true"
+                android:ellipsize="end"/>
 
-    <TextView
-            android:id="@+id/time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2013.06.10"
-            android:textSize="@dimen/font_size_tiny"
-            android:layout_below="@id/source_dir"
-            android:layout_alignParentRight="true"/>
+        <TextView
+                android:id="@+id/source_dir"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SourceDir"
+                android:textSize="@dimen/font_size_small"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/app_name"
+                android:visibility="gone"
+                android:textColor="@color/text_secondary_selectable"
+                android:singleLine="true"
+                android:ellipsize="end"/>
 
-</RelativeLayout>
+        <TextView
+                android:id="@+id/size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1.8M"
+                android:textSize="@dimen/font_size_tiny"
+                android:layout_below="@id/app_name"
+                android:layout_alignParentLeft="true"
+                android:textColor="@color/text_secondary_selectable"
+                android:singleLine="true"
+                android:ellipsize="end"/>
+
+        <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2013.06.10"
+                android:textSize="@dimen/font_size_tiny"
+                android:layout_below="@id/app_name"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/text_secondary_selectable"
+                android:singleLine="true"
+                android:ellipsize="end"/>
+
+    </RelativeLayout>
+
+</LinearLayout>
+

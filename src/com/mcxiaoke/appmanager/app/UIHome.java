@@ -1,10 +1,11 @@
 package com.mcxiaoke.appmanager.app;
 
-import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.mcxiaoke.appmanager.AppContext;
@@ -15,8 +16,8 @@ import com.mcxiaoke.appmanager.util.Utils;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
+import com.stericson.RootTools.execution.Shell;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ public class UIHome extends UIBaseSupport {
 
     private ListView mListView;
     private ArrayAdapter<AppInfo> mArrayAdapter;
+    private GetInstalledAppsAsync mAppsAsync;
 
     /**
      * Called when the activity is first created.
@@ -47,8 +49,7 @@ public class UIHome extends UIBaseSupport {
         mListView.setAdapter(mArrayAdapter);
         if (RootTools.isAccessGiven()) {
             AppContext.v("Root Access Granted");
-            GetInstalledAppsAsync task = new GetInstalledAppsAsync(this, mArrayAdapter);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            startRefresh();
         } else {
             AppContext.v("Root Access Not Granted");
             AppContext.showToast(this, R.string.root_access_failed);
@@ -56,17 +57,72 @@ public class UIHome extends UIBaseSupport {
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_refresh:
+                startRefresh();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.clear();
+        getMenuInflater().inflate(R.menu.menu_home, menu);
+        if (isRefreshing()) {
+            menu.findItem(R.id.menu_refresh).setActionView(
+                    R.layout.action_bar_indeterminate_progress);
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    private void startRefresh() {
+        startAsyncTask();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopAsyncTask();
+    }
+
+    private void stopAsyncTask() {
+        if (mAppsAsync != null) {
+            mAppsAsync.cancel(false);
+        }
+    }
+
+    private void startAsyncTask() {
+        stopAsyncTask();
+        mArrayAdapter.clear();
+        mAppsAsync = new GetInstalledAppsAsync(this, mArrayAdapter);
+        mAppsAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     private static class GetInstalledAppsAsync extends AsyncTask<Void, Void, List<AppInfo>> {
-        private Context context;
+        private UIBaseSupport context;
         private ArrayAdapter<AppInfo> adapter;
 
-        public GetInstalledAppsAsync(Context context, ArrayAdapter<AppInfo> adapter) {
+        public GetInstalledAppsAsync(UIBaseSupport context, ArrayAdapter<AppInfo> adapter) {
             this.context = context;
             this.adapter = adapter;
         }
 
         @Override
         protected List<AppInfo> doInBackground(Void... params) {
+            executeSuCommand();
             PackageManager pm = context.getPackageManager();
             int flags = PackageManager.GET_META_DATA;
             flags |= PackageManager.GET_SIGNATURES;
@@ -97,27 +153,25 @@ public class UIHome extends UIBaseSupport {
         @Override
         protected void onPostExecute(List<AppInfo> packageInfos) {
             super.onPostExecute(packageInfos);
+            context.hideActionBarRefresh();
             adapter.addAll(packageInfos);
-            adapter.notifyDataSetChanged();
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            context.showActionBarRefresh();
+
         }
     }
 
-    private void listDataFiles() {
-        CommandCapture cmd = new CommandCapture(0, "chmod 777 /data/app");
+    private static void executeSuCommand() {
+        CommandCapture chmodAppDir = new CommandCapture(0, "chmod 777 /data/app");
+//        CommandCapture chmodDataDir = new CommandCapture(0, "chmod 777 /data/data");
         try {
-            RootTools.getShell(true).add(cmd).waitForFinish();
-            File appDir = new File("/data/app");
-            File[] apps = appDir.listFiles();
-            if (apps != null) {
-                for (File file : apps) {
-                    AppContext.v("App: " + file.getAbsolutePath());
-                }
-            }
+            Shell shell = RootTools.getShell(true);
+            shell.add(chmodAppDir).waitForFinish();
+//            shell.add(chmodDataDir);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (IOException e) {

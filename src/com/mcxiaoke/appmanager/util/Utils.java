@@ -46,6 +46,15 @@ public final class Utils {
         return null;
     }
 
+    public static Drawable getAppIcon(PackageManager pm, PackageInfo info) {
+        if (info != null) {
+            ApplicationInfo appInfo = info.applicationInfo;
+            return pm.getApplicationIcon(appInfo);
+//            Drawable icon = appInfo.loadIcon(context.getPackageManager());
+        }
+        return null;
+    }
+
     public static AppInfo convert(PackageManager pm, PackageInfo info) {
         AppInfo app = new AppInfo();
         ApplicationInfo ainfo = info.applicationInfo;

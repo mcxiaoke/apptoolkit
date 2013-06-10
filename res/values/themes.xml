@@ -4,5 +4,12 @@
 
     <style name="AppTheme"/>
 
-    <style name="AppTheme.Light" parent="android:Theme.Holo.Light.DarkActionBar"/>
+    <style name="AppTheme.Light" parent="android:Theme.Holo.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:indeterminateProgressStyle">@style/IndeterminateProgress</item>
+        <item name="android:background">@color/holo_primary</item>
+    </style>
 </resources>

@@ -10,4 +10,7 @@
     <dimen name="font_size_xlarge">20dp</dimen>
     <dimen name="font_size_huge">24dp</dimen>
 
+    <dimen name="app_icon_minsize">32dp</dimen>
+    <dimen name="app_icon_maxsize">48dp</dimen>
+
 </resources>

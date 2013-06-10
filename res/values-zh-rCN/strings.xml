@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">应用管理器</string>
+    <string name="app_name">圈圈应用</string>
+    <string name="root_access_success">获取ROOT权限成功</string>
+    <string name="root_access_failed">获取ROOT权限失败，程序退出</string>
     <string name="menu_refresh">刷新</string>
 </resources>

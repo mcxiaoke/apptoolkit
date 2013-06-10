@@ -31,7 +31,7 @@
     <color name="text_primary">#FF222222</color>
     <color name="text_secondary">#FF888888</color>
 
-    <color name="background_primary">#FFFCFCFC0F0F0</color>
+    <color name="background_primary">#FFF0F0F0</color>
     <color name="background_secondary">#FFE0E0E0</color>
 
     <!-- Theme colors -->

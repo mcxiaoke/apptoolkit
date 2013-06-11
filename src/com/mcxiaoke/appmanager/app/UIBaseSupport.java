@@ -9,7 +9,7 @@ import com.mcxiaoke.appmanager.AppContext;
 
 /**
  * Project: DoubanShuo
- * User: mcxiaoke
+ * User: com.mcxiaoke
  * Date: 13-5-30
  * Time: 上午9:58
  */

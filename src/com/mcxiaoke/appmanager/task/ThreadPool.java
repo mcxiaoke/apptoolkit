@@ -8,7 +8,7 @@ import java.util.concurrent.*;
 /**
  * 扩展的ThreadPoolExecutor，添加一些实用方法
  * Project: com.douban.radio
- * User: mcxiaoke
+ * User: com.mcxiaoke
  * Date: 13-5-9
  * Time: 下午1:33
  */

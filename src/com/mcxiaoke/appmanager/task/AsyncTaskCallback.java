@@ -2,7 +2,7 @@ package com.mcxiaoke.appmanager.task;
 
 /**
  * Project: DoubanShuo
- * User: mcxiaoke
+ * User: com.mcxiaoke
  * Date: 13-6-4
  * Time: 下午12:08
  */

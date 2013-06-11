@@ -9,8 +9,8 @@ import java.util.concurrent.TimeoutException;
 
 /**
  * Project: filemanager
- * Package: com.mcxiaoke.appmanager.util
- * User: mcxiaoke
+ * Package: com.com.mcxiaoke.appmanager.util
+ * User: com.mcxiaoke
  * Date: 13-6-11
  * Time: 上午11:41
  */

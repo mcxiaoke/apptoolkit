@@ -6,8 +6,8 @@ import com.mcxiaoke.appmanager.app.UIBaseSupport;
 
 /**
  * Project: filemanager
- * Package: com.mcxiaoke.appmanager.fragment
- * User: mcxiaoke
+ * Package: com.com.mcxiaoke.appmanager.fragment
+ * User: com.mcxiaoke
  * Date: 13-6-11
  * Time: 上午10:51
  */

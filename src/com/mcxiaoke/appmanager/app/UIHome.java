@@ -21,8 +21,8 @@ import java.util.concurrent.TimeoutException;
 
 /**
  * Project: filemanager
- * Package: com.mcxiaoke.appmanager.app
- * User: mcxiaoke
+ * Package: com.com.mcxiaoke.appmanager.app
+ * User: com.mcxiaoke
  * Date: 13-6-10
  * Time: 下午9:18
  */

@@ -6,8 +6,8 @@ import java.util.HashMap;
 
 /**
  * Project: filemanager
- * Package: com.mcxiaoke.appmanager.cache
- * User: mcxiaoke
+ * Package: com.com.mcxiaoke.appmanager.cache
+ * User: com.mcxiaoke
  * Date: 13-6-11
  * Time: 上午12:09
  */

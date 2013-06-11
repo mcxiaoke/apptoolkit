@@ -4,8 +4,8 @@ import com.google.gson.annotations.Expose;
 
 /**
  * Project: filemanager
- * Package: com.mcxiaoke.appmanager.model
- * User: mcxiaoke
+ * Package: com.com.mcxiaoke.appmanager.model
+ * User: com.mcxiaoke
  * Date: 13-6-10
  * Time: 下午9:20
  */

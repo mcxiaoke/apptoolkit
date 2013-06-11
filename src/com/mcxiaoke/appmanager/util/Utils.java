@@ -1,9 +1,12 @@
 package com.mcxiaoke.appmanager.util;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.*;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -21,11 +24,12 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Project: filemanager
- * Package: com.mcxiaoke.appmanager.util
- * User: mcxiaoke
+ * Package: com.com.mcxiaoke.appmanager.util
+ * User: com.mcxiaoke
  * Date: 13-6-10
  * Time: 下午5:29
  */
@@ -266,6 +270,19 @@ public final class Utils {
 
     public static String buildApkName(AppInfo app) {
         return new StringBuilder().append(app.appName).append(".").append(app.versionName).append(".apk").toString();
+    }
+
+    public static boolean isPackageAlreadyInstalled(Activity context, String pkgName) {
+        List<PackageInfo> installedList = context.getPackageManager().getInstalledPackages(
+                PackageManager.GET_UNINSTALLED_PACKAGES);
+        int installedListSize = installedList.size();
+        for (int i = 0; i < installedListSize; i++) {
+            PackageInfo tmp = installedList.get(i);
+            if (pkgName.equalsIgnoreCase(tmp.packageName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

@@ -20,8 +20,8 @@ import java.util.List;
 
 /**
  * Project: filemanager
- * Package: com.mcxiaoke.appmanager.adapter
- * User: mcxiaoke
+ * Package: com.com.mcxiaoke.appmanager.adapter
+ * User: com.mcxiaoke
  * Date: 13-6-10
  * Time: 下午5:48
  */

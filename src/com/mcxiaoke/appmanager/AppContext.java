@@ -12,8 +12,8 @@ import java.util.concurrent.Executors;
 
 /**
  * Project: filemanager
- * Package: com.mcxiaoke.appmanager
- * User: mcxiaoke
+ * Package: com.com.mcxiaoke.appmanager
+ * User: com.mcxiaoke
  * Date: 13-6-10
  * Time: 下午9:15
  */

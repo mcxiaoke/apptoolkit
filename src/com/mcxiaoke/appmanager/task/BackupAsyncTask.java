@@ -11,8 +11,8 @@ import java.util.List;
 
 /**
  * Project: filemanager
- * Package: com.mcxiaoke.appmanager.task
- * User: mcxiaoke
+ * Package: com.com.mcxiaoke.appmanager.task
+ * User: com.mcxiaoke
  * Date: 13-6-11
  * Time: 下午1:24
  */

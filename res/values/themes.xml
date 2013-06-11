@@ -10,6 +10,6 @@
 
     <style name="Widget.Styled.ActionBar" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:indeterminateProgressStyle">@style/IndeterminateProgress</item>
-        <item name="android:background">@color/holo_primary</item>
+<!--        <item name="android:background">@color/holo_primary</item>-->
     </style>
 </resources>

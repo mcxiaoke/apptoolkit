@@ -1,5 +1,7 @@
 package com.mcxiaoke.appmanager.util;
 
+import android.content.Context;
+import com.mcxiaoke.appmanager.model.AppInfo;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
@@ -32,5 +34,13 @@ public class RootUtils {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public static void silentInstall(Context context, AppInfo app) {
+
+    }
+
+    public static void silentUninstall(Context context, AppInfo app) {
+
     }
 }

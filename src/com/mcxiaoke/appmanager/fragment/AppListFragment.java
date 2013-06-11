@@ -10,7 +10,6 @@ import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import com.cuubonandroid.sugaredlistanimations.SpeedScrollListener;
 import com.mcxiaoke.appmanager.AppContext;
 import com.mcxiaoke.appmanager.R;
 import com.mcxiaoke.appmanager.adapter.AppListAdapter;
@@ -36,7 +35,6 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
     private ArrayAdapter<AppInfo> mArrayAdapter;
     private AppListAsyncTask mAsyncTask;
     private BackupAsyncTask mBackupTask;
-    private SpeedScrollListener mScrollListener;
 
     private ProgressDialog mProgressDialog;
 
@@ -63,10 +61,8 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mScrollListener = new SpeedScrollListener();
-        mListView.setOnScrollListener(mScrollListener);
         mListView.setOnItemClickListener(this);
-        mArrayAdapter = new AppListAdapter(getActivity(), mScrollListener, mAppInfos);
+        mArrayAdapter = new AppListAdapter(getActivity(), mAppInfos);
         mListView.setAdapter(mArrayAdapter);
         refresh();
     }

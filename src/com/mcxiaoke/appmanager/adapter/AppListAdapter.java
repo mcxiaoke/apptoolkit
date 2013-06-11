@@ -8,10 +8,9 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.cuubonandroid.sugaredlistanimations.GPlusListAdapter;
-import com.cuubonandroid.sugaredlistanimations.SpeedScrollListener;
 import com.mcxiaoke.appmanager.R;
 import com.mcxiaoke.appmanager.cache.AppIconCache;
 import com.mcxiaoke.appmanager.model.AppInfo;
@@ -26,15 +25,15 @@ import java.util.List;
  * Date: 13-6-10
  * Time: 下午5:48
  */
-public class AppListAdapter extends GPlusListAdapter<AppInfo> {
+public class AppListAdapter extends ArrayAdapter<AppInfo> {
     private Context mContext;
     private LayoutInflater mInflater;
     private PackageManager mPackageManager;
     private AppIconCache mIconCache;
     private Handler mUiHandler;
 
-    public AppListAdapter(Context context, SpeedScrollListener listener, List<AppInfo> objects) {
-        super(context, listener, objects);
+    public AppListAdapter(Context context, List<AppInfo> objects) {
+        super(context, 0, objects);
         mContext = context;
         mInflater = LayoutInflater.from(context);
         mPackageManager = context.getPackageManager();
@@ -43,12 +42,7 @@ public class AppListAdapter extends GPlusListAdapter<AppInfo> {
     }
 
     @Override
-    protected void defineInterpolator() {
-        super.defineInterpolator();
-    }
-
-    @Override
-    protected View getRowView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_item_app, null);

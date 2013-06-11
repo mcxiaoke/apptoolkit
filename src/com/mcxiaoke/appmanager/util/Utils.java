@@ -12,6 +12,9 @@ import com.mcxiaoke.appmanager.model.AppInfo;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.nio.channels.FileChannel;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
@@ -243,6 +246,26 @@ public final class Utils {
         int exp = (int) (Math.log(bytes) / Math.log(unit));
         String pre = "KMGTPE".charAt(exp - 1) + "";
         return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+    }
+
+    public static boolean copyFile(File src, File dest) {
+        try {
+            FileChannel srcChannel = new FileInputStream(src).getChannel();
+            FileChannel destChannel = new FileOutputStream(dest).getChannel();
+            srcChannel.transferTo(0, srcChannel.size(), destChannel);
+            srcChannel.close();
+            destChannel.close();
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+
+        }
+        return false;
+    }
+
+    public static String buildApkName(AppInfo app) {
+        return new StringBuilder().append(app.appName).append(".").append(app.versionName).append(".apk").toString();
     }
 
 

@@ -113,13 +113,13 @@ public class UIBaseSupport extends Activity {
         return mRefreshing;
     }
 
-    public void showActionBarRefresh() {
+    public void showActionBarProgress() {
         ensureMainThread();
         mRefreshing = true;
         invalidateOptionsMenu();
     }
 
-    public void hideActionBarRefresh() {
+    public void hideActionBarProgress() {
         ensureMainThread();
         mRefreshing = false;
         invalidateOptionsMenu();

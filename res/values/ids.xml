@@ -21,6 +21,7 @@
 
     <!--MENU IDS-->
     <item type="id" name="menu_refresh"/>
+    <item type="id" name="menu_backup"/>
     <item type="id" name="menu_compose"/>
     <item type="id" name="menu_share"/>
     <item type="id" name="menu_search"/>

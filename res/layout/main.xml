@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/background_primary"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:id="@id/root"
+             android:background="@color/background_primary"
         >
 
-    <ListView
-            android:id="@android:id/list"
+    <FrameLayout
+            android:id="@id/container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:cacheColorHint="@android:color/transparent"
-            android:scrollbarStyle="outsideOverlay"
-            android:fastScrollEnabled="false"
-            android:listSelector="@drawable/selector"/>
-</LinearLayout>
+            android:layout_height="match_parent"/>
+</FrameLayout>
 

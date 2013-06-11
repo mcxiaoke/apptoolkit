@@ -4,4 +4,13 @@
     <string name="root_access_success">获取ROOT权限成功</string>
     <string name="root_access_failed">获取ROOT权限失败，程序退出</string>
     <string name="menu_refresh">刷新</string>
+    <string name="menu_backup">备份</string>
+
+    <string name="dialog_backup_title">正在备份</string>
+
+    <string name="dialog_backup_all_title">备份全部</string>
+    <string name="dialog_backup_all_message">确定备份全部应用到存储卡？</string>
+
+    <string name="dialog_backup_complete_title">备份完成</string>
+    <string name="dialog_backup_complete_message">应用已全部备份到存储卡，备份应用总数：%1$d，本次新增备份数量： %2$d</string>
 </resources>

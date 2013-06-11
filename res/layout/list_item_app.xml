@@ -3,24 +3,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:padding="8dp">
+              android:layout_height="wrap_content"
+              android:padding="6dp"
+              android:gravity="center_vertical"
+              android:minHeight="@dimen/list_item_minheight">
 
     <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/app_icon_width"
+            android:layout_height="@dimen/app_icon_height"
             android:id="@+id/icon"
             android:scaleType="center"
-            android:adjustViewBounds="true"
-            android:minWidth="@dimen/app_icon_minsize"
-            android:minHeight="@dimen/app_icon_minsize"
-            android:layout_marginRight="8dp"
-            android:maxWidth="@dimen/app_icon_maxsize"
-            android:maxHeight="@dimen/app_icon_maxsize"/>
+            android:layout_marginRight="8dp"/>
 
     <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1">
 
         <TextView
@@ -28,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="AppName"
-                android:textSize="@dimen/font_size_large"
+                android:textSize="@dimen/font_size_medium"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:textStyle="bold"
@@ -42,23 +39,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1.0.0"
-                android:textSize="@dimen/font_size_small"
+                android:textSize="@dimen/font_size_medium"
                 android:layout_alignBaseline="@id/app_name"
                 android:layout_toRightOf="@id/app_name"
                 android:layout_marginLeft="4dp"
-                android:textColor="@color/text_secondary_selectable"
-                android:singleLine="true"
-                android:ellipsize="end"/>
-
-        <TextView
-                android:id="@+id/source_dir"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="SourceDir"
-                android:textSize="@dimen/font_size_small"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@id/app_name"
-                android:visibility="gone"
                 android:textColor="@color/text_secondary_selectable"
                 android:singleLine="true"
                 android:ellipsize="end"/>
@@ -68,7 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1.8M"
-                android:textSize="@dimen/font_size_tiny"
+                android:textSize="@dimen/font_size_small"
                 android:layout_below="@id/app_name"
                 android:layout_alignParentLeft="true"
                 android:textColor="@color/text_secondary_selectable"
@@ -85,6 +69,21 @@
                 android:layout_alignParentRight="true"
                 android:textColor="@color/text_secondary_selectable"
                 android:singleLine="true"
+                android:ellipsize="end"
+                android:visibility="gone"/>
+
+
+        <TextView
+                android:id="@+id/source_dir"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SourceDir"
+                android:textSize="@dimen/font_size_tiny"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/size"
+                android:textColor="@color/text_secondary_selectable"
+                android:singleLine="false"
+                android:maxLines="2"
                 android:ellipsize="end"/>
 
     </RelativeLayout>

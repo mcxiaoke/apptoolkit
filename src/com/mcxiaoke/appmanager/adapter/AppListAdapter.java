@@ -25,14 +25,14 @@ import java.util.List;
  * Date: 13-6-10
  * Time: 下午5:48
  */
-public class AppInfosAdapter extends ArrayAdapter<AppInfo> {
+public class AppListAdapter extends ArrayAdapter<AppInfo> {
     private Context mContext;
     private LayoutInflater mInflater;
     private PackageManager mPackageManager;
     private AppIconCache mIconCache;
     private Handler mUiHandler;
 
-    public AppInfosAdapter(Context context, List<AppInfo> objects) {
+    public AppListAdapter(Context context, List<AppInfo> objects) {
         super(context, 0, objects);
         mContext = context;
         mInflater = LayoutInflater.from(context);

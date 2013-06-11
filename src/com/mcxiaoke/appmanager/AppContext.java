@@ -58,6 +58,10 @@ public class AppContext extends Application {
         Toast.makeText(context, resId, Toast.LENGTH_LONG).show();
     }
 
+    public static void showToast(Context context, CharSequence text) {
+        Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+    }
+
     private static final String DEFAULT_TAG = "LOG";
 
     public static void d(String message) {

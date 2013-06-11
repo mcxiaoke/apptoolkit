@@ -18,4 +18,24 @@
         Apps: %2$dd
     </string>
     <string name="msg_backup_success">Backup Completed. Total Backup Apps: %1$d, New Backup Apps: %2$d</string>
+
+
+    <!-- Mime/Types * Folder -->
+    <string name="mime_folder">Folder</string>
+    <!-- Mime/Types * Symlink -->
+    <string name="mime_symlink">Symlink</string>
+    <!-- Mime/Types * Unknown -->
+    <string name="mime_unknown">Unknown</string>
+
+    <!-- Devices types -->
+    <string name="device_blockdevice">Block device</string>
+    <string name="device_characterdevice">Character device</string>
+    <string name="device_namedpipe">Named pipe</string>
+    <string name="device_domainsocket">Domain socket</string>
+
+    <!-- Human readable sizes -->
+    <string name="size_bytes">B</string>
+    <string name="size_kilobytes">kB</string>
+    <string name="size_megabytes">MB</string>
+    <string name="size_gigabytes">GB</string>
 </resources>

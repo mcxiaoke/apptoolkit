@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.*;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.cuubonandroid.sugaredlistanimations.SpeedScrollListener;
@@ -29,7 +30,7 @@ import java.util.List;
  * Date: 13-6-11
  * Time: 上午10:55
  */
-public class AppListFragment extends BaseFragment {
+public class AppListFragment extends BaseFragment implements AdapterView.OnItemClickListener {
     private ListView mListView;
     private List<AppInfo> mAppInfos;
     private ArrayAdapter<AppInfo> mArrayAdapter;
@@ -64,6 +65,7 @@ public class AppListFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         mScrollListener = new SpeedScrollListener();
         mListView.setOnScrollListener(mScrollListener);
+        mListView.setOnItemClickListener(this);
         mArrayAdapter = new AppListAdapter(getActivity(), mScrollListener, mAppInfos);
         mListView.setAdapter(mArrayAdapter);
         refresh();
@@ -239,5 +241,9 @@ public class AppListFragment extends BaseFragment {
             showBackupConfirmDialog();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     }
 }

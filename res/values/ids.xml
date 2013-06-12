@@ -28,4 +28,27 @@
     <item type="id" name="menu_logout"/>
     <item type="id" name="menu_debug"/>
 
+    <!-- App Operations-->
+    <item type="id" name="action_view_appinfo"/>
+    <item type="id" name="action_view_appsetting"/>
+    <item type="id" name="action_backup_apk"/>
+    <item type="id" name="action_backup_data"/>
+    <item type="id" name="action_restore_data"/>
+    <item type="id" name="action_view_data"/>
+    <item type="id" name="action_clear_data"/>
+    <item type="id" name="action_install"/>
+    <item type="id" name="action_uninstall"/>
+    <item type="id" name="action_slient_install"/>
+    <item type="id" name="action_silent_uninstall"/>
+    <item type="id" name="action_disable_app"/>
+    <item type="id" name="action_enable_app"/>
+    <item type="id" name="action_restart_package"/>
+    <item type="id" name="action_kill_process"/>
+    <item type="id" name="action_install_system"/>
+    <item type="id" name="action_uninstall_system"/>
+    <item type="id" name="action_view_playstore"/>
+    <item type="id" name="action_copy_package"/>
+    <item type="id" name="action_view_manifest"/>
+    <item type="id" name="action_view_resource"/>
+
 </resources>

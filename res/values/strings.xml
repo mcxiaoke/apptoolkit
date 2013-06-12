@@ -72,4 +72,6 @@
     <string name="action_cachemanager">Cache Manager</string>
     <string name="action_receivermanager">Start Manager</string>
     <string name="action_servicemanager">Service Manager</string>
+
+    <string name="action_dialog_title">Choose Operation</string>
 </resources>

@@ -10,4 +10,6 @@ package com.mcxiaoke.appmanager;
 public class Constants {
 
     public static final String BACKUP_DIR = "AppsBackup";
+
+    public static final String EXTRA_APPINFO = "extra_appinfo";
 }

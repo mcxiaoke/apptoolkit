@@ -3,12 +3,8 @@ package com.mcxiaoke.appmanager.adapter;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
-import android.os.Looper;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.mcxiaoke.appmanager.R;
@@ -25,20 +21,14 @@ import java.util.List;
  * Date: 13-6-10
  * Time: 下午5:48
  */
-public class AppListAdapter extends ArrayAdapter<AppInfo> {
-    private Context mContext;
-    private LayoutInflater mInflater;
+public class AppListAdapter extends BaseArrayAdapter<AppInfo> {
     private PackageManager mPackageManager;
     private AppIconCache mIconCache;
-    private Handler mUiHandler;
 
     public AppListAdapter(Context context, List<AppInfo> objects) {
-        super(context, 0, objects);
-        mContext = context;
-        mInflater = LayoutInflater.from(context);
+        super(context, objects);
         mPackageManager = context.getPackageManager();
         mIconCache = AppIconCache.getInstance();
-        mUiHandler = new Handler(Looper.getMainLooper());
     }
 
     @Override
@@ -75,7 +65,7 @@ public class AppListAdapter extends ArrayAdapter<AppInfo> {
         return mIconCache.get(app.packageName);
     }
 
-    static class ViewHolder {
+    private static class ViewHolder {
         ImageView icon;
         TextView appName;
         TextView sourceDir;

@@ -75,14 +75,14 @@ public final class Utils {
             try {
                 ActivityInfo ai = pm.getActivityInfo(cn, 0);
                 if (ai != null) {
-                    app.mainName = ai.loadLabel(pm);
+                    app.mainName = ai.loadLabel(pm).toString();
                 }
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
         }
 
-        app.appName = pm.getApplicationLabel(ainfo);
+        app.appName = pm.getApplicationLabel(ainfo).toString();
         app.processName = ainfo.processName;
         app.sourceDir = ainfo.sourceDir;
         app.publicSourceDir = ainfo.publicSourceDir;
@@ -287,7 +287,6 @@ public final class Utils {
         }
         return false;
     }
-
 
 
 }

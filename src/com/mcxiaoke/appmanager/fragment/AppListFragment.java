@@ -1,6 +1,8 @@
 package com.mcxiaoke.appmanager.fragment;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -246,10 +248,28 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        final AppInfo app = mArrayAdapter.getItem(position);
+        showDialog(app);
     }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         return false;
+    }
+
+    private static final String DIALOG_TAG = "DIALOG_TAG";
+
+    private void showDialog(AppInfo app) {
+        if (app != null) {
+            //        mStackLevel++;
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            Fragment prev = getFragmentManager().findFragmentByTag(DIALOG_TAG);
+            if (prev != null) {
+                ft.remove(prev);
+            }
+            ft.addToBackStack(null);
+            AppActionDialogFragment newFragment = AppActionDialogFragment.newInstance(app);
+            newFragment.show(ft, DIALOG_TAG);
+        }
     }
 }

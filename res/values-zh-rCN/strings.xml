@@ -17,7 +17,7 @@
     <!-- App Operations-->
     <string name="action_view_appinfo">显示详细信息</string>
     <string name="action_view_appsetting">进入应用管理</string>
-    <string name="action_backup_apk">备份安装文件到存储卡</string>
+    <string name="action_backup_apk">备份到存储卡</string>
     <string name="action_backup_data">备份数据到存储卡</string>
     <string name="action_restore_data">从存储卡恢复数据</string>
     <string name="action_view_data">显示应用数据</string>
@@ -31,7 +31,7 @@
     <string name="action_restart_package">结束应用</string>
     <string name="action_kill_process">强制结束进程</string>
     <string name="action_install_system">安装为系统应用</string>
-    <string name="action_uninstall_system">删除系统应哟娜</string>
+    <string name="action_uninstall_system">删除系统应用</string>
     <string name="action_view_playstore">查看市场信息</string>
     <string name="action_copy_package">复制应用包名</string>
     <string name="action_view_manifest">查看清单文件</string>
@@ -48,5 +48,7 @@
     <string name="action_cachemanager">缓存清理</string>
     <string name="action_receivermanager">自启动管理</string>
     <string name="action_servicemanager">服务管理</string>
+
+    <string name="action_dialog_title">选择操作</string>
 
 </resources>

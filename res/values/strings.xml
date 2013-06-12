@@ -38,4 +38,38 @@
     <string name="size_kilobytes">kB</string>
     <string name="size_megabytes">MB</string>
     <string name="size_gigabytes">GB</string>
+
+    <!-- App Operations-->
+    <string name="action_view_appinfo">View App Detail</string>
+    <string name="action_view_appsetting">View App Setting</string>
+    <string name="action_backup_apk">Backup Apk to SDCARD</string>
+    <string name="action_backup_data">Backup Data to SDCARD</string>
+    <string name="action_restore_data">Restore Data from SDCARD</string>
+    <string name="action_view_data">View App Data</string>
+    <string name="action_clear_data">Clear App Data</string>
+    <string name="action_install">Install App</string>
+    <string name="action_uninstall">Uninstall App</string>
+    <string name="action_slient_install">Silent Install App</string>
+    <string name="action_silent_uninstall">Silent Uninstall App</string>
+    <string name="action_disable_app">Disable App</string>
+    <string name="action_enable_app">Enable App</string>
+    <string name="action_restart_package">Stop Task</string>
+    <string name="action_kill_process">Kill Process</string>
+    <string name="action_install_system">Install To System</string>
+    <string name="action_uninstall_system">Uninstall From System</string>
+    <string name="action_view_playstore">View Playstore Page</string>
+    <string name="action_copy_package">Copy PackageName</string>
+    <string name="action_view_manifest">View AndroidManifest File</string>
+    <string name="action_view_resource">View Resources</string>
+    <!-- Common Operations -->
+    <string name="action_shutdown">Shutdown</string>
+    <string name="action_restart">Restart</string>
+    <string name="action_processmanager">Process Manager</string>
+    <string name="action_filemanager">File Manager</string>
+    <string name="action_backupmanager">Backup Manager</string>
+    <string name="action_networkmanager">Network Firewall</string>
+    <string name="action_appmanager">App Manager</string>
+    <string name="action_cachemanager">Cache Manager</string>
+    <string name="action_receivermanager">Start Manager</string>
+    <string name="action_servicemanager">Service Manager</string>
 </resources>

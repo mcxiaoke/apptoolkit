@@ -13,4 +13,40 @@
 
     <string name="dialog_backup_complete_title">备份完成</string>
     <string name="dialog_backup_complete_message">应用已全部备份到存储卡，备份应用总数：%1$d，本次新增备份数量： %2$d</string>
+
+    <!-- App Operations-->
+    <string name="action_view_appinfo">显示详细信息</string>
+    <string name="action_view_appsetting">进入应用管理</string>
+    <string name="action_backup_apk">备份安装文件到存储卡</string>
+    <string name="action_backup_data">备份数据到存储卡</string>
+    <string name="action_restore_data">从存储卡恢复数据</string>
+    <string name="action_view_data">显示应用数据</string>
+    <string name="action_clear_data">清除数据和缓存</string>
+    <string name="action_install">安装应用</string>
+    <string name="action_uninstall">卸载应用</string>
+    <string name="action_slient_install">静默安装</string>
+    <string name="action_silent_uninstall">静默卸载</string>
+    <string name="action_disable_app">禁用此应用</string>
+    <string name="action_enable_app">启用此应用</string>
+    <string name="action_restart_package">结束应用</string>
+    <string name="action_kill_process">强制结束进程</string>
+    <string name="action_install_system">安装为系统应用</string>
+    <string name="action_uninstall_system">删除系统应哟娜</string>
+    <string name="action_view_playstore">查看市场信息</string>
+    <string name="action_copy_package">复制应用包名</string>
+    <string name="action_view_manifest">查看清单文件</string>
+    <string name="action_view_resource">查看资源文件</string>
+
+    <!-- Common Operations -->
+    <string name="action_shutdown">关机</string>
+    <string name="action_restart">重启</string>
+    <string name="action_processmanager">进程管理</string>
+    <string name="action_filemanager">文件管理</string>
+    <string name="action_backupmanager">数据备份</string>
+    <string name="action_networkmanager">网络防火墙</string>
+    <string name="action_appmanager">应用管理</string>
+    <string name="action_cachemanager">缓存清理</string>
+    <string name="action_receivermanager">自启动管理</string>
+    <string name="action_servicemanager">服务管理</string>
+
 </resources>

@@ -34,7 +34,7 @@ import java.util.List;
  * Date: 13-6-11
  * Time: 上午10:55
  */
-public class AppListFragment extends BaseFragment implements AdapterView.OnItemClickListener {
+public class AppListFragment extends BaseFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
     private ListView mListView;
     private List<AppInfo> mAppInfos;
     private ArrayAdapter<AppInfo> mArrayAdapter;
@@ -246,5 +246,10 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        return false;
     }
 }

@@ -68,5 +68,20 @@ public final class AppUtils {
 
     }
 
+    // TODO todos
+    // show services/providers/receivers/permissions/activities
+    // kill process, show memory, show cpuinfo
+    // install binary, move to system, uninstall system
+    // backup app data, batch install /uninstall
+    // shutdown, restart, remount, screenshot
+    // kill notifications, kill auto start
+    // disable component
+    // restart package / real kill: kill process
+    //Process.sendSignal(pid, Process.SIGNAL_KILL);
+    //ActivityManager.killBackgroundProcesses(PackageName)
+
+    // android:name="android.permission.GET_TASKS"
+    //android:name="android.permission.KILL_BACKGROUND_PROCESSES"
+
 
 }

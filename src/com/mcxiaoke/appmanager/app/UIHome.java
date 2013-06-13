@@ -8,16 +8,11 @@ import com.mcxiaoke.appmanager.R;
 import com.mcxiaoke.appmanager.cache.AppIconCache;
 import com.mcxiaoke.appmanager.fragment.AppListFragment;
 import com.mcxiaoke.appmanager.fragment.BaseFragment;
+import com.mcxiaoke.appmanager.receiver.PackageCallback;
+import com.mcxiaoke.appmanager.receiver.PackageMonitor;
 import com.mcxiaoke.appmanager.task.RootAccessAsyncTask;
 import com.mcxiaoke.appmanager.task.SimpleAsyncTaskCallback;
 import com.stericson.RootTools.RootTools;
-import com.stericson.RootTools.exceptions.RootDeniedException;
-import com.stericson.RootTools.execution.CommandCapture;
-import com.stericson.RootTools.execution.Shell;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.concurrent.TimeoutException;
 
 /**
  * Project: filemanager
@@ -26,10 +21,11 @@ import java.util.concurrent.TimeoutException;
  * Date: 13-6-10
  * Time: 下午9:18
  */
-public class UIHome extends UIBaseSupport {
+public class UIHome extends UIBaseSupport implements PackageCallback {
     private BaseFragment mFragment;
     private RootAccessAsyncTask mRootAccessAsyncTask;
     private UIHome mContext;
+    private PackageMonitor mPackageMonitor;
 
     /**
      * Called when the activity is first created.
@@ -40,6 +36,8 @@ public class UIHome extends UIBaseSupport {
         RootTools.debugMode = true;
         mContext = this;
         setContentView(R.layout.main);
+        mPackageMonitor = new PackageMonitor();
+        mPackageMonitor.register(this, this, false);
         addAppListFragment();
 //        startAsyncTask();
         if (RootTools.isAccessGiven()) {
@@ -121,38 +119,41 @@ public class UIHome extends UIBaseSupport {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mPackageMonitor != null) {
+            mPackageMonitor.unregister();
+            mPackageMonitor = null;
+        }
         stopAsyncTask();
         AppIconCache.getInstance().clear();
     }
 
-    private static void executeSuCommand() {
-        File file = new File("/data/data/com.baidu.input");
-        file.setExecutable(true);
-        file.setWritable(true);
-        file.setReadable(true);
-        AppContext.v("file r=" + file.canRead() + " e=" + file.canExecute() + " w=" + file.canWrite());
-        if (file.canRead()) {
-            File[] list = file.listFiles();
-            if (list != null) {
-                for (File f : list) {
-                    AppContext.v("file: " + f.getAbsolutePath());
-                }
-            }
-        }
-        CommandCapture chmodAppDir = new CommandCapture(0, "chmod 777 /data/app");
-        try {
-            Shell shell = RootTools.getShell(true);
-            shell.add(chmodAppDir).waitForFinish();
-//            shell.add(chmodDataDir).waitForFinish();
-//            shell.add(chmodDataDir);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-        } catch (RootDeniedException e) {
-            e.printStackTrace();
-        }
+    @Override
+    protected void debug(String message) {
+        super.debug(message);
+    }
+
+    @Override
+    public void onPackageAdded(String packageName, int uid) {
+        debug("onPackageAdded() packageName=" + packageName + " uid=" + uid);
+    }
+
+    @Override
+    public void onPackageChanged(String packageName, int uid, String[] components) {
+        debug("onPackageChanged() packageName=" + packageName + " uid=" + uid);
+    }
+
+    @Override
+    public void onPackageModified(String packageName) {
+        debug("onPackageModified() packageName=" + packageName);
+    }
+
+    @Override
+    public void onPackageRemoved(String packageName, int uid) {
+        debug("onPackageRemoved() packageName=" + packageName + " uid=" + uid);
+    }
+
+    @Override
+    public void onUidRemoved(int uid) {
+        debug("onUidRemoved() uid=" + uid);
     }
 }

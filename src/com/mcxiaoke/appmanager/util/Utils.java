@@ -65,6 +65,16 @@ public final class Utils {
         return null;
     }
 
+    public static AppInfo convert(PackageManager pm, String packageName) {
+        try {
+            PackageInfo info = pm.getPackageInfo(packageName, 0);
+            return convert(pm, packageName);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static AppInfo convert(PackageManager pm, PackageInfo info) {
         AppInfo app = new AppInfo();
         ApplicationInfo ainfo = info.applicationInfo;

@@ -50,5 +50,26 @@
                 android:label="@string/app_name"
                 android:launchMode="singleTask"
                 android:screenOrientation="portrait"/>
+
+        <!--<receiver-->
+        <!--android:name=".receiver.PackageMonitor"-->
+        <!--android:exported="false"-->
+        <!--android:enabled="true">-->
+        <!--<intent-filter>-->
+        <!--<category android:name="android.intent.category.DEFAULT"/>-->
+
+        <!--<action android:name="android.intent.action.PACKAGE_ADDED"/>-->
+        <!--<action android:name="android.intent.action.PACKAGE_REMOVED"/>-->
+        <!--<action android:name="android.intent.action.PACKAGE_CHANGED"/>-->
+        <!--<action android:name="android.intent.action.PACKAGE_REPLACED"/>-->
+        <!--<action android:name="android.intent.action.PACKAGE_RESTARTED"/>-->
+        <!--<action android:name="android.intent.action.PACKAGE_DATA_CLEARED"/>-->
+        <!--<action android:name="android.intent.action.UID_REMOVED"/>-->
+        <!--<action android:name="android.intent.action.EXTERNAL_APPLICATIONS_AVAILABLE"/>-->
+        <!--<action android:name="android.intent.action.EXTERNAL_APPLICATIONS_UNAVAILABLE"/>-->
+
+        <!--<data android:scheme="package"/>-->
+        <!--</intent-filter>-->
+        <!--</receiver>-->
     </application>
 </manifest>

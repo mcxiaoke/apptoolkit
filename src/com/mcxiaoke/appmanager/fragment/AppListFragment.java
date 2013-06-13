@@ -8,12 +8,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.os.Message;
+import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -37,6 +33,15 @@ import java.util.List;
  * Time: 上午10:55
  */
 public class AppListFragment extends BaseFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+    private static final String TAG = AppListFragment.class.getSimpleName();
+
+    private static void debug(String message) {
+        AppContext.v(message);
+    }
+
+    private static final int MSG_PACKAGE_ADDED = 1001;
+    private static final int MSG_PACKAGE_REMOVED = 1002;
+
     private ListView mListView;
     private List<AppInfo> mAppInfos;
     private ArrayAdapter<AppInfo> mArrayAdapter;
@@ -54,8 +59,14 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
         super.onCreate(savedInstanceState);
         AppContext.v("AppListFragment onCreate()");
         mAppInfos = new ArrayList<AppInfo>();
-        mUiHandler = new Handler(Looper.getMainLooper());
         setHasOptionsMenu(true);
+
+        mUiHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);    //To change body of overridden methods use File | Settings | File Templates.
+            }
+        };
     }
 
     @Override
@@ -72,6 +83,27 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
         mArrayAdapter = new AppListAdapter(getActivity(), mAppInfos);
         mListView.setAdapter(mArrayAdapter);
         refresh();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -272,4 +304,5 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
             newFragment.show(ft, DIALOG_TAG);
         }
     }
+
 }

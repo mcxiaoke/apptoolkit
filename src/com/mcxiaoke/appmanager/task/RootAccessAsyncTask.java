@@ -1,6 +1,6 @@
 package com.mcxiaoke.appmanager.task;
 
-import com.stericson.RootTools.RootTools;
+import static com.stericson.RootTools.RootTools.isAccessGiven;
 
 /**
  * Project: filemanager
@@ -18,6 +18,6 @@ public class RootAccessAsyncTask extends AsyncTaskBase<Void, Void, Boolean> {
 
     @Override
     protected Boolean onExecute(Void... params) throws Exception {
-        return RootTools.isAccessGiven();
+        return isAccessGiven();
     }
 }

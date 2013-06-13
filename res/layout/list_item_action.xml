@@ -16,7 +16,6 @@
             android:textStyle="bold"
             android:textColor="@color/text_primary_selectable"
             android:singleLine="true"
-            android:ellipsize="end"
-            android:paddingLeft="20dp"/>
+            android:ellipsize="end"/>
 
 </LinearLayout>

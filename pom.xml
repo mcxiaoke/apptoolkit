@@ -18,6 +18,14 @@
         <android-maven.version>3.6.0</android-maven.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <name>github-repo</name>
+            <id>github-repo</id>
+            <url>https://raw.github.com/mcxiaoke/mavenrepo/master/repository/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>com.google.android</groupId>

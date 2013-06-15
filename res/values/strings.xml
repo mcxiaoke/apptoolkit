@@ -3,7 +3,7 @@
     <string name="app_name">App Toolkit</string>
 
     <string name="root_access_success">Root Access Granted.</string>
-    <string name="root_access_failed">Root Access Grant Failed, Quit.</string>
+    <string name="root_access_failed">Root Access Grant Failed.</string>
     <string name="menu_refresh">Refresh</string>
     <string name="menu_backup">Backup</string>
 

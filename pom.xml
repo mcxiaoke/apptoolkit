@@ -16,6 +16,7 @@
         <android.platform>17</android.platform>
         <android-support.version>r13</android-support.version>
         <android-maven.version>3.6.0</android-maven.version>
+        <actionbarsherlock.version>4.3.1</actionbarsherlock.version>
     </properties>
 
     <repositories>
@@ -35,9 +36,22 @@
         </dependency>
 
         <dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>support-v4</artifactId>
+            <version>${android-support.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.2.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.actionbarsherlock</groupId>
+            <artifactId>actionbarsherlock</artifactId>
+            <version>${actionbarsherlock.version}</version>
+            <type>apklib</type>
         </dependency>
 
     </dependencies>

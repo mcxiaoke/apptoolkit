@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-
-    <style name="AppTheme"/>
-
-    <style name="AppTheme.Light" parent="android:Theme.Holo.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
+    <style name="AppThemeLight" parent="Theme.Sherlock.Light.DarkActionBar">
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
     </style>
 
-    <style name="Widget.Styled.ActionBar" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
+    <style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+        <item name="indeterminateProgressStyle">@style/IndeterminateProgress</item>
         <item name="android:indeterminateProgressStyle">@style/IndeterminateProgress</item>
-<!--        <item name="android:background">@color/holo_primary</item>-->
     </style>
 </resources>

@@ -6,7 +6,6 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 
 import java.util.List;
 
@@ -17,13 +16,13 @@ import java.util.List;
  * Date: 13-6-12
  * Time: 下午11:00
  */
-public abstract class BaseArrayAdapter<T> extends ArrayAdapter<T> {
+public abstract class BaseArrayAdapter<T> extends ArrayAdapterCompat<T> {
     protected Context mContext;
     protected LayoutInflater mInflater;
     protected Handler mUiHandler;
 
     public BaseArrayAdapter(Context context, List<T> objects) {
-        super(context, 0, objects);
+        super(context, objects);
         mContext = context;
         mInflater = LayoutInflater.from(context);
         mUiHandler = new Handler(Looper.getMainLooper());

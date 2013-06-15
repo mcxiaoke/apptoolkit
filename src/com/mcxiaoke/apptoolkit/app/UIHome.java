@@ -1,9 +1,6 @@
 package com.mcxiaoke.apptoolkit.app;
 
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import com.mcxiaoke.apptoolkit.AppContext;
 import com.mcxiaoke.apptoolkit.R;
 import com.mcxiaoke.apptoolkit.cache.AppIconCache;
 import com.mcxiaoke.apptoolkit.fragment.AppListFragment;
@@ -32,24 +29,37 @@ public class UIHome extends UIBaseSupport implements PackageCallback {
         super.onCreate(savedInstanceState);
         mContext = this;
         setContentView(R.layout.main);
+        debug("onCreate()");
         mPackageMonitor = new PackageMonitor();
         mPackageMonitor.register(this, this, false);
         addAppListFragment();
         if (Shell.SU.available()) {
-            AppContext.v("Root Access Granted");
+            debug("Root Access Granted");
         } else {
-            AppContext.v("Root Access Not Granted");
-            AppContext.showToast(mContext, R.string.root_access_failed);
+            debug("Root Access Not Granted");
         }
     }
 
     private void addAppListFragment() {
+        debug("addAppListFragment()");
         mFragment = new AppListFragment();
-        getFragmentManager().beginTransaction().replace(R.id.container, mFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, mFragment).commit();
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+        debug("onCreateOptionsMenu()");
+        menu.clear();
+        getSupportMenuInflater().inflate(R.menu.menu_home, menu);
+        if (isRefreshing()) {
+            menu.findItem(R.id.menu_refresh).setActionView(
+                    R.layout.action_bar_indeterminate_progress);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
                 refresh();
@@ -59,18 +69,13 @@ public class UIHome extends UIBaseSupport implements PackageCallback {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        menu.clear();
-        getMenuInflater().inflate(R.menu.menu_home, menu);
-        if (isRefreshing()) {
-            menu.findItem(R.id.menu_refresh).setActionView(
-                    R.layout.action_bar_indeterminate_progress);
-        }
-        return super.onCreateOptionsMenu(menu);
+    public boolean onPrepareOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
     }
 
     private void refresh() {
         if (mFragment != null && mFragment.isVisible()) {
+            debug("refresh()");
             mFragment.refresh();
         }
     }
@@ -88,6 +93,7 @@ public class UIHome extends UIBaseSupport implements PackageCallback {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        debug("onDestroy()");
         if (mPackageMonitor != null) {
             mPackageMonitor.unregister();
             mPackageMonitor = null;

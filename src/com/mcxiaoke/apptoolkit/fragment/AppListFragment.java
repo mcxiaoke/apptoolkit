@@ -1,21 +1,24 @@
 package com.mcxiaoke.apptoolkit.fragment;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.view.*;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.mcxiaoke.apptoolkit.AppContext;
 import com.mcxiaoke.apptoolkit.R;
 import com.mcxiaoke.apptoolkit.adapter.AppListAdapter;
+import com.mcxiaoke.apptoolkit.adapter.BaseArrayAdapter;
 import com.mcxiaoke.apptoolkit.model.AppInfo;
 import com.mcxiaoke.apptoolkit.task.AppListAsyncTask;
 import com.mcxiaoke.apptoolkit.task.AsyncTaskCallback;
@@ -44,7 +47,7 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
 
     private ListView mListView;
     private List<AppInfo> mAppInfos;
-    private ArrayAdapter<AppInfo> mArrayAdapter;
+    private BaseArrayAdapter<AppInfo> mArrayAdapter;
     private AppListAsyncTask mAsyncTask;
     private BackupAsyncTask mBackupTask;
 
@@ -64,13 +67,14 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
         mUiHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
-                super.handleMessage(msg);    //To change body of overridden methods use File | Settings | File Templates.
+                super.handleMessage(msg);
             }
         };
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        AppContext.v("AppListFragment onCreateView()");
         View root = inflater.inflate(R.layout.fm_applist, null);
         mListView = (ListView) root.findViewById(android.R.id.list);
         return root;
@@ -79,6 +83,7 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        AppContext.v("AppListFragment onActivityCreated()");
         mListView.setOnItemClickListener(this);
         mArrayAdapter = new AppListAdapter(getActivity(), mAppInfos);
         mListView.setAdapter(mArrayAdapter);
@@ -116,6 +121,7 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
 
     @Override
     public void refresh() {
+        AppContext.v("AppListFragment refresh()");
         startAsyncTask();
     }
 
@@ -128,15 +134,18 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
     private void startAsyncTask() {
         stopAsyncTask();
         mArrayAdapter.clear();
+        AppContext.v("AppListFragment startAsyncTask()");
         mAsyncTask = new AppListAsyncTask(getActivity(), new SimpleAsyncTaskCallback<List<AppInfo>>() {
             @Override
             public void onTaskSuccess(int code, List<AppInfo> appInfos) {
+                AppContext.v("AppListFragment onTaskSuccess() size is " + (appInfos == null ? "null" : appInfos.size()));
                 hideProgressIndicator();
                 mArrayAdapter.addAll(appInfos);
             }
 
             @Override
             public void onTaskFailure(int code, Throwable e) {
+                AppContext.v("AppListFragment onTaskFailure()");
                 hideProgressIndicator();
             }
         });
@@ -260,22 +269,22 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu, com.actionbarsherlock.view.MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_backup, menu);
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
         if (R.id.menu_backup == item.getItemId()) {
             showBackupConfirmDialog();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -293,8 +302,9 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
 
     private void showDialog(AppInfo app) {
         if (app != null) {
-            //        mStackLevel++;
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
+
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
             Fragment prev = getFragmentManager().findFragmentByTag(DIALOG_TAG);
             if (prev != null) {
                 ft.remove(prev);

@@ -1,7 +1,7 @@
 package com.mcxiaoke.apptoolkit.fragment;
 
 import android.app.Activity;
-import android.app.Fragment;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.mcxiaoke.apptoolkit.app.UIBaseSupport;
 
 /**
@@ -11,7 +11,7 @@ import com.mcxiaoke.apptoolkit.app.UIBaseSupport;
  * Date: 13-6-11
  * Time: 上午10:51
  */
-public abstract class BaseFragment extends Fragment implements Refreshable {
+public abstract class BaseFragment extends SherlockFragment implements Refreshable {
     private UIBaseSupport mBaseSupport;
 
     @Override

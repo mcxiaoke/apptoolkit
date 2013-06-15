@@ -1,10 +1,8 @@
 package com.mcxiaoke.apptoolkit.app;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Looper;
-import android.view.Menu;
-import android.view.MenuItem;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.mcxiaoke.apptoolkit.AppContext;
 
 /**
@@ -13,7 +11,7 @@ import com.mcxiaoke.apptoolkit.AppContext;
  * Date: 13-5-30
  * Time: 上午9:58
  */
-public class UIBaseSupport extends Activity {
+public class UIBaseSupport extends SherlockFragmentActivity {
 
     protected static final boolean DEBUG = AppContext.isDebug();
 
@@ -78,21 +76,6 @@ public class UIBaseSupport extends Activity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override

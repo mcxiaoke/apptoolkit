@@ -1,6 +1,6 @@
 package com.mcxiaoke.apptoolkit.fragment;
 
-import android.app.DialogFragment;
+import com.actionbarsherlock.app.SherlockDialogFragment;
 
 /**
  * Project: filemanager
@@ -9,5 +9,5 @@ import android.app.DialogFragment;
  * Date: 13-6-12
  * Time: 下午10:57
  */
-public class BaseDialogFragment extends DialogFragment {
+public class BaseDialogFragment extends SherlockDialogFragment {
 }

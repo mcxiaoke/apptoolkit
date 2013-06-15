@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.CompoundButton;
 import android.widget.ListView;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
@@ -23,6 +22,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.mcxiaoke.apptoolkit.AppContext;
 import com.mcxiaoke.apptoolkit.R;
 import com.mcxiaoke.apptoolkit.adapter.AppListAdapter;
+import com.mcxiaoke.apptoolkit.adapter.MultiChoiceArrayAdapter;
 import com.mcxiaoke.apptoolkit.model.AppInfo;
 import com.mcxiaoke.apptoolkit.task.AppListAsyncTask;
 import com.mcxiaoke.apptoolkit.task.AsyncTaskCallback;
@@ -39,7 +39,7 @@ import java.util.List;
  * Date: 13-6-11
  * Time: 上午10:55
  */
-public class AppListFragment extends BaseFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, ActionMode.Callback, CompoundButton.OnCheckedChangeListener {
+public class AppListFragment extends BaseFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, ActionMode.Callback, MultiChoiceArrayAdapter.OnCheckedListener {
     private static final String TAG = AppListFragment.class.getSimpleName();
 
     private static void debug(String message) {
@@ -51,7 +51,7 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
 
     private ListView mListView;
     private List<AppInfo> mAppInfos;
-    private AppListAdapter mArrayAdapter;
+    private MultiChoiceArrayAdapter<AppInfo> mArrayAdapter;
     private AppListAsyncTask mAsyncTask;
     private BackupAsyncTask mBackupTask;
 
@@ -92,7 +92,7 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
         mListView.setOnItemClickListener(this);
         mListView.setOnItemLongClickListener(this);
         mArrayAdapter = new AppListAdapter(getActivity(), mAppInfos);
-        mArrayAdapter.setOnCheckedChangeListener(this);
+        mArrayAdapter.setOnCheckedListener(this);
         mListView.setAdapter(mArrayAdapter);
         refresh();
     }
@@ -334,7 +334,7 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
     }
 
     @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+    public void onCheckedChanged(int position, boolean isChecked) {
         checkActionMode();
     }
 

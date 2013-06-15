@@ -23,6 +23,10 @@ public abstract class BaseArrayAdapter<T> extends ArrayAdapterCompat<T> {
 
     public BaseArrayAdapter(Context context, List<T> objects) {
         super(context, objects);
+        initialize(context);
+    }
+
+    private void initialize(Context context) {
         mContext = context;
         mInflater = LayoutInflater.from(context);
         mUiHandler = new Handler(Looper.getMainLooper());

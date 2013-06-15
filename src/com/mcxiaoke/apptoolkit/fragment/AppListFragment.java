@@ -133,31 +133,6 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
         showProgressIndicator();
     }
 
-    @Override
-    public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu, com.actionbarsherlock.view.MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_mode_applist, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
-        if (R.id.menu_backup == item.getItemId()) {
-            showBackupConfirmDialog();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(com.actionbarsherlock.view.Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        final AppInfo app = mArrayAdapter.getItem(position);
-        showDialog(app);
-    }
-
     private void showDialog(AppInfo app) {
         if (app != null) {
 
@@ -174,9 +149,25 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
     }
 
     @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        AppContext.v("AppListFragment onItemClick() position=" + position + " mActionMode=" + mActionMode);
+        if (mActionMode != null) {
+            mArrayAdapter.toggleChecked(position);
+            checkActionMode();
+        } else {
+            final AppInfo app = mArrayAdapter.getItem(position);
+            showDialog(app);
+        }
+    }
+
+
+    @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        mArrayAdapter.toggleChecked(position);
-        checkActionMode();
+        AppContext.v("AppListFragment onItemLongClick() position=" + position + " mActionMode=" + mActionMode);
+        if (mActionMode == null) {
+            mArrayAdapter.toggleChecked(position);
+            checkActionMode();
+        }
         return true;
     }
 

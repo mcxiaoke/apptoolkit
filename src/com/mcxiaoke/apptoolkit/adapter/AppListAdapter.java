@@ -26,13 +26,13 @@ import java.util.List;
 public class AppListAdapter extends MultiChoiceArrayAdapter<AppInfo> {
     private PackageManager mPackageManager;
     private AppIconCache mIconCache;
-    private int mActivateColor;
+    private int mActivateBgResId;
 
     public AppListAdapter(Context context, List<AppInfo> objects) {
         super(context, objects);
         mPackageManager = context.getPackageManager();
         mIconCache = AppIconCache.getInstance();
-        mActivateColor = mContext.getResources().getColor(R.color.holo_primary_transparent);
+        mActivateBgResId = R.drawable.list_item_activated;
     }
 
     @Override
@@ -59,6 +59,18 @@ public class AppListAdapter extends MultiChoiceArrayAdapter<AppInfo> {
             holder = (ViewHolder) convertView.getTag();
         }
 
+        final AppInfo app = getItem(position);
+        final boolean checked = isChecked(position);
+        holder.appName.setText(app.appName);
+        holder.sourceDir.setText(app.sourceDir);
+        holder.version.setText(app.versionName);
+        holder.size.setText(Utils.getHumanReadableByteCount(app.size));
+        holder.time.setText(Utils.formatDate(app.createdAt));
+        Drawable icon = getIcon(app);
+        if (icon != null) {
+            holder.icon.setImageDrawable(icon);
+        }
+
         final int index = position;
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -67,20 +79,14 @@ public class AppListAdapter extends MultiChoiceArrayAdapter<AppInfo> {
                 onChecked(index, isChecked);
             }
         });
-        final AppInfo app = getItem(position);
-        final boolean checked = isChecked(position);
-        holder.appName.setText(app.appName);
-        holder.sourceDir.setText(app.sourceDir);
-        holder.version.setText(app.versionName);
-        holder.size.setText(Utils.getHumanReadableByteCount(app.size));
-        holder.time.setText(Utils.formatDate(app.createdAt));
         holder.checkBox.setChecked(checked);
-        Drawable icon = getIcon(app);
-        if (icon != null) {
-            holder.icon.setImageDrawable(icon);
-        }
 
-        convertView.setBackgroundColor(checked ? mActivateColor : 0);
+        if (checked) {
+            convertView.setBackgroundResource(mActivateBgResId);
+        } else {
+            convertView.setBackgroundResource(0);
+        }
+//        convertView.setBackgroundColor(checked ? mActivateColor : 0);
         return convertView;
     }
 

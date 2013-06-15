@@ -39,7 +39,7 @@ import java.util.List;
  * Date: 13-6-11
  * Time: 上午10:55
  */
-public class AppListFragment extends BaseFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, ActionMode.Callback, MultiChoiceArrayAdapter.OnCheckedListener {
+public class AppListFragment extends BaseFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, MultiChoiceArrayAdapter.OnCheckedListener {
     private static final String TAG = AppListFragment.class.getSimpleName();
 
     private static void debug(String message) {
@@ -52,6 +52,7 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
     private ListView mListView;
     private List<AppInfo> mAppInfos;
     private MultiChoiceArrayAdapter<AppInfo> mArrayAdapter;
+    private ActionModeCallback mActionModeCallback;
     private AppListAsyncTask mAsyncTask;
     private BackupAsyncTask mBackupTask;
 
@@ -89,67 +90,13 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         AppContext.v("AppListFragment onActivityCreated()");
+        mActionModeCallback = new ActionModeCallback(this);
         mListView.setOnItemClickListener(this);
         mListView.setOnItemLongClickListener(this);
         mArrayAdapter = new AppListAdapter(getActivity(), mAppInfos);
         mArrayAdapter.setOnCheckedListener(this);
         mListView.setAdapter(mArrayAdapter);
         refresh();
-    }
-
-    @Override
-    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-        return false;
-    }
-
-    @Override
-    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        MenuInflater inflater = mode.getMenuInflater();
-        inflater.inflate(R.menu.menu_home, menu);
-        mActionMode = mode;
-        mArrayAdapter.setActionMode(true);
-        setActionModeTitle();
-        return true;
-    }
-
-    @Override
-    public void onDestroyActionMode(ActionMode mode) {
-        mActionMode = null;
-        mArrayAdapter.setActionMode(false);
-    }
-
-    @Override
-    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-        return false;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        dismissProgressDialog();
-        stopAsyncTask();
-        stopBackup();
     }
 
     @Override
@@ -185,6 +132,167 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
         mAsyncTask.start();
         showProgressIndicator();
     }
+
+    @Override
+    public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu, com.actionbarsherlock.view.MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_mode_applist, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+        if (R.id.menu_backup == item.getItemId()) {
+            showBackupConfirmDialog();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        final AppInfo app = mArrayAdapter.getItem(position);
+        showDialog(app);
+    }
+
+    private void showDialog(AppInfo app) {
+        if (app != null) {
+
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            Fragment prev = getFragmentManager().findFragmentByTag(DIALOG_TAG);
+            if (prev != null) {
+                ft.remove(prev);
+            }
+            ft.addToBackStack(null);
+            AppActionDialogFragment newFragment = AppActionDialogFragment.newInstance(app);
+            newFragment.show(ft, DIALOG_TAG);
+        }
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        mArrayAdapter.toggleChecked(position);
+        checkActionMode();
+        return true;
+    }
+
+    @Override
+    public void onCheckedChanged(int position, boolean isChecked) {
+        checkActionMode();
+    }
+
+    private void checkActionMode() {
+        if (mActionMode == null) {
+            getSherlockActivity().startActionMode(mActionModeCallback);
+        }
+        setActionModeTitle();
+    }
+
+    private void setActionModeTitle() {
+        if (mActionMode != null) {
+            int checkedCount = mArrayAdapter.getCheckedItemCount();
+            if (checkedCount == 0) {
+                mActionMode.finish();
+            } else {
+                mActionMode.setTitle("选择应用");
+                mActionMode.setSubtitle("已选择" + checkedCount + "项");
+            }
+        }
+    }
+
+    private boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        return false;
+    }
+
+    private void onCreateActionMode(ActionMode mode, Menu menu) {
+        MenuInflater inflater = mode.getMenuInflater();
+        inflater.inflate(R.menu.menu_home, menu);
+        mActionMode = mode;
+        mArrayAdapter.setActionModeState(true);
+        setActionModeTitle();
+    }
+
+    private boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        return false;
+    }
+
+    private void onDestroyActionMode(ActionMode mode) {
+        mArrayAdapter.setActionModeState(false);
+        mActionMode = null;
+    }
+
+    private static final String DIALOG_TAG = "DIALOG_TAG";
+
+    static class ActionModeCallback implements ActionMode.Callback {
+        private AppListFragment mFragment;
+
+        public ActionModeCallback(AppListFragment fragment) {
+            this.mFragment = fragment;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            return mFragment.onActionItemClicked(mode, item);
+        }
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mFragment.onCreateActionMode(mode, menu);
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            mFragment.onDestroyActionMode(mode);
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return mFragment.onPrepareActionMode(mode, menu);
+        }
+    }
+
+
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(getActivity());
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.setTitle(R.string.dialog_backup_title);
+            mProgressDialog.setCancelable(true);
+            mProgressDialog.setCanceledOnTouchOutside(false);
+            mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    AppContext.v("OnCancelListener");
+                    stopBackup();
+                }
+            });
+        }
+        mProgressDialog.show();
+    }
+
+    private void updateProgressDialog(final String text) {
+        mUiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                    mProgressDialog.setMessage(text);
+                }
+            }
+        });
+    }
+
+    private void dismissProgressDialog() {
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+            mProgressDialog = null;
+        }
+    }
+
 
     private void showBackupConfirmDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -265,113 +373,34 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
         }
     }
 
-    private void showProgressDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(getActivity());
-            mProgressDialog.setIndeterminate(true);
-            mProgressDialog.setTitle(R.string.dialog_backup_title);
-            mProgressDialog.setCancelable(true);
-            mProgressDialog.setCanceledOnTouchOutside(false);
-            mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    AppContext.v("OnCancelListener");
-                    stopBackup();
-                }
-            });
-        }
-        mProgressDialog.show();
-    }
 
-    private void updateProgressDialog(final String text) {
-        mUiHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (mProgressDialog != null && mProgressDialog.isShowing()) {
-                    mProgressDialog.setMessage(text);
-                }
-            }
-        });
-    }
-
-    private void dismissProgressDialog() {
-        if (mProgressDialog != null) {
-            mProgressDialog.dismiss();
-            mProgressDialog = null;
-        }
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     @Override
-    public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu, com.actionbarsherlock.view.MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_mode_applist, menu);
+    public void onStop() {
+        super.onStop();
     }
 
     @Override
-    public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
-        if (R.id.menu_backup == item.getItemId()) {
-            showBackupConfirmDialog();
-        }
-        return super.onOptionsItemSelected(item);
+    public void onPause() {
+        super.onPause();
+
     }
 
     @Override
-    public void onPrepareOptionsMenu(com.actionbarsherlock.view.Menu menu) {
-        super.onPrepareOptionsMenu(menu);
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        final AppInfo app = mArrayAdapter.getItem(position);
-        showDialog(app);
-    }
-
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        mArrayAdapter.toggleChecked(position);
-        checkActionMode();
-        return true;
-    }
-
-    @Override
-    public void onCheckedChanged(int position, boolean isChecked) {
-        checkActionMode();
-    }
-
-    private void checkActionMode() {
-        if (mActionMode == null) {
-            getSherlockActivity().startActionMode(this);
-        }
-        setActionModeTitle();
-    }
-
-    private void setActionModeTitle() {
-        if (mActionMode != null) {
-            int checkedCount = mArrayAdapter.getCheckedCount();
-            if (checkedCount == 0) {
-                mActionMode.finish();
-            } else {
-                mActionMode.setTitle("选择应用");
-                mActionMode.setSubtitle("已选择" + checkedCount + "项");
-            }
-        }
-    }
-
-    private static final String DIALOG_TAG = "DIALOG_TAG";
-
-    private void showDialog(AppInfo app) {
-        if (app != null) {
-
-            FragmentManager fm = getFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-            Fragment prev = getFragmentManager().findFragmentByTag(DIALOG_TAG);
-            if (prev != null) {
-                ft.remove(prev);
-            }
-            ft.addToBackStack(null);
-            AppActionDialogFragment newFragment = AppActionDialogFragment.newInstance(app);
-            newFragment.show(ft, DIALOG_TAG);
-        }
+    public void onDestroy() {
+        super.onDestroy();
+        dismissProgressDialog();
+        stopAsyncTask();
+        stopBackup();
     }
 
 }

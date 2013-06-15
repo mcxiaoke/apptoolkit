@@ -38,7 +38,7 @@ public class AppListAdapter extends MultiChoiceArrayAdapter<AppInfo> {
     @Override
     public void clear() {
         super.clear();
-        clearChecked();
+        uncheckAll();
     }
 
     @Override
@@ -88,7 +88,7 @@ public class AppListAdapter extends MultiChoiceArrayAdapter<AppInfo> {
         return mIconCache.get(app.packageName);
     }
 
-    private static class ViewHolder {
+    static class ViewHolder {
         ImageView icon;
         TextView appName;
         TextView sourceDir;

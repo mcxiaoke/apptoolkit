@@ -22,9 +22,9 @@ public abstract class MultiChoiceArrayAdapter<T> extends BaseArrayAdapter<T> {
 
     }
 
-    private boolean mInActionMode;
+    private boolean mActionModeStarted;
     private OnCheckedListener mOnCheckedListener;
-    private SparseBooleanArray mCheckState;
+    private SparseBooleanArray mCheckedState;
 
     public MultiChoiceArrayAdapter(Context context, List<T> objects) {
         super(context, objects);
@@ -38,7 +38,7 @@ public abstract class MultiChoiceArrayAdapter<T> extends BaseArrayAdapter<T> {
     }
 
     private void initialize() {
-        mCheckState = new SparseBooleanArray();
+        mCheckedState = new SparseBooleanArray();
     }
 
     public void setOnCheckedListener(OnCheckedListener listener) {
@@ -51,57 +51,57 @@ public abstract class MultiChoiceArrayAdapter<T> extends BaseArrayAdapter<T> {
         }
     }
 
-    public void setAllChecked() {
+    public void checkAll() {
         int count = getCount();
         for (int i = 0; i < count; i++) {
-            mCheckState.put(i, true);
+            mCheckedState.put(i, true);
         }
         notifyDataSetChanged();
         printChecked();
     }
 
+    public boolean isAllChecked() {
+        int count = getCount();
+        for (int i = 0; i < count; i++) {
+            boolean checked = mCheckedState.get(i);
+            if (!checked) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public boolean isChecked(int position) {
-        return mCheckState.get(position);
+        return mCheckedState.get(position);
     }
 
 
-    protected void setChecked(int position, boolean checked) {
+    public void setChecked(int position, boolean checked) {
         AppContext.v("setChecked() position=" + position + " checked=" + checked);
-        mCheckState.put(position, checked);
+        mCheckedState.put(position, checked);
         notifyDataSetChanged();
     }
 
-    public void clearChecked() {
-        mCheckState.clear();
+    public void uncheckAll() {
+        mCheckedState.clear();
         notifyDataSetChanged();
         printChecked();
     }
 
     public void toggleChecked(int position) {
-        boolean checked = mCheckState.get(position);
+        boolean checked = mCheckedState.get(position);
         AppContext.v("toggleChecked() position=" + position + " original checked=" + checked);
-        mCheckState.put(position, !checked);
+        mCheckedState.put(position, !checked);
         notifyDataSetChanged();
     }
 
-    public void setActionMode(boolean actionMode) {
-        AppContext.v("setActionMode() actionMode=" + actionMode);
-        mInActionMode = actionMode;
-        if (!mInActionMode) {
-            clearChecked();
-        }
-    }
-
-    protected boolean isInActionMode() {
-        return mInActionMode;
-    }
 
     public List<T> getCheckedItems() {
         List<T> items = new ArrayList<T>();
         int count = getCount();
         for (int i = 0; i < count; i++) {
             T item = getItem(i);
-            boolean checked = mCheckState.get(i);
+            boolean checked = mCheckedState.get(i);
             if (checked) {
                 items.add(item);
             }
@@ -114,7 +114,7 @@ public abstract class MultiChoiceArrayAdapter<T> extends BaseArrayAdapter<T> {
         int count = getCount();
         List<Integer> positions = new ArrayList<Integer>();
         for (int i = 0; i < count; i++) {
-            boolean checked = mCheckState.get(i);
+            boolean checked = mCheckedState.get(i);
             if (checked) {
                 positions.add(i);
             }
@@ -122,17 +122,29 @@ public abstract class MultiChoiceArrayAdapter<T> extends BaseArrayAdapter<T> {
         return positions;
     }
 
-    public int getCheckedCount() {
+    public int getCheckedItemCount() {
         int count = getCount();
         int checkedCount = 0;
         for (int i = 0; i < count; i++) {
-            if (mCheckState.get(i)) {
+            if (mCheckedState.get(i)) {
                 checkedCount++;
             }
         }
         return checkedCount;
     }
 
+
+    public void setActionModeState(boolean actionMode) {
+        AppContext.v("setActionMode() actionMode=" + actionMode);
+        mActionModeStarted = actionMode;
+        if (!mActionModeStarted) {
+            uncheckAll();
+        }
+    }
+
+    protected boolean isActionModeStart() {
+        return mActionModeStarted;
+    }
 
     private void printChecked() {
         int size = getCount();

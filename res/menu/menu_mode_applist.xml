@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+            android:id="@id/menu_backup"
+            android:showAsAction="ifRoom"
+            android:icon="@drawable/ic_backup"
+            android:title="@string/menu_backup"/>
+
+    <item
+            android:id="@id/menu_backup"
+            android:showAsAction="ifRoom"
+            android:icon="@drawable/ic_backup"
+            android:title="@string/menu_backup"/>
+
+    <item
+            android:id="@id/menu_backup"
+            android:showAsAction="ifRoom"
+            android:icon="@drawable/ic_backup"
+            android:title="@string/menu_backup"/>
+
+</menu>

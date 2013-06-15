@@ -1,7 +1,6 @@
 package com.mcxiaoke.apptoolkit.task;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -53,11 +52,11 @@ public class AppListAsyncTask extends AsyncTaskBase<Boolean, Void, List<AppInfo>
             apps = new ArrayList<AppInfo>(installedPackages.size());
             for (PackageInfo info : installedPackages) {
                 AppInfo app = Utils.convert(pm, info);
-                if (info != null) {
+                if (!app.system) {
                     apps.add(app);
                 }
-                ApplicationInfo ainfo = info.applicationInfo;
-                Drawable icon = pm.getApplicationIcon(ainfo);
+
+                Drawable icon = info.applicationInfo.loadIcon(pm);
                 AppIconCache.getInstance().put(info.packageName, icon);
             }
         }

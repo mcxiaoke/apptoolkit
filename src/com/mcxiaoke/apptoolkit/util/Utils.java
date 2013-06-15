@@ -92,6 +92,9 @@ public final class Utils {
             }
         }
 
+        if ((ainfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
+        }
+
         app.appName = pm.getApplicationLabel(ainfo).toString();
         app.processName = ainfo.processName;
         app.sourceDir = ainfo.sourceDir;
@@ -104,7 +107,8 @@ public final class Utils {
         app.createdAt = info.firstInstallTime;
         app.updatedAt = info.lastUpdateTime;
 
-        app.system = app.sourceDir.startsWith(AppInfo.SYSTEM_PATH_PREFIX);
+        app.system = (ainfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1;
+//        app.system = app.sourceDir.startsWith(AppInfo.SYSTEM_PATH_PREFIX);
         app.size = new File(app.sourceDir).length();
 
         return app;

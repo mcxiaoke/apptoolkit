@@ -14,11 +14,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.mcxiaoke.apptoolkit.AppContext;
 import com.mcxiaoke.apptoolkit.R;
 import com.mcxiaoke.apptoolkit.adapter.AppListAdapter;
-import com.mcxiaoke.apptoolkit.adapter.BaseArrayAdapter;
 import com.mcxiaoke.apptoolkit.model.AppInfo;
 import com.mcxiaoke.apptoolkit.task.AppListAsyncTask;
 import com.mcxiaoke.apptoolkit.task.AsyncTaskCallback;
@@ -35,7 +39,7 @@ import java.util.List;
  * Date: 13-6-11
  * Time: 上午10:55
  */
-public class AppListFragment extends BaseFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public class AppListFragment extends BaseFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, ActionMode.Callback, CompoundButton.OnCheckedChangeListener {
     private static final String TAG = AppListFragment.class.getSimpleName();
 
     private static void debug(String message) {
@@ -47,11 +51,12 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
 
     private ListView mListView;
     private List<AppInfo> mAppInfos;
-    private BaseArrayAdapter<AppInfo> mArrayAdapter;
+    private AppListAdapter mArrayAdapter;
     private AppListAsyncTask mAsyncTask;
     private BackupAsyncTask mBackupTask;
 
     private ProgressDialog mProgressDialog;
+    private ActionMode mActionMode;
 
     private boolean isBackuping;
 
@@ -85,9 +90,37 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
         super.onActivityCreated(savedInstanceState);
         AppContext.v("AppListFragment onActivityCreated()");
         mListView.setOnItemClickListener(this);
+        mListView.setOnItemLongClickListener(this);
         mArrayAdapter = new AppListAdapter(getActivity(), mAppInfos);
+        mArrayAdapter.setOnCheckedChangeListener(this);
         mListView.setAdapter(mArrayAdapter);
         refresh();
+    }
+
+    @Override
+    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        return false;
+    }
+
+    @Override
+    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        MenuInflater inflater = mode.getMenuInflater();
+        inflater.inflate(R.menu.menu_home, menu);
+        mActionMode = mode;
+        mArrayAdapter.setActionMode(true);
+        setActionModeTitle();
+        return true;
+    }
+
+    @Override
+    public void onDestroyActionMode(ActionMode mode) {
+        mActionMode = null;
+        mArrayAdapter.setActionMode(false);
+    }
+
+    @Override
+    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        return false;
     }
 
     @Override
@@ -271,7 +304,7 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
     @Override
     public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu, com.actionbarsherlock.view.MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_backup, menu);
+        inflater.inflate(R.menu.menu_mode_applist, menu);
     }
 
     @Override
@@ -295,7 +328,33 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        return false;
+        mArrayAdapter.toggleChecked(position);
+        checkActionMode();
+        return true;
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        checkActionMode();
+    }
+
+    private void checkActionMode() {
+        if (mActionMode == null) {
+            getSherlockActivity().startActionMode(this);
+        }
+        setActionModeTitle();
+    }
+
+    private void setActionModeTitle() {
+        if (mActionMode != null) {
+            int checkedCount = mArrayAdapter.getCheckedCount();
+            if (checkedCount == 0) {
+                mActionMode.finish();
+            } else {
+                mActionMode.setTitle("选择应用");
+                mActionMode.setSubtitle("已选择" + checkedCount + "项");
+            }
+        }
     }
 
     private static final String DIALOG_TAG = "DIALOG_TAG";

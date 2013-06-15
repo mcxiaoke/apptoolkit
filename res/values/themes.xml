@@ -3,10 +3,17 @@
 
     <style name="AppThemeLight" parent="Theme.Sherlock.Light.DarkActionBar">
         <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
+        <item name="actionBarWidgetTheme">@style/Widget.Styled.ActionBarWidget</item>
+        <item name="android:actionBarWidgetTheme">@style/Widget.Styled.ActionBarWidget</item>
     </style>
 
     <style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
         <item name="indeterminateProgressStyle">@style/IndeterminateProgress</item>
-        <item name="android:indeterminateProgressStyle">@style/IndeterminateProgress</item>
     </style>
+
+    <style name="Widget.Styled.ActionBarWidget" parent="Theme.Sherlock.Light">
+        <!-- ugly bug from sdk14, waste my all day-->
+        <!--@see http://daniel-codes.blogspot.com/2012/11/the-unknown-style-actionbarwidgettheme.html-->
+    </style>
+
 </resources>

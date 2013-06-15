@@ -3,21 +3,27 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-            android:id="@id/menu_backup"
+            android:id="@id/menu_mode_select_all"
             android:showAsAction="ifRoom"
-            android:icon="@drawable/ic_backup"
-            android:title="@string/menu_backup"/>
+            android:icon="@drawable/ic_content_select_all"
+            android:title="@string/menu_mode_select_all"/>
 
     <item
-            android:id="@id/menu_backup"
+            android:id="@id/menu_mode_backup_app"
             android:showAsAction="ifRoom"
-            android:icon="@drawable/ic_backup"
-            android:title="@string/menu_backup"/>
+            android:icon="@drawable/ic_device_access_storage"
+            android:title="@string/menu_mode_backup_app"/>
 
     <item
-            android:id="@id/menu_backup"
+            android:id="@id/menu_mode_backup_data"
             android:showAsAction="ifRoom"
-            android:icon="@drawable/ic_backup"
-            android:title="@string/menu_backup"/>
+            android:icon="@drawable/ic_content_copy"
+            android:title="@string/menu_mode_backup_data"/>
+
+    <item
+            android:id="@id/menu_mode_delete"
+            android:showAsAction="ifRoom"
+            android:icon="@drawable/ic_content_remove"
+            android:title="@string/menu_mode_delete"/>
 
 </menu>

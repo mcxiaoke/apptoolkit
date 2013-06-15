@@ -28,6 +28,13 @@
     <item type="id" name="menu_logout"/>
     <item type="id" name="menu_debug"/>
 
+    <!-- Action Mode IDS-->
+    <item type="id" name="menu_mode_select_all"/>
+    <item type="id" name="menu_mode_unselect_all"/>
+    <item type="id" name="menu_mode_delete"/>
+    <item type="id" name="menu_mode_backup_app"/>
+    <item type="id" name="menu_mode_backup_data"/>
+
     <!-- App Operations-->
     <item type="id" name="action_view_appinfo"/>
     <item type="id" name="action_view_appsetting"/>

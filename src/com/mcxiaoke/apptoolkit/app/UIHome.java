@@ -33,11 +33,17 @@ public class UIHome extends UIBaseSupport implements PackageCallback {
         mPackageMonitor = new PackageMonitor();
         mPackageMonitor.register(this, this, false);
         addAppListFragment();
-        if (Shell.SU.available()) {
-            debug("Root Access Granted");
-        } else {
-            debug("Root Access Not Granted");
-        }
+        new Thread() {
+            @Override
+            public void run() {
+                if (Shell.SU.available()) {
+                    debug("Root Access Granted");
+                } else {
+                    debug("Root Access Not Granted");
+                }
+            }
+        }.start();
+
     }
 
     private void addAppListFragment() {

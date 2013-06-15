@@ -201,7 +201,7 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
 
     private void onCreateActionMode(ActionMode mode, Menu menu) {
         MenuInflater inflater = mode.getMenuInflater();
-        inflater.inflate(R.menu.menu_home, menu);
+        inflater.inflate(R.menu.menu_mode_applist, menu);
         mActionMode = mode;
         mArrayAdapter.setActionModeState(true);
         setActionModeTitle();

@@ -6,6 +6,13 @@
     <string name="menu_refresh">刷新</string>
     <string name="menu_backup">备份</string>
 
+    <!-- menu strings-->
+    <string name="menu_mode_select_all">选择全部</string>
+    <string name="menu_mode_unselect_all">取消选择</string>
+    <string name="menu_mode_delete">卸载所选应用</string>
+    <string name="menu_mode_backup_app">备份安装文件</string>
+    <string name="menu_mode_backup_data">备份应用数据</string>
+
     <string name="dialog_backup_title">正在备份</string>
 
     <string name="dialog_backup_all_title">备份全部</string>

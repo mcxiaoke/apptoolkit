@@ -7,6 +7,13 @@
     <string name="menu_refresh">Refresh</string>
     <string name="menu_backup">Backup</string>
 
+    <!-- menu strings-->
+    <string name="menu_mode_select_all">Select All</string>
+    <string name="menu_mode_unselect_all">Unselect All</string>
+    <string name="menu_mode_delete">Delete Selected</string>
+    <string name="menu_mode_backup_app">Backup Apps</string>
+    <string name="menu_mode_backup_data">Backup Data</string>
+
     <string name="dialog_backup_title">Backuping</string>
 
     <string name="dialog_backup_all_title">Backup All</string>

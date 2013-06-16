@@ -4,9 +4,9 @@ import android.os.Bundle;
 import com.mcxiaoke.apptoolkit.AppConfig;
 import com.mcxiaoke.apptoolkit.R;
 import com.mcxiaoke.apptoolkit.cache.CacheManager;
-import com.mcxiaoke.apptoolkit.fragment.AppsFragment;
 import com.mcxiaoke.apptoolkit.fragment.BaseFragment;
-import com.mcxiaoke.apptoolkit.receiver.PackageCallback;
+import com.mcxiaoke.apptoolkit.fragment.PackageListFragment;
+import com.mcxiaoke.apptoolkit.callback.IPackageMonitor;
 import com.mcxiaoke.apptoolkit.receiver.PackageMonitor;
 import com.mcxiaoke.shell.Shell;
 
@@ -17,7 +17,8 @@ import com.mcxiaoke.shell.Shell;
  * Date: 13-6-10
  * Time: 下午9:18
  */
-public class UIHome extends UIBaseSupport implements PackageCallback {
+public class UIHome extends UIBaseSupport implements IPackageMonitor {
+    private static final int MSG_PACKAGE_REMOVED = 0;
     private BaseFragment mFragment;
     private UIHome mContext;
     private PackageMonitor mPackageMonitor;
@@ -50,7 +51,7 @@ public class UIHome extends UIBaseSupport implements PackageCallback {
 
     private void addAppListFragment() {
         debug("addAppListFragment()");
-        mFragment = AppsFragment.newInstance(AppConfig.TYPE_USER_APP_MANAGER, false);
+        mFragment = PackageListFragment.newInstance(AppConfig.TYPE_USER_APP_MANAGER, true);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, mFragment).commit();
     }
 
@@ -133,6 +134,9 @@ public class UIHome extends UIBaseSupport implements PackageCallback {
     @Override
     public void onPackageRemoved(String packageName, int uid) {
         debug("onPackageRemoved() packageName=" + packageName + " uid=" + uid);
+        if (mFragment != null && mFragment.isVisible() && mFragment instanceof IPackageMonitor) {
+            ((PackageListFragment) mFragment).onPackageRemoved(packageName, uid);
+        }
     }
 
     @Override

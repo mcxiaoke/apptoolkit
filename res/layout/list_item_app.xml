@@ -6,15 +6,16 @@
               android:layout_height="wrap_content"
               android:padding="4dp"
               android:gravity="center_vertical"
-              android:minHeight="@dimen/list_item_minheight"
+              android:minHeight="@dimen/list_item_height"
               android:descendantFocusability="blocksDescendants">
 
     <ImageView
-            android:layout_width="@dimen/app_icon_width"
-            android:layout_height="@dimen/app_icon_height"
+            android:layout_width="@dimen/icon_width"
+            android:layout_height="@dimen/icon_height"
             android:id="@+id/icon"
             android:scaleType="center"
-            android:layout_marginRight="8dp"/>
+            android:layout_marginRight="8dp"
+            android:src="@drawable/ic_launcher"/>
 
     <RelativeLayout
             android:layout_width="match_parent"
@@ -22,7 +23,7 @@
             android:layout_weight="1">
 
         <TextView
-                android:id="@+id/app_name"
+                android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="AppName"
@@ -36,57 +37,69 @@
                 android:ellipsize="end"/>
 
         <TextView
-                android:id="@+id/version"
+                android:id="@+id/subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1.0.0"
-                android:textSize="@dimen/font_size_medium"
-                android:layout_alignBaseline="@id/app_name"
-                android:layout_toRightOf="@id/app_name"
+                android:textSize="@dimen/font_size_small"
+                android:layout_alignBaseline="@id/title"
+                android:layout_alignParentRight="true"
                 android:layout_marginLeft="4dp"
                 android:textColor="@color/text_secondary_selectable"
                 android:singleLine="true"
                 android:ellipsize="end"/>
 
         <TextView
-                android:id="@+id/size"
+                android:id="@+id/text1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1.8M"
                 android:textSize="@dimen/font_size_small"
-                android:layout_below="@id/app_name"
+                android:layout_below="@id/title"
                 android:layout_alignParentLeft="true"
                 android:textColor="@color/text_secondary_selectable"
                 android:singleLine="true"
                 android:ellipsize="end"/>
 
         <TextView
-                android:id="@+id/time"
+                android:id="@+id/text2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2013.06.10"
-                android:textSize="@dimen/font_size_tiny"
-                android:layout_below="@id/app_name"
+                android:textSize="@dimen/font_size_small"
+                android:layout_below="@id/title"
                 android:layout_alignParentRight="true"
                 android:textColor="@color/text_secondary_selectable"
                 android:singleLine="true"
-                android:ellipsize="end"
-                android:visibility="gone"/>
+                android:ellipsize="end"/>
 
 
         <TextView
-                android:id="@+id/source_dir"
+                android:id="@+id/info1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="SourceDir"
+                android:text="info line 1"
                 android:textSize="@dimen/font_size_tiny"
                 android:layout_alignParentLeft="true"
-                android:layout_below="@id/size"
+                android:layout_below="@id/text1"
                 android:textColor="@color/text_secondary_selectable"
                 android:singleLine="false"
                 android:maxLines="2"
-                android:ellipsize="end"
-                android:visibility="gone"/>
+                android:ellipsize="end"/>
+
+
+        <TextView
+                android:id="@+id/info2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="info line 2"
+                android:textSize="@dimen/font_size_tiny"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/info1"
+                android:textColor="@color/text_secondary_selectable"
+                android:singleLine="false"
+                android:maxLines="2"
+                android:ellipsize="end"/>
 
     </RelativeLayout>
 
@@ -95,7 +108,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="?android:checkboxStyle"
-            android:padding="6dp"/>
+            android:padding="4dp"/>
 
 </LinearLayout>
 

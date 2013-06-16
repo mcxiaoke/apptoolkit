@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.mcxiaoke.apptoolkit.AppConfig;
 import com.mcxiaoke.apptoolkit.R;
 import com.mcxiaoke.apptoolkit.cache.CacheManager;
 import com.mcxiaoke.apptoolkit.model.AppInfo;
@@ -27,12 +28,14 @@ public class AppListAdapter extends MultiChoiceArrayAdapter<AppInfo> {
     private PackageManager mPackageManager;
     private CacheManager mIconCache;
     private int mActivateBgResId;
+    private boolean mAdvancedMode;
 
     public AppListAdapter(Context context, List<AppInfo> objects) {
         super(context, objects);
         mPackageManager = context.getPackageManager();
         mIconCache = CacheManager.getInstance();
         mActivateBgResId = R.drawable.list_item_activated;
+        mAdvancedMode = false;
     }
 
     @Override
@@ -46,14 +49,7 @@ public class AppListAdapter extends MultiChoiceArrayAdapter<AppInfo> {
         ViewHolder holder;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_item_app, null);
-            holder = new ViewHolder();
-            holder.icon = (ImageView) convertView.findViewById(R.id.icon);
-            holder.appName = (TextView) convertView.findViewById(R.id.app_name);
-            holder.sourceDir = (TextView) convertView.findViewById(R.id.source_dir);
-            holder.version = (TextView) convertView.findViewById(R.id.version);
-            holder.size = (TextView) convertView.findViewById(R.id.size);
-            holder.time = (TextView) convertView.findViewById(R.id.time);
-            holder.checkBox = (CheckBox) convertView.findViewById(R.id.checkbox);
+            holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -64,11 +60,37 @@ public class AppListAdapter extends MultiChoiceArrayAdapter<AppInfo> {
         final boolean checked = isChecked(position);
         final View view = convertView;
 
-        holder.appName.setText(app.appName);
-        holder.sourceDir.setText(app.sourceDir);
-        holder.version.setText(app.versionName);
-        holder.size.setText(Utils.getHumanReadableByteCount(app.size));
-        holder.time.setText(Utils.formatDate(app.createdAt));
+        if (mAdvancedMode) {
+            holder.subtitle.setText(app.domain == AppConfig.DOMAIN_GOOGLE ? "Google" : "");
+            holder.subtitle.setVisibility(View.VISIBLE);
+
+            if (app.system) {
+                holder.text2.setText("system");
+                holder.text2.setVisibility(View.VISIBLE);
+            } else {
+                holder.text2.setVisibility(View.GONE);
+            }
+
+            holder.info1.setText("package:" + app.packageName);
+            holder.info1.setVisibility(View.VISIBLE);
+
+            if (app.backup) {
+                holder.info2.setText("Backup");
+                holder.info2.setVisibility(View.VISIBLE);
+            } else {
+                holder.info2.setVisibility(View.GONE);
+            }
+
+        } else {
+            holder.subtitle.setVisibility(View.GONE);
+            holder.text2.setVisibility(View.GONE);
+            holder.info1.setVisibility(View.GONE);
+            holder.info2.setVisibility(View.GONE);
+        }
+
+        holder.title.setText(app.appName);
+        holder.text1.setText(Utils.getHumanReadableByteCount(app.size) + " | v" + app.versionName);
+
         Drawable icon = getIcon(app);
         if (icon != null) {
             holder.icon.setImageDrawable(icon);
@@ -102,13 +124,26 @@ public class AppListAdapter extends MultiChoiceArrayAdapter<AppInfo> {
     }
 
     static class ViewHolder {
+
         ImageView icon;
-        TextView appName;
-        TextView sourceDir;
-        TextView version;
-        TextView size;
-        TextView time;
+        TextView title;
+        TextView subtitle;
+        TextView text1;
+        TextView text2;
+        TextView info1;
+        TextView info2;
         CheckBox checkBox;
+
+        ViewHolder(View convertView) {
+            icon = (ImageView) convertView.findViewById(R.id.icon);
+            title = (TextView) convertView.findViewById(R.id.title);
+            subtitle = (TextView) convertView.findViewById(R.id.subtitle);
+            text1 = (TextView) convertView.findViewById(R.id.text1);
+            text2 = (TextView) convertView.findViewById(R.id.text2);
+            info1 = (TextView) convertView.findViewById(R.id.info1);
+            info2 = (TextView) convertView.findViewById(R.id.info2);
+            checkBox = (CheckBox) convertView.findViewById(R.id.checkbox);
+        }
     }
 
 

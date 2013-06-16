@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -25,6 +24,7 @@ import com.mcxiaoke.apptoolkit.AppContext;
 import com.mcxiaoke.apptoolkit.R;
 import com.mcxiaoke.apptoolkit.adapter.AppListAdapter;
 import com.mcxiaoke.apptoolkit.adapter.MultiChoiceArrayAdapter;
+import com.mcxiaoke.apptoolkit.callback.IPackageMonitor;
 import com.mcxiaoke.apptoolkit.model.AppInfo;
 import com.mcxiaoke.apptoolkit.task.AsyncTaskCallback;
 import com.mcxiaoke.apptoolkit.task.BackupAppsApkTask;
@@ -32,8 +32,8 @@ import com.mcxiaoke.apptoolkit.task.LoadAppsTask;
 import com.mcxiaoke.apptoolkit.task.TaskMessage;
 import com.mcxiaoke.apptoolkit.util.Utils;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Project: filemanager
@@ -42,8 +42,8 @@ import java.util.List;
  * Date: 13-6-11
  * Time: 上午10:55
  */
-public class AppsFragment extends BaseFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, MultiChoiceArrayAdapter.OnCheckedListener {
-    private static final String TAG = AppsFragment.class.getSimpleName();
+public class PackageListFragment extends BaseFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, MultiChoiceArrayAdapter.OnCheckedListener, IPackageMonitor {
+    private static final String TAG = PackageListFragment.class.getSimpleName();
 
     private static void debug(String message) {
         AppContext.v(message);
@@ -53,7 +53,7 @@ public class AppsFragment extends BaseFragment implements AdapterView.OnItemClic
     private static final int MSG_PACKAGE_REMOVED = 1002;
 
     private ListView mListView;
-    private List<AppInfo> mAppData;
+    private CopyOnWriteArrayList<AppInfo> mAppData;
     private MultiChoiceArrayAdapter<AppInfo> mArrayAdapter;
     private ActionModeCallback mActionModeCallback;
     private LoadAppsTask mLoadAppsTask;
@@ -65,14 +65,13 @@ public class AppsFragment extends BaseFragment implements AdapterView.OnItemClic
 
     private boolean isBackuping;
     private boolean isAppLoading;
-
     private Handler mUiHandler;
 
     private int mType;
     private boolean mSystem;
 
-    public static AppsFragment newInstance(int type, boolean system) {
-        AppsFragment fragment = new AppsFragment();
+    public static PackageListFragment newInstance(int type, boolean system) {
+        PackageListFragment fragment = new PackageListFragment();
         Bundle args = new Bundle();
         args.putInt(AppConfig.EXTRA_TYPE, type);
         args.putBoolean(AppConfig.EXTRA_SYSTEM, system);
@@ -80,7 +79,7 @@ public class AppsFragment extends BaseFragment implements AdapterView.OnItemClic
         return fragment;
     }
 
-    private AppsFragment() {
+    public PackageListFragment() {
     }
 
     @Override
@@ -93,15 +92,10 @@ public class AppsFragment extends BaseFragment implements AdapterView.OnItemClic
             mSystem = args.getBoolean(AppConfig.EXTRA_SYSTEM, false);
         }
         mLoadAppsTaskParam = new TaskMessage(mType, mSystem);
-        mAppData = new ArrayList<AppInfo>();
+        mAppData = new CopyOnWriteArrayList<AppInfo>();
         setHasOptionsMenu(true);
 
-        mUiHandler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-            }
-        };
+        mUiHandler = new Handler(Looper.getMainLooper());
     }
 
     @Override
@@ -231,7 +225,10 @@ public class AppsFragment extends BaseFragment implements AdapterView.OnItemClic
     }
 
     private void onSelectAll() {
-
+        if (mActionMode != null) {
+            mArrayAdapter.checkAll();
+            setActionModeTitle();
+        }
     }
 
     private void onUnselectAll() {
@@ -287,9 +284,9 @@ public class AppsFragment extends BaseFragment implements AdapterView.OnItemClic
     private static final String DIALOG_TAG = "DIALOG_TAG";
 
     static class ActionModeCallback implements ActionMode.Callback {
-        private AppsFragment mFragment;
+        private PackageListFragment mFragment;
 
-        public ActionModeCallback(AppsFragment fragment) {
+        public ActionModeCallback(PackageListFragment fragment) {
             this.mFragment = fragment;
         }
 
@@ -383,6 +380,7 @@ public class AppsFragment extends BaseFragment implements AdapterView.OnItemClic
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
+                mArrayAdapter.notifyDataSetChanged();
             }
         });
         builder.create().show();
@@ -439,6 +437,45 @@ public class AppsFragment extends BaseFragment implements AdapterView.OnItemClic
         }
     }
 
+    @Override
+    public void onPackageAdded(String packageName, int uid) {
+    }
+
+    @Override
+    public void onPackageChanged(String packageName, int uid, String[] components) {
+    }
+
+    @Override
+    public void onPackageModified(String packageName) {
+    }
+
+    @Override
+    public void onPackageRemoved(String packageName, int uid) {
+        if (packageName != null) {
+            synchronized (this) {
+                for (AppInfo app : mAppData) {
+                    if (app.packageName.equalsIgnoreCase(packageName)) {
+                        mAppData.remove(app);
+                        mArrayAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onUidRemoved(int uid) {
+        if (uid > AppConfig.UID_SYSTEM) {
+            synchronized (this) {
+                for (AppInfo app : mAppData) {
+                    if (app.uid == uid) {
+                        mAppData.remove(app);
+                        mArrayAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+        }
+    }
 
     @Override
     public void onStart() {

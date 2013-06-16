@@ -84,7 +84,7 @@ public abstract class MultiChoiceArrayAdapter<T> extends BaseArrayAdapter<T> {
     public void uncheckAll() {
         mCheckedState.clear();
         notifyDataSetChanged();
-        printChecked();
+//        printChecked();
     }
 
     public void toggleChecked(int position) {
@@ -105,7 +105,7 @@ public abstract class MultiChoiceArrayAdapter<T> extends BaseArrayAdapter<T> {
                 items.add(item);
             }
         }
-        printChecked();
+//        printChecked();
         return items;
     }
 

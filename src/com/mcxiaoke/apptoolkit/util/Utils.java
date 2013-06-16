@@ -258,7 +258,7 @@ public final class Utils {
         return null;
     }
 
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd");
 
     public static String formatDate(long time) {
         Date date = new Date(time);
@@ -355,6 +355,5 @@ public final class Utils {
         File file = new File(getBackupDir(), buildApkName(app));
         return app.size == file.length();
     }
-
 
 }

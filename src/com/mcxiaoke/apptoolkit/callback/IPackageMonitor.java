@@ -1,4 +1,4 @@
-package com.mcxiaoke.apptoolkit.receiver;
+package com.mcxiaoke.apptoolkit.callback;
 
 /**
  * Project: appmanager
@@ -6,7 +6,7 @@ package com.mcxiaoke.apptoolkit.receiver;
  * Date: 13-6-13
  * Time: 下午3:22
  */
-public interface PackageCallback {
+public interface IPackageMonitor {
 
     public void onPackageAdded(String packageName, int uid);
 

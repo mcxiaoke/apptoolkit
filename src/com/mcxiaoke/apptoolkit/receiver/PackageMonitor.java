@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
+import com.mcxiaoke.apptoolkit.callback.IPackageMonitor;
 
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
@@ -57,14 +58,14 @@ public class PackageMonitor extends android.content.BroadcastReceiver {
 
     private String[] mTempArray = new String[1];
 
-    private WeakReference<PackageCallback> mPackageCallbackRef;
+    private WeakReference<IPackageMonitor> mPackageCallbackRef;
 
-    public void register(Context context, PackageCallback callback, boolean externalStorage) {
+    public void register(Context context, IPackageMonitor callback, boolean externalStorage) {
         if (mRegisteredContext != null) {
             throw new IllegalStateException("Already registered");
         }
         mRegisteredContext = context;
-        mPackageCallbackRef = new WeakReference<PackageCallback>(callback);
+        mPackageCallbackRef = new WeakReference<IPackageMonitor>(callback);
         context.registerReceiver(this, sPackageFilter);
         context.registerReceiver(this, sNonDataFilter);
         if (externalStorage) {
@@ -94,7 +95,7 @@ public class PackageMonitor extends android.content.BroadcastReceiver {
 
     protected void onPackageAdded(String packageName, int uid) {
         if (mPackageCallbackRef != null) {
-            PackageCallback callback = mPackageCallbackRef.get();
+            IPackageMonitor callback = mPackageCallbackRef.get();
             if (callback != null) {
                 callback.onPackageAdded(packageName, uid);
             }
@@ -103,7 +104,7 @@ public class PackageMonitor extends android.content.BroadcastReceiver {
 
     protected void onPackageRemoved(String packageName, int uid) {
         if (mPackageCallbackRef != null) {
-            PackageCallback callback = mPackageCallbackRef.get();
+            IPackageMonitor callback = mPackageCallbackRef.get();
             if (callback != null) {
                 callback.onPackageRemoved(packageName, uid);
             }
@@ -112,7 +113,7 @@ public class PackageMonitor extends android.content.BroadcastReceiver {
 
     protected void onPackageUpdateStarted(String packageName, int uid) {
         if (mPackageCallbackRef != null) {
-            PackageCallback callback = mPackageCallbackRef.get();
+            IPackageMonitor callback = mPackageCallbackRef.get();
             if (callback != null) {
             }
         }
@@ -120,7 +121,7 @@ public class PackageMonitor extends android.content.BroadcastReceiver {
 
     protected void onPackageUpdateFinished(String packageName, int uid) {
         if (mPackageCallbackRef != null) {
-            PackageCallback callback = mPackageCallbackRef.get();
+            IPackageMonitor callback = mPackageCallbackRef.get();
             if (callback != null) {
             }
         }
@@ -128,7 +129,7 @@ public class PackageMonitor extends android.content.BroadcastReceiver {
 
     protected void onPackageChanged(String packageName, int uid, String[] components) {
         if (mPackageCallbackRef != null) {
-            PackageCallback callback = mPackageCallbackRef.get();
+            IPackageMonitor callback = mPackageCallbackRef.get();
             if (callback != null) {
                 callback.onPackageChanged(packageName, uid, components);
             }
@@ -141,7 +142,7 @@ public class PackageMonitor extends android.content.BroadcastReceiver {
 
     protected void onUidRemoved(int uid) {
         if (mPackageCallbackRef != null) {
-            PackageCallback callback = mPackageCallbackRef.get();
+            IPackageMonitor callback = mPackageCallbackRef.get();
             if (callback != null) {
                 callback.onUidRemoved(uid);
             }
@@ -150,7 +151,7 @@ public class PackageMonitor extends android.content.BroadcastReceiver {
 
     protected void onPackagesAvailable(String[] packages) {
         if (mPackageCallbackRef != null) {
-            PackageCallback callback = mPackageCallbackRef.get();
+            IPackageMonitor callback = mPackageCallbackRef.get();
             if (callback != null) {
             }
         }
@@ -172,7 +173,7 @@ public class PackageMonitor extends android.content.BroadcastReceiver {
 
     protected void onPackageModified(String packageName) {
         if (mPackageCallbackRef != null) {
-            PackageCallback callback = mPackageCallbackRef.get();
+            IPackageMonitor callback = mPackageCallbackRef.get();
             if (callback != null) {
                 callback.onPackageModified(packageName);
             }

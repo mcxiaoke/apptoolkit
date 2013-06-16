@@ -24,12 +24,12 @@
     <!-- App Operations-->
     <string name="action_view_appinfo">进入应用管理</string>
     <string name="action_view_appsetting">查看应用信息</string>
-    <string name="action_backup_apk">备份应用安装包</string>
+    <string name="action_backup_apk">备份安装文件</string>
     <string name="action_backup_data">备份应用数据</string>
     <string name="action_restore_data">从存储卡恢复数据</string>
     <string name="action_view_data">显示应用数据</string>
-    <string name="action_clear_data">清除数据文件</string>
-    <string name="action_clear_cache">清除缓存文件</string>
+    <string name="action_clear_data">清除应用数据</string>
+    <string name="action_clear_cache">清除应用缓存</string>
     <string name="action_install">安装应用</string>
     <string name="action_uninstall">卸载应用</string>
     <string name="action_slient_install">静默安装</string>

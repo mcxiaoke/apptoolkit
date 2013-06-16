@@ -53,9 +53,9 @@ public class AppConfig {
 
     public static final String SETTINGS_PACKAGE = "com.android.settings";
 
-    public static final String SYSTEM_APP_PATH = "/system/app/";
-    public static final String USER_APP_PATH = "/data/app/";
-    public static final String APP_DATA_PATH = "/data/data/";
+    public static final String SYSTEM_APP_PATH = "/system/app";
+    public static final String USER_APP_PATH = "/data/app";
+    public static final String APP_DATA_PATH = "/data/data";
     public static final String BUSYBOX_PATH = "/system/xbin/busybox";
     public static final String ANDROID_APP_PACKAGE_PREFIX = "com.android.";
     public static final String GOOGLE_APP_PACKAGE_PREFIX = "com.google.android";

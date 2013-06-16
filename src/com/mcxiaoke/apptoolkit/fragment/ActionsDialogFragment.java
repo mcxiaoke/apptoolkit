@@ -1,8 +1,6 @@
 package com.mcxiaoke.apptoolkit.fragment;
 
-import android.app.ActivityManager;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -72,6 +70,8 @@ public class ActionsDialogFragment extends BaseDialogFragment implements Adapter
         Dialog dialog = super.onCreateDialog(savedInstanceState);
 //        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setTitle(app.appName);
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
         return dialog;
     }
 
@@ -89,18 +89,31 @@ public class ActionsDialogFragment extends BaseDialogFragment implements Adapter
         final AppAction action = mArrayAdapter.getItem(position);
         if (action != null) {
             switch (action.id) {
-                case R.id.action_view_appsetting:
-                    break;
+                case R.id.action_view_appsetting: {
+                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    intent.setData(Uri.parse("package:" + app.packageName));
+                    startActivity(intent);
+                }
+                break;
                 case R.id.action_backup_apk:
                     break;
                 case R.id.action_backup_data:
                     break;
                 case R.id.action_restore_data:
                     break;
-                case R.id.action_install:
-                    break;
-                case R.id.action_uninstall:
-                    break;
+                case R.id.action_install: {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.fromFile(new File(app.sourceDir)), "application/vnd.android.package-archive");
+                    startActivity(intent);
+                }
+                break;
+                case R.id.action_uninstall: {
+                    Uri packageUri = Uri.parse("package:" + app.packageName);
+                    Intent uninstallIntent =
+                            new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
+                    startActivity(uninstallIntent);
+                }
+                break;
                 case R.id.action_slient_install:
                     break;
                 case R.id.action_silent_uninstall:
@@ -118,24 +131,6 @@ public class ActionsDialogFragment extends BaseDialogFragment implements Adapter
                 case R.id.action_kill_process:
                     break;
             }
-        }
-
-        if (R.id.action_view_appsetting == action.id) {
-            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-            intent.setData(Uri.parse("package:" + app.packageName));
-            startActivity(intent);
-        } else if (R.id.action_restart_package == action.id) {
-            ActivityManager am = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
-            am.killBackgroundProcesses(app.packageName);
-        } else if (R.id.action_install == action.id) {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(Uri.fromFile(new File(app.sourceDir)), "application/vnd.android.package-archive");
-            startActivity(intent);
-        } else if (R.id.action_uninstall == action.id) {
-            Uri packageUri = Uri.parse("package:" + app.packageName);
-            Intent uninstallIntent =
-                    new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
-            startActivity(uninstallIntent);
         }
     }
 

@@ -16,6 +16,8 @@ import com.mcxiaoke.apptoolkit.adapter.AppActionsAdapter;
 import com.mcxiaoke.apptoolkit.adapter.BaseArrayAdapter;
 import com.mcxiaoke.apptoolkit.model.AppAction;
 import com.mcxiaoke.apptoolkit.model.AppInfo;
+import com.mcxiaoke.apptoolkit.task.SimpleCommandTask;
+import com.mcxiaoke.apptoolkit.task.TaskMessage;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -95,10 +97,18 @@ public class ActionsDialogFragment extends BaseDialogFragment implements Adapter
                     startActivity(intent);
                 }
                 break;
-                case R.id.action_backup_apk:
-                    break;
-                case R.id.action_backup_data:
-                    break;
+                case R.id.action_backup_apk: {
+                    TaskMessage tm = new TaskMessage(AppConfig.CMD_BACKUP_APP_ONE, true);
+                    tm.object = app;
+                    new SimpleCommandTask().start(tm);
+                }
+                break;
+                case R.id.action_backup_data: {
+                    TaskMessage tm = new TaskMessage(AppConfig.CMD_BACKUP_DATA_ONE, true);
+                    tm.object = app;
+                    new SimpleCommandTask().start(tm);
+                }
+                break;
                 case R.id.action_restore_data:
                     break;
                 case R.id.action_install: {

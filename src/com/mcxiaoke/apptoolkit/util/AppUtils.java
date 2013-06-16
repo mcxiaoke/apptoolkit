@@ -2,6 +2,10 @@ package com.mcxiaoke.apptoolkit.util;
 
 import android.content.Context;
 import com.mcxiaoke.apptoolkit.model.AppInfo;
+import com.mcxiaoke.shell.Shell;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Project: filemanager
@@ -46,9 +50,23 @@ public final class AppUtils {
 
     public static void showApp(Context context, AppInfo app) {
 
+
     }
 
-    public static void backupApp(Context context, AppInfo app) {
+    public static boolean backupAppApk(AppInfo app) throws IOException {
+        boolean result = false;
+        File src = new File(app.sourceDir);
+        File dest = new File(Utils.getBackupAppsDir(), Utils.buildApkName(app));
+        if (src.exists() && !dest.exists()) {
+            result = IOHelper.copyFile(src, dest);
+        }
+        return result;
+    }
+
+    public static boolean backupAppData(AppInfo app) throws Exception {
+        String src = app.dataDir;
+        String dest = new File(Utils.getBackupDataDir(), app.packageName).getPath();
+        return Shell.Helper.copyFile(src, dest, false);
 
     }
 
@@ -82,6 +100,8 @@ public final class AppUtils {
 
     // android:name="android.permission.GET_TASKS"
     //android:name="android.permission.KILL_BACKGROUND_PROCESSES"
+
+    // 删除系统程序，三步：删除apk/odex，删除数据，删除dalvikcache
 
 
 }

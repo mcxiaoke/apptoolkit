@@ -254,11 +254,9 @@ public class PackageListFragment extends BaseFragment implements AdapterView.OnI
                 break;
             case R.id.menu_mode_backup_app:
                 onBackupApps();
-                mode.finish();
                 break;
             case R.id.menu_mode_backup_data:
                 onBackupData();
-                mode.finish();
                 break;
         }
         return false;
@@ -371,7 +369,7 @@ public class PackageListFragment extends BaseFragment implements AdapterView.OnI
     }
 
     private void showBackupCompleteDialog(int count, int totalCount) {
-        String backupDir = Utils.getBackupDir().getPath();
+        String backupDir = Utils.getBackupAppsDir().getPath();
         String message = String.format(getString(R.string.dialog_backup_complete_message), backupDir, totalCount, count);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.dialog_backup_complete_title);
@@ -424,6 +422,9 @@ public class PackageListFragment extends BaseFragment implements AdapterView.OnI
         });
 
         mBackupTask.start(apps);
+        if (mActionMode != null) {
+            mActionMode.finish();
+        }
         showProgressDialog();
 
     }

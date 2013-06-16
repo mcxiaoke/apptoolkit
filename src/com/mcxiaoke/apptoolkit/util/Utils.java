@@ -113,7 +113,7 @@ public final class Utils {
         app.system = isSystemApp(ainfo);
         app.type = 0;
         app.size = new File(app.sourceDir).length();
-        app.backup = isBackupExists(app);
+        app.backup = isBackupAppExists(app);
 
         return app;
 
@@ -341,19 +341,33 @@ public final class Utils {
         return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
     }
 
-    public static File getBackupDir() {
+    public static File getBackupAppsDir() {
+        return checkDir(AppConfig.BACKUP_APPS_DIR);
+    }
+
+    public static boolean isBackupAppExists(AppInfo app) {
+        File file = new File(getBackupAppsDir(), buildApkName(app));
+        return app.size == file.length();
+    }
+
+
+    public static File getBackupDataDir() {
+        return checkDir(AppConfig.BACKUP_DATA_DIR);
+    }
+
+    public static boolean isBackupDataExists(AppInfo app) {
+        File file = new File(getBackupDataDir(), app.packageName);
+        return file.exists() && file.isDirectory();
+    }
+
+    public static File checkDir(String dir) {
         File sdcard = Environment.getExternalStorageDirectory();
-        File appDir = new File(sdcard, AppConfig.APP_DIR);
-        File backupDir = new File(appDir, AppConfig.BACKUP_DIR);
+        File appDir = new File(sdcard, AppConfig.APP_TOOL_DIR);
+        File backupDir = new File(appDir, dir);
         if (!backupDir.exists()) {
             backupDir.mkdirs();
         }
         return backupDir;
-    }
-
-    public static boolean isBackupExists(AppInfo app) {
-        File file = new File(getBackupDir(), buildApkName(app));
-        return app.size == file.length();
     }
 
 }

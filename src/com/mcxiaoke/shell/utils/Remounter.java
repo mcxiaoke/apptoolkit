@@ -18,6 +18,7 @@
 
 package com.mcxiaoke.shell.utils;
 
+import com.mcxiaoke.shell.Shell;
 import com.mcxiaoke.shell.model.Mount;
 
 import java.io.File;
@@ -30,7 +31,7 @@ import java.util.List;
 
 /**
  * The remounter.
- * 
+ *
  * @author Chris Jiang
  */
 public class Remounter {
@@ -65,44 +66,29 @@ public class Remounter {
 
         final boolean isMountMode = mountPoint.getFlags().contains(mountType.toLowerCase());
 
-//        if (!isMountMode) {
-//
-//            Command command = new Command("busybox mount -o remount," + mountType.toLowerCase()
-//                    + " " + mountPoint.getDevice().getAbsolutePath() + " "
-//                    + mountPoint.getMountPoint().getAbsolutePath(), "toolbox mount -o remount,"
-//                    + mountType.toLowerCase() + " " + mountPoint.getDevice().getAbsolutePath()
-//                    + " " + mountPoint.getMountPoint().getAbsolutePath(), "mount -o remount,"
-//                    + mountType.toLowerCase() + " " + mountPoint.getDevice().getAbsolutePath()
-//                    + " " + mountPoint.getMountPoint().getAbsolutePath(),
-//                    "/system/bin/toolbox mount -o remount," + mountType.toLowerCase() + " "
-//                            + mountPoint.getDevice().getAbsolutePath() + " "
-//                            + mountPoint.getMountPoint().getAbsolutePath()) {
-//
-//                @Override
-//                public void onUpdate(int id, String message) {
-//
-//                }
-//
-//                @Override
-//                public void onFinished(int id) {
-//
-//                }
-//            };
-//
-//            try {
-//                Shell.startRootShell().add(command).waitForFinish();
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            } catch (TimeoutException e) {
-//                e.printStackTrace();
-//            } catch (PermissionException e) {
-//                e.printStackTrace();
-//            }
-//
-//        }
+        if (!isMountMode) {
+            String mountPath = mountPoint.getDevice().getAbsolutePath()
+                    + " " + mountPoint.getMountPoint().getAbsolutePath();
+            String mountCommand = "";
+            if (Shell.Helper.hasMount()) {
+                mountCommand = "mount -o remount,"
+                        + mountType.toLowerCase() + " " + mountPath;
+            } else if (Shell.Helper.hasBusyBox()) {
+                mountCommand = "busybox mount -o remount," + mountType.toLowerCase()
+                        + " " + mountPath;
+            } else {
+                mountCommand = "toolbox mount -o remount,"
+                        + mountType.toLowerCase() + " " + mountPath;
+            }
 
+            try {
+                List<String> output = Shell.SU.run(mountCommand);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         mountPoint = getMountPoint(file);
 
         if (mountPoint.getFlags().contains(mountType.toLowerCase())) {
@@ -119,7 +105,7 @@ public class Remounter {
             return null;
         }
 
-        for (File path = new File(file); path != null;) {
+        for (File path = new File(file); path != null; ) {
             for (Mount mount : mounts) {
                 if (mount.getMountPoint().equals(path)) {
                     return mount;
@@ -154,5 +140,29 @@ public class Remounter {
         }
 
         return mounts;
+    }
+
+    /**
+     * This will tell you how the specified mount is mounted. rw, ro, etc...
+     * <p/>
+     *
+     * @param path mount you want to check
+     * @return <code>String</code> What the mount is mounted as.
+     * @throws Exception if we cannot determine how the mount is mounted.
+     */
+    public static String getMountedAs(String path) throws Exception {
+        List<Mount> mounts = getMounts();
+        if (mounts != null) {
+            for (Mount mount : mounts) {
+                if (path.contains(mount.getMountPoint().getAbsolutePath())) {
+//                    RootTools.log((String) mount.getFlags().toArray()[0]);
+                    return (String) mount.getFlags().toArray()[0];
+                }
+            }
+
+            throw new Exception();
+        } else {
+            throw new Exception();
+        }
     }
 }

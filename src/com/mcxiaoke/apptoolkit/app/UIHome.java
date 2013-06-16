@@ -51,7 +51,7 @@ public class UIHome extends UIBaseSupport implements IPackageMonitor {
 
     private void addAppListFragment() {
         debug("addAppListFragment()");
-        mFragment = PackageListFragment.newInstance(AppConfig.TYPE_USER_APP_MANAGER, true);
+        mFragment = PackageListFragment.newInstance(AppConfig.TYPE_USER_APP_MANAGER, false);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, mFragment).commit();
     }
 

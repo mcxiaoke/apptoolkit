@@ -54,7 +54,7 @@ public class BackupAppsDataTask extends AsyncTaskBase<List<AppInfo>, AppInfo, In
 
         List<AppInfo> apps = params[0];
         File sdcard = Environment.getExternalStorageDirectory();
-        File backupDir = new File(sdcard, AppConfig.BACKUP_DIR);
+        File backupDir = new File(sdcard, AppConfig.BACKUP_APPS_DIR);
         if (!backupDir.exists()) {
             backupDir.mkdirs();
         }

@@ -78,6 +78,6 @@ public class BackupAppsApkTask extends AsyncTaskBase<List<AppInfo>, AppInfo, Int
     }
 
     private File checkBackupDir() {
-        return Utils.getBackupDir();
+        return Utils.getBackupAppsDir();
     }
 }

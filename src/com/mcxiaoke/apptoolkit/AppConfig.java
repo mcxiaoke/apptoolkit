@@ -9,8 +9,9 @@ package com.mcxiaoke.apptoolkit;
  */
 public class AppConfig {
 
-    public static final String APP_DIR = "AppToolKit";
-    public static final String BACKUP_DIR = "apps";
+    public static final String APP_TOOL_DIR = "AppToolKit";
+    public static final String BACKUP_APPS_DIR = "apps";
+    public static final String BACKUP_DATA_DIR = "data";
 
     public static final String EXTRA_APPINFO = "extra_appinfo";
     public static final String EXTRA_ID = "extra_ID";
@@ -32,6 +33,15 @@ public class AppConfig {
     public static final int TYPE_COMPONENT_MANAGER = 10;
     public static final int TYPE_FILE_MANAGER = 12;
 
+    public static final int CMD_BACKUP_APP_ONE = 50;
+    public static final int CMD_BACKUP_DATA_ONE = 52;
+    public static final int CMD_SILENT_INSTAlL_ONE = 54;
+    public static final int CMD_SILENT_UNINSTALL_ONE = 56;
+    public static final int CMD_CLEAR_CACHE_ONE = 58;
+    public static final int CMD_CLEAR_DATA_ONE = 60;
+    public static final int CMD_INSTALL_SYSTEM_APP_ONE = 62;
+    public static final int CMD_UNINSTALL_SYSTEM_APP_ONE = 64;
+
     public static final int DOMAIN_ANDROID = 101;
     public static final int DOMAIN_GOOGLE = 102;
     public static final int DOMAIN_WHITELIST = 103;
@@ -45,6 +55,7 @@ public class AppConfig {
     public static final String DOMAIN_NAME_NORMAL = "Normal";
 
 
+    public static final String APK_MIME_TYPE = "application/vnd.android.package-archive";
     /**
      * The patch for some android version and devices. Install may fail without
      * this patch.

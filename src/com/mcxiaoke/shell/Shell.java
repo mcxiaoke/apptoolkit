@@ -107,23 +107,6 @@ public class Shell {
             "/vendor/bin", "/sbin"
     };
 
-    /**
-     * The patch for some android version and devices. Install may fail without
-     * this patch.
-     */
-    public static final String COMMAND_INSTALL_PATCH = "LD_LIBRARY_PATH=/vendor/lib:/system/lib ";
-
-    public static final String SETTINGS_PACKAGE = "com.android.settings";
-
-    public static final String SYSTEM_APP_PATH = "/system/app/";
-    public static final String USER_APP_PATH = "/data/app/";
-    public static final String APP_DATA_PATH = "/data/data/";
-    public static final String BUSYBOX_PATH = "/system/xbin/busybox";
-    public static final String ANDROID_APP_PACKAGE_PREFIX = "com.android.";
-    public static final String GOOGLE_APP_PACKAGE_PREFIX = "com.google.";
-
-    public static final int UID_ROOT = 0;
-    public static final int UID_SYSTEM = 1000;
 
     /**
      * Check if command need patch.
@@ -1182,7 +1165,7 @@ public class Shell {
                         ) {
                     // If the callbacks are posted to a different thread than this one, we can wait until
                     // all callbacks have called before returning. If we don't use a Handler at all,
-                    // the callbacks are already called before we get here. If we do use a Handler but
+                    // the callbacks are already called before we getIcon here. If we do use a Handler but
                     // we use the same Looper, waiting here would actually block the callbacks from being
                     // called
 

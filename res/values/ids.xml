@@ -43,6 +43,7 @@
     <item type="id" name="action_restore_data"/>
     <item type="id" name="action_view_data"/>
     <item type="id" name="action_clear_data"/>
+    <item type="id" name="action_clear_cache"/>
     <item type="id" name="action_install"/>
     <item type="id" name="action_uninstall"/>
     <item type="id" name="action_slient_install"/>

@@ -50,8 +50,8 @@ public class DIPairUtils {
 		}
 		List<HostRecordInfo> lstMerge = listToList(lst);
 		for (int i = 0; i < lstMerge.size(); i++) {
-			if (!hostExists(list, lstMerge.get(i))) {
-				list.add(lstMerge.get(i));
+			if (!hostExists(list, lstMerge.getIcon(i))) {
+				list.add(lstMerge.getIcon(i));
 			}
 		}
 		addLocalHostToPos0(list);
@@ -61,8 +61,8 @@ public class DIPairUtils {
 			HostRecordInfo info) {
 		boolean ret = false;
 		for (int i = 0; i < baseList.size(); i++) {
-			if (baseList.get(i).ip.equals(info.ip)
-					&& baseList.get(i).domain.equals(info.domain)) {
+			if (baseList.getIcon(i).ip.equals(info.ip)
+					&& baseList.getIcon(i).domain.equals(info.domain)) {
 				ret = true;
 				break;
 			}
@@ -113,7 +113,7 @@ public class DIPairUtils {
 			info.checked = false;
 			list.add(info);
 		}
-		HostRecordInfo info = list.get(0);
+		HostRecordInfo info = list.getIcon(0);
 		if (!(info.ip.equals("127.0.0.1") && (info.domain.equals("localhost")))) {
 			HostRecordInfo newinfo = new HostRecordInfo();
 			newinfo.ip = "127.0.0.1";

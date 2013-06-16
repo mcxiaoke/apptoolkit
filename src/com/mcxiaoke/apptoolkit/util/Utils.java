@@ -14,6 +14,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Environment;
+import com.mcxiaoke.apptoolkit.AppConfig;
 import com.mcxiaoke.apptoolkit.model.AppInfo;
 
 import java.io.ByteArrayInputStream;
@@ -107,9 +109,11 @@ public final class Utils {
         app.createdAt = info.firstInstallTime;
         app.updatedAt = info.lastUpdateTime;
 
-        app.system = (ainfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1;
-//        app.system = app.sourceDir.startsWith(AppInfo.SYSTEM_PATH_PREFIX);
+        app.domain = getAppDomain(app.packageName);
+        app.system = isSystemApp(ainfo);
+        app.type = 0;
         app.size = new File(app.sourceDir).length();
+        app.backup = isBackupExists(app);
 
         return app;
 
@@ -304,6 +308,52 @@ public final class Utils {
 
     public static boolean isIceCreamSanwich() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+    }
+
+
+    public static String buildProgressText(AppInfo app) {
+        return new StringBuilder().append(app.appName).append(" v").append(app.versionName).append("\n").append(app.sourceDir).toString();
+
+    }
+
+    public static boolean isSystemApp(PackageInfo info) {
+        return isSystemApp(info.applicationInfo);
+    }
+
+    public static boolean isSystemApp(ApplicationInfo info) {
+        return (info.flags & ApplicationInfo.FLAG_SYSTEM) == 1;
+    }
+
+    public static int getAppDomain(String packageName) {
+        if (packageName == null || packageName.trim().length() == 0) {
+            return AppConfig.DOMAIN_NORMAL;
+        }
+        if (packageName.startsWith(AppConfig.ANDROID_APP_PACKAGE_PREFIX)) {
+            return AppConfig.DOMAIN_ANDROID;
+        } else if (packageName.startsWith(AppConfig.GOOGLE_APP_PACKAGE_PREFIX)) {
+            return AppConfig.DOMAIN_GOOGLE;
+        } else {
+            return AppConfig.DOMAIN_NORMAL;
+        }
+    }
+
+    public static boolean isSdcardMounted() {
+        return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
+    }
+
+    public static File getBackupDir() {
+        File sdcard = Environment.getExternalStorageDirectory();
+        File appDir = new File(sdcard, AppConfig.APP_DIR);
+        File backupDir = new File(appDir, AppConfig.BACKUP_DIR);
+        if (!backupDir.exists()) {
+            backupDir.mkdirs();
+        }
+        return backupDir;
+    }
+
+    public static boolean isBackupExists(AppInfo app) {
+        File file = new File(getBackupDir(), buildApkName(app));
+        return app.size == file.length();
     }
 
 

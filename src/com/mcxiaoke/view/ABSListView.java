@@ -13,7 +13,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 /**
- * The ABSListView is a compatibility class, to get the ListView working together
+ * The ABSListView is a compatibility class, to getIcon the ListView working together
  * with the ActionbarSherlock compatibility package.
  * It offers support for multiple selection with the context action bar of ActionBarSherlock.
  * The batch contextual actions in ListView (http://developer.android.com/guide/topics/ui/menus.html#CABforListView)

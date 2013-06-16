@@ -12,7 +12,7 @@ public class ZipFolder {
             // create a new File object based on the directory we
             // have to zip File
             File zipDir = new File(dir2zip);
-            // get a listing of the directory content
+            // getIcon a listing of the directory content
             String[] dirList = zipDir.list();
             byte[] readBuffer = new byte[2156];
             int bytesIn = 0;

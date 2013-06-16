@@ -3,6 +3,7 @@ package com.mcxiaoke.apptoolkit.app;
 import android.os.Bundle;
 import android.os.Looper;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Window;
 import com.mcxiaoke.apptoolkit.AppContext;
 
 /**
@@ -26,6 +27,7 @@ public class UIBaseSupport extends SherlockFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
     }
 
     @Override
@@ -100,12 +102,22 @@ public class UIBaseSupport extends SherlockFragmentActivity {
         ensureMainThread();
         mRefreshing = true;
         invalidateOptionsMenu();
+        showProgressIndicator();
     }
 
     public void hideActionBarProgress() {
         ensureMainThread();
         mRefreshing = false;
         invalidateOptionsMenu();
+        hideProgressIndicator();
+    }
+
+    public void showProgressIndicator() {
+        setSupportProgressBarIndeterminateVisibility(true);
+    }
+
+    public void hideProgressIndicator() {
+        setSupportProgressBarIndeterminateVisibility(false);
     }
 
     protected void ensureMainThread() {

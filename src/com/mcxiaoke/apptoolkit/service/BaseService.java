@@ -4,11 +4,13 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import java.util.Collection;
@@ -70,6 +72,7 @@ abstract class BaseService extends Service implements Handler.Callback {
 
     private BaseService mBaseService;
     private NotificationManager mNotificationManager;
+    private LocalBroadcastManager mLocalBroadcastManager;
     private ExecutorService mExecutor;
     private HandlerThread mHandlerThread;
     private Handler mHandler;
@@ -90,6 +93,7 @@ abstract class BaseService extends Service implements Handler.Callback {
             debug(TAG, "onCreate()");
         }
         mBaseService = this;
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mTasks = Collections.synchronizedMap(new WeakHashMap<Long, Runnable>());
         mFutures = Collections.synchronizedMap(new WeakHashMap<Long, Future<?>>());
@@ -363,6 +367,14 @@ abstract class BaseService extends Service implements Handler.Callback {
         mNotificationManager.cancelAll();
     }
 
+    public final void sendLocalBroadcast(Intent intent) {
+        mLocalBroadcastManager.sendBroadcast(intent);
+    }
+
+    public final void sendLocalBroadcastSync(Intent intent) {
+        mLocalBroadcastManager.sendBroadcastSync(intent);
+    }
+
     /**
      * can be override to use custom executor
      *
@@ -375,4 +387,16 @@ abstract class BaseService extends Service implements Handler.Callback {
     protected abstract void onHandleIntent(long taskId, Intent intent);
 
     protected abstract boolean isDebug();
+
+    protected static class LocalBinder<T extends BaseService> extends Binder {
+        T mService;
+
+        public LocalBinder(T service) {
+            this.mService = service;
+        }
+
+        public T getService() {
+            return mService;
+        }
+    }
 }

@@ -10,6 +10,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,15 +20,17 @@ import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.mcxiaoke.apptoolkit.AppConfig;
 import com.mcxiaoke.apptoolkit.AppContext;
 import com.mcxiaoke.apptoolkit.R;
 import com.mcxiaoke.apptoolkit.adapter.AppListAdapter;
 import com.mcxiaoke.apptoolkit.adapter.MultiChoiceArrayAdapter;
 import com.mcxiaoke.apptoolkit.model.AppInfo;
-import com.mcxiaoke.apptoolkit.task.AppListAsyncTask;
 import com.mcxiaoke.apptoolkit.task.AsyncTaskCallback;
-import com.mcxiaoke.apptoolkit.task.BackupAsyncTask;
-import com.mcxiaoke.apptoolkit.task.SimpleAsyncTaskCallback;
+import com.mcxiaoke.apptoolkit.task.BackupAppsApkTask;
+import com.mcxiaoke.apptoolkit.task.LoadAppsTask;
+import com.mcxiaoke.apptoolkit.task.TaskMessage;
+import com.mcxiaoke.apptoolkit.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +42,8 @@ import java.util.List;
  * Date: 13-6-11
  * Time: 上午10:55
  */
-public class AppListFragment extends BaseFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, MultiChoiceArrayAdapter.OnCheckedListener {
-    private static final String TAG = AppListFragment.class.getSimpleName();
+public class AppsFragment extends BaseFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, MultiChoiceArrayAdapter.OnCheckedListener {
+    private static final String TAG = AppsFragment.class.getSimpleName();
 
     private static void debug(String message) {
         AppContext.v(message);
@@ -50,24 +53,47 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
     private static final int MSG_PACKAGE_REMOVED = 1002;
 
     private ListView mListView;
-    private List<AppInfo> mAppInfos;
+    private List<AppInfo> mAppData;
     private MultiChoiceArrayAdapter<AppInfo> mArrayAdapter;
     private ActionModeCallback mActionModeCallback;
-    private AppListAsyncTask mAsyncTask;
-    private BackupAsyncTask mBackupTask;
+    private LoadAppsTask mLoadAppsTask;
+    private TaskMessage mLoadAppsTaskParam;
+    private BackupAppsApkTask mBackupTask;
 
     private ProgressDialog mProgressDialog;
     private ActionMode mActionMode;
 
     private boolean isBackuping;
+    private boolean isAppLoading;
 
     private Handler mUiHandler;
+
+    private int mType;
+    private boolean mSystem;
+
+    public static AppsFragment newInstance(int type, boolean system) {
+        AppsFragment fragment = new AppsFragment();
+        Bundle args = new Bundle();
+        args.putInt(AppConfig.EXTRA_TYPE, type);
+        args.putBoolean(AppConfig.EXTRA_SYSTEM, system);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    private AppsFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppContext.v("AppListFragment onCreate()");
-        mAppInfos = new ArrayList<AppInfo>();
+        Bundle args = getArguments();
+        if (args != null) {
+            mType = args.getInt(AppConfig.EXTRA_TYPE, AppConfig.TYPE_USER_APP_MANAGER);
+            mSystem = args.getBoolean(AppConfig.EXTRA_SYSTEM, false);
+        }
+        mLoadAppsTaskParam = new TaskMessage(mType, mSystem);
+        mAppData = new ArrayList<AppInfo>();
         setHasOptionsMenu(true);
 
         mUiHandler = new Handler(Looper.getMainLooper()) {
@@ -93,7 +119,7 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
         mActionModeCallback = new ActionModeCallback(this);
         mListView.setOnItemClickListener(this);
         mListView.setOnItemLongClickListener(this);
-        mArrayAdapter = new AppListAdapter(getActivity(), mAppInfos);
+        mArrayAdapter = new AppListAdapter(getActivity(), mAppData);
         mArrayAdapter.setOnCheckedListener(this);
         mListView.setAdapter(mArrayAdapter);
         refresh();
@@ -102,24 +128,31 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
     @Override
     public void refresh() {
         AppContext.v("AppListFragment refresh()");
-        startAsyncTask();
+        startLoadAppsTask();
     }
 
-    private void stopAsyncTask() {
-        if (mAsyncTask != null) {
-            mAsyncTask.cancel(false);
+    private void stopLoadAppsTask() {
+        if (mLoadAppsTask != null) {
+            mLoadAppsTask.cancel(false);
         }
     }
 
-    private void startAsyncTask() {
-        stopAsyncTask();
+    private void startLoadAppsTask() {
+        stopLoadAppsTask();
+        isAppLoading = true;
         mArrayAdapter.clear();
-        AppContext.v("AppListFragment startAsyncTask()");
-        mAsyncTask = new AppListAsyncTask(getActivity(), new SimpleAsyncTaskCallback<List<AppInfo>>() {
+        AppContext.v("AppListFragment startLoadAppsTask()");
+        mLoadAppsTask = new LoadAppsTask(getActivity(), new AsyncTaskCallback<Pair<Integer, Integer>, List<AppInfo>>() {
+
+            @Override
+            public void onTaskProgress(int code, Pair<Integer, Integer> integerIntegerPair) {
+            }
+
             @Override
             public void onTaskSuccess(int code, List<AppInfo> appInfos) {
                 AppContext.v("AppListFragment onTaskSuccess() size is " + (appInfos == null ? "null" : appInfos.size()));
                 hideProgressIndicator();
+                isAppLoading = false;
                 mArrayAdapter.addAll(appInfos);
             }
 
@@ -127,9 +160,11 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
             public void onTaskFailure(int code, Throwable e) {
                 AppContext.v("AppListFragment onTaskFailure()");
                 hideProgressIndicator();
+                isAppLoading = false;
             }
         });
-        mAsyncTask.start();
+
+        mLoadAppsTask.start(mLoadAppsTaskParam);
         showProgressIndicator();
     }
 
@@ -143,7 +178,7 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
                 ft.remove(prev);
             }
             ft.addToBackStack(null);
-            AppActionDialogFragment newFragment = AppActionDialogFragment.newInstance(app);
+            ActionsDialogFragment newFragment = ActionsDialogFragment.newInstance(app, mType);
             newFragment.show(ft, DIALOG_TAG);
         }
     }
@@ -195,7 +230,40 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
         }
     }
 
+    private void onSelectAll() {
+
+    }
+
+    private void onUnselectAll() {
+
+    }
+
+    private void onBackupApps() {
+        List<AppInfo> checkedApps = mArrayAdapter.getCheckedItems();
+        if (checkedApps != null && checkedApps.size() > 0) {
+            showBackupConfirmDialog(checkedApps);
+        }
+    }
+
+    private void onBackupData() {
+
+    }
+
     private boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.menu_mode_select_all:
+                onSelectAll();
+                break;
+            case R.id.menu_mode_backup_app:
+                onBackupApps();
+                mode.finish();
+                break;
+            case R.id.menu_mode_backup_data:
+                onBackupData();
+                mode.finish();
+                break;
+        }
         return false;
     }
 
@@ -219,9 +287,9 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
     private static final String DIALOG_TAG = "DIALOG_TAG";
 
     static class ActionModeCallback implements ActionMode.Callback {
-        private AppListFragment mFragment;
+        private AppsFragment mFragment;
 
-        public ActionModeCallback(AppListFragment fragment) {
+        public ActionModeCallback(AppsFragment fragment) {
             this.mFragment = fragment;
         }
 
@@ -285,7 +353,7 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
     }
 
 
-    private void showBackupConfirmDialog() {
+    private void showBackupConfirmDialog(final List<AppInfo> apps) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.dialog_backup_all_title);
         builder.setMessage(R.string.dialog_backup_all_message);
@@ -293,7 +361,7 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                startBackup();
+                startBackup(apps);
             }
         });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -305,8 +373,9 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
         builder.create().show();
     }
 
-    private void showBackupCompleteDialog(int count) {
-        String message = String.format(getString(R.string.dialog_backup_complete_message), mAppInfos.size(), count);
+    private void showBackupCompleteDialog(int count, int totalCount) {
+        String backupDir = Utils.getBackupDir().getPath();
+        String message = String.format(getString(R.string.dialog_backup_complete_message), backupDir, totalCount, count);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.dialog_backup_complete_title);
         builder.setMessage(message);
@@ -319,27 +388,32 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
         builder.create().show();
     }
 
-    private void startBackup() {
+    private void startBackup(List<AppInfo> apps) {
         if (isBackuping) {
             return;
         }
+        if (apps == null || apps.isEmpty()) {
+            return;
+        }
+
+        final int totalCount = apps.size();
         AppContext.v("startBackup");
         stopBackup();
         isBackuping = true;
-        mBackupTask = new BackupAsyncTask(getActivity(), new AsyncTaskCallback<String, Integer>() {
+        mBackupTask = new BackupAppsApkTask(getActivity(), new AsyncTaskCallback<AppInfo, Integer>() {
 
             @Override
-            public void onTaskProgress(int code, String text) {
-                AppContext.v("BackupAsyncTask.onTaskProgress " + text);
-                updateProgressDialog(text);
+            public void onTaskProgress(int code, AppInfo app) {
+                AppContext.v("BackupAsyncTask.onTaskProgress " + app.appName);
+                updateProgressDialog(Utils.buildProgressText(app));
             }
 
             @Override
             public void onTaskSuccess(int code, Integer integer) {
                 AppContext.v("BackupAsyncTask.onTaskSuccess backup count is " + integer);
-                int added = integer == null ? 0 : integer;
+                int backuped = integer == null ? 0 : integer;
                 dismissProgressDialog();
-                showBackupCompleteDialog(added);
+                showBackupCompleteDialog(backuped, totalCount);
                 isBackuping = false;
             }
 
@@ -350,7 +424,8 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
                 dismissProgressDialog();
             }
         });
-        mBackupTask.start(mAppInfos);
+
+        mBackupTask.start(apps);
         showProgressDialog();
 
     }
@@ -390,7 +465,7 @@ public class AppListFragment extends BaseFragment implements AdapterView.OnItemC
     public void onDestroy() {
         super.onDestroy();
         dismissProgressDialog();
-        stopAsyncTask();
+        stopLoadAppsTask();
         stopBackup();
     }
 

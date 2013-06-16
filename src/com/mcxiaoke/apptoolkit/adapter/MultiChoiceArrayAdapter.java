@@ -79,7 +79,6 @@ public abstract class MultiChoiceArrayAdapter<T> extends BaseArrayAdapter<T> {
     public void setChecked(int position, boolean checked) {
         AppContext.v("setChecked() position=" + position + " checked=" + checked);
         mCheckedState.put(position, checked);
-//        notifyDataSetChanged();
     }
 
     public void uncheckAll() {

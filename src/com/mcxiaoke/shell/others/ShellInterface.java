@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  * Common usage for su shell:<p/>
  * <code>if(ShellInterface.isSuAvailable()) { ShellInterface.runCommand("reboot"); }</code>
  * <p/><p/>
- * To get process output as a String:<p/>
+ * To getIcon process output as a String:<p/>
  * <code>if(ShellInterface.isSuAvailable()) { String date = ShellInterface.getProcessOutput("date"); }</code>
  * <p/><p/>
  * To run command with standard shell (no root permissions):

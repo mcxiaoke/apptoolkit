@@ -142,7 +142,7 @@ public class ComponentUtils {
 			return false;
 		}
 		for (int i = 0; i < serviceList.size(); i++) {
-			if (serviceList.get(i).service.getClassName().equals(className) == true) {
+			if (serviceList.getIcon(i).service.getClassName().equals(className) == true) {
 				isRunning = true;
 				break;
 			}

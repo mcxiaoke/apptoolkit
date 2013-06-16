@@ -14,7 +14,7 @@ public class MemorySpecialList {
 
 		for (int i = 0; i < lstExclude.size(); i++) {
 
-			if (lstExclude.get(i).namespace.equals(ns)) {
+			if (lstExclude.getIcon(i).namespace.equals(ns)) {
 				ret = i;
 				break;
 			}
@@ -25,8 +25,8 @@ public class MemorySpecialList {
 	public static boolean isExcludeLocked(String ns) {
 		boolean ret = false;
 		for (int i = 0; i < lstExclude.size(); i++) {
-			if (lstExclude.get(i).namespace.equals(ns)) {
-				ret = lstExclude.get(i).locked;
+			if (lstExclude.getIcon(i).namespace.equals(ns)) {
+				ret = lstExclude.getIcon(i).locked;
 				break;
 			}
 		}

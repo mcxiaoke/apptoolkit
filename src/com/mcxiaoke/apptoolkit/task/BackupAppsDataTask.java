@@ -2,7 +2,7 @@ package com.mcxiaoke.apptoolkit.task;
 
 import android.content.Context;
 import android.os.Environment;
-import com.mcxiaoke.apptoolkit.Constants;
+import com.mcxiaoke.apptoolkit.AppConfig;
 import com.mcxiaoke.apptoolkit.model.AppInfo;
 import com.mcxiaoke.apptoolkit.util.Utils;
 
@@ -10,17 +10,18 @@ import java.io.File;
 import java.util.List;
 
 /**
+ * 批量备份应用数据，需要ROOT
  * Project: filemanager
  * Package: com.com.mcxiaoke.appmanager.task
  * User: com.mcxiaoke
  * Date: 13-6-11
  * Time: 下午1:24
  */
-public class BackupAsyncTask extends AsyncTaskBase<List<AppInfo>, String, Integer> {
+public class BackupAppsDataTask extends AsyncTaskBase<List<AppInfo>, AppInfo, Integer> {
     private Context mContext;
 
 
-    public BackupAsyncTask(Context context, AsyncTaskCallback<String, Integer> callback) {
+    public BackupAppsDataTask(Context context, AsyncTaskCallback<AppInfo, Integer> callback) {
         super(callback);
         mContext = context;
     }
@@ -31,7 +32,7 @@ public class BackupAsyncTask extends AsyncTaskBase<List<AppInfo>, String, Intege
     }
 
     @Override
-    protected void onProgressUpdate(String... values) {
+    protected void onProgressUpdate(AppInfo... values) {
         super.onProgressUpdate(values);
     }
 
@@ -53,7 +54,7 @@ public class BackupAsyncTask extends AsyncTaskBase<List<AppInfo>, String, Intege
 
         List<AppInfo> apps = params[0];
         File sdcard = Environment.getExternalStorageDirectory();
-        File backupDir = new File(sdcard, Constants.BACKUP_DIR);
+        File backupDir = new File(sdcard, AppConfig.BACKUP_DIR);
         if (!backupDir.exists()) {
             backupDir.mkdirs();
         }
@@ -71,7 +72,7 @@ public class BackupAsyncTask extends AsyncTaskBase<List<AppInfo>, String, Intege
                     backupCount++;
                 }
             }
-            publishProgress(buildProgressText(app));
+            publishProgress(app);
         }
         return backupCount;
     }

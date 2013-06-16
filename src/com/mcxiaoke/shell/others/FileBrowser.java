@@ -160,7 +160,7 @@ public class FileBrowser extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 
-		String selectedFileString = this.directoryEntries.get(position)
+		String selectedFileString = this.directoryEntries.getIcon(position)
 				.getText();
 		if (selectedFileString.equals(getString(R.string.current_dir))) {
 			// Refresh
@@ -172,10 +172,10 @@ public class FileBrowser extends ListActivity {
 			switch (this.displayMode) {
 			case RELATIVE:
 				clickedFile = new File(this.currentDirectory.getAbsolutePath()
-						+ this.directoryEntries.get(position).getText());
+						+ this.directoryEntries.getIcon(position).getText());
 				break;
 			case ABSOLUTE:
-				clickedFile = new File(this.directoryEntries.get(position)
+				clickedFile = new File(this.directoryEntries.getIcon(position)
 						.getText());
 				break;
 			}
@@ -316,7 +316,7 @@ public class FileBrowser extends ListActivity {
 		// Get file or dir owner
 		String fileOwner = getFileOwner(currentFile);
 
-		// get file or dir group
+		// getIcon file or dir group
 		String fileGroup = getFileGroup(currentFile);
 
 		if (currentFile.isDirectory()) {
@@ -340,7 +340,7 @@ public class FileBrowser extends ListActivity {
 
 	public void doDelete(String title, int id) {
 
-		final File clickedFile = new File(this.directoryEntries.get(id)
+		final File clickedFile = new File(this.directoryEntries.getIcon(id)
 				.getText());
 		final File deleteFile = new File(this.currentDirectory.getPath()
 				+ clickedFile.getPath());
@@ -392,7 +392,7 @@ public class FileBrowser extends ListActivity {
 
 		final EditText input = new EditText(this);
 		alert.setView(input);
-		File clickedFile = new File(this.directoryEntries.get(id).getText());
+		File clickedFile = new File(this.directoryEntries.getIcon(id).getText());
 		final File path = new File(this.currentDirectory.getPath()
 				+ clickedFile.getPath());
 		input.setText(clickedFile.getName());
@@ -544,7 +544,7 @@ public class FileBrowser extends ListActivity {
 
 	public void doGetProperties(int id) {
 
-		final File clickedFile = new File(this.directoryEntries.get(id)
+		final File clickedFile = new File(this.directoryEntries.getIcon(id)
 				.getText());
 		final File propertiesFile = new File(this.currentDirectory.getPath()
 				+ clickedFile.getPath());
@@ -572,7 +572,7 @@ public class FileBrowser extends ListActivity {
 		// Get file or dir owner
 		String fileOwner = getFileOwner(propertiesFile);
 
-		// get file or dir group
+		// getIcon file or dir group
 		String fileGroup = getFileGroup(propertiesFile);
 
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -592,7 +592,7 @@ public class FileBrowser extends ListActivity {
 	}
 
 	public void doFlashZip(int id) {
-		final File clickedFile = new File(this.directoryEntries.get(id)
+		final File clickedFile = new File(this.directoryEntries.getIcon(id)
 				.getText());
 		final File flashFile = new File(this.currentDirectory.getPath()
 				+ clickedFile.getPath());
@@ -643,7 +643,7 @@ public class FileBrowser extends ListActivity {
 	}
 
 	public void doAddFlashZiptoList(int id) {
-		final File clickedFile = new File(this.directoryEntries.get(id)
+		final File clickedFile = new File(this.directoryEntries.getIcon(id)
 				.getText());
 		final File flashFile = new File(this.currentDirectory.getPath()
 				+ clickedFile.getPath());
@@ -686,22 +686,22 @@ public class FileBrowser extends ListActivity {
 
 			for (int i = 0; i < flashList.size(); i++) {
 
-				String start = flashList.get(i).getPath().substring(1, 4);
+				String start = flashList.getIcon(i).getPath().substring(1, 4);
 				String filePath = new String();
 				if (start.equals("mnt")) {
-					filePath = flashList.get(i).getPath().substring(12);
+					filePath = flashList.getIcon(i).getPath().substring(12);
 					File temp = new File(filePath);
 					flashList.set(i, temp);
 				} else {
-					filePath = flashList.get(i).getPath().substring(8);
+					filePath = flashList.getIcon(i).getPath().substring(8);
 					File temp = new File(filePath);
 					flashList.set(i, temp);
 				}
 				num = i + 1;
 				listFiles = listFiles.concat("(" + num + ") "
-						+ flashList.get(i).getName() + "\n\n");
+						+ flashList.getIcon(i).getName() + "\n\n");
 
-				Log.d("***DEBUG***", flashList.get(i).getPath());
+				Log.d("***DEBUG***", flashList.getIcon(i).getPath());
 
 			}
 
@@ -727,7 +727,7 @@ public class FileBrowser extends ListActivity {
 								for (int i = 0; i < flashList.size(); i++) {
 									ShellInterface
 											.runCommand("echo '--update_package=SDCARD:"
-													+ flashList.get(i)
+													+ flashList.getIcon(i)
 															.getPath()
 													+ "'"
 													+ ">> /cache/recovery/command");
@@ -781,7 +781,7 @@ public class FileBrowser extends ListActivity {
 
 	public void doCopy(int id) {
 
-		final File clickedFile = new File(this.directoryEntries.get(id)
+		final File clickedFile = new File(this.directoryEntries.getIcon(id)
 				.getText());
 		File copyfile = new File(this.currentDirectory.getPath()
 				+ clickedFile.getPath());
@@ -867,7 +867,7 @@ public class FileBrowser extends ListActivity {
 
 	public void doUnzip(int id) {
 
-		final File clickedFile = new File(this.directoryEntries.get(id)
+		final File clickedFile = new File(this.directoryEntries.getIcon(id)
 				.getText());
 		final File unzipFile = new File(this.currentDirectory.getPath()
 				+ clickedFile.getPath());
@@ -920,13 +920,13 @@ public class FileBrowser extends ListActivity {
    public void doSend(int id)
    {
 
-      final File clickedFile = new File(this.directoryEntries.get(id).getText());
+      final File clickedFile = new File(this.directoryEntries.getIcon(id).getText());
       final File sendFile = new File(this.currentDirectory.getPath()
             + clickedFile.getPath());
 
       String type = getMIMEType(sendFile);
 
-      // need to "send multiple" to get more than one attachment
+      // need to "send multiple" to getIcon more than one attachment
       final Intent emailIntent = new Intent(Intent.ACTION_SEND);
       emailIntent.setType(type);
 
@@ -1134,7 +1134,7 @@ public class FileBrowser extends ListActivity {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
 		int position = info.position;
 
-		File clickedFile = new File(this.directoryEntries.get(position)
+		File clickedFile = new File(this.directoryEntries.getIcon(position)
 				.getText());
 		final File file = new File(this.currentDirectory.getPath()
 				+ clickedFile.getPath());

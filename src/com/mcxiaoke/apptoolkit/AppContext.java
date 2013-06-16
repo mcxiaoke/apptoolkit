@@ -11,8 +11,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Project: filemanager
- * Package: com.com.mcxiaoke.appmanager
+ * Project: apptoolkit
+ * Package: com.mcxiaoke.apptoolkit
  * User: com.mcxiaoke
  * Date: 13-6-10
  * Time: 下午9:15
@@ -20,14 +20,16 @@ import java.util.concurrent.Executors;
 public class AppContext extends Application {
     private static final boolean DEBUG = true;
 
-    private static Gson sGson;
-
-    private static ExecutorService mExecutor;
-
+    private static AppContext sInstance;
+    private Gson mGson;
+    private ExecutorService mExecutor;
+    private boolean mRootGranted;
+    private boolean mBusyboxInstalled;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        sInstance = this;
         mExecutor = Executors.newCachedThreadPool();
     }
 
@@ -36,22 +38,46 @@ public class AppContext extends Application {
         return DEBUG;
     }
 
-    public static Gson getGson() {
-        if (sGson == null) {
-            sGson = new GsonBuilder()
+    public static AppContext getApp() {
+        return sInstance;
+    }
+
+    public static AppContext getApp(Context context) {
+        return (AppContext) context.getApplicationContext();
+    }
+
+    public Gson getGson() {
+        if (mGson == null) {
+            mGson = new GsonBuilder()
                     .serializeNulls()
                     .disableHtmlEscaping()
                     .excludeFieldsWithoutExposeAnnotation()
                     .create();
         }
-        return sGson;
+        return mGson;
     }
 
-    public static ExecutorService getExecutor() {
+    public ExecutorService getExecutor() {
         if (mExecutor == null) {
             mExecutor = Executors.newCachedThreadPool();
         }
         return mExecutor;
+    }
+
+    public void setRootGranted(boolean value) {
+        mRootGranted = value;
+    }
+
+    public boolean isRootGranted(boolean value) {
+        return mRootGranted;
+    }
+
+    public void setBusyboxInstalled(boolean value) {
+        mBusyboxInstalled = value;
+    }
+
+    public boolean isBusyboxInstalled() {
+        return mBusyboxInstalled;
     }
 
     public static void showToast(Context context, int resId) {
@@ -62,7 +88,7 @@ public class AppContext extends Application {
         Toast.makeText(context, text, Toast.LENGTH_LONG).show();
     }
 
-    private static final String DEFAULT_TAG = "LOG";
+    private static final String DEFAULT_TAG = "AppToolkit";
 
     public static void d(String message) {
         Log.d(DEFAULT_TAG, message);

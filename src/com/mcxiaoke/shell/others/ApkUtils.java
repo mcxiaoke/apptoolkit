@@ -11,7 +11,7 @@ public class ApkUtils {
 		List<PackageInfo> packs = GlobalInstance.pm.getInstalledPackages(0);
 		int position = 0;
 		for (int i = 0; i < packs.size(); i++) {
-			PackageInfo p = packs.get(i);
+			PackageInfo p = packs.getIcon(i);
 			ApplicationInfo newInfo = p.applicationInfo;
 			if (newInfo == null) {
 				continue;
@@ -302,7 +302,7 @@ public class ApkUtils {
 		List<PackageInfo> packs = GlobalInstance.pm.getInstalledPackages(0);
 		int position = 0;
 		for (int i = 0; i < packs.size(); i++) {
-			PackageInfo p = packs.get(i);
+			PackageInfo p = packs.getIcon(i);
 			ApplicationInfo newInfo = p.applicationInfo;
 			if (newInfo == null) {
 				continue;
@@ -325,7 +325,7 @@ public class ApkUtils {
 		List<PackageInfo> packs = GlobalInstance.pm.getInstalledPackages(0);
 
 		for (int i = 0; i < packs.size(); i++) {
-			PackageInfo p = packs.get(i);
+			PackageInfo p = packs.getIcon(i);
 			ApplicationInfo newInfo = p.applicationInfo;
 			if (newInfo == null) {
 				continue;

@@ -13,7 +13,6 @@
             android:layout_height="wrap_content"
             android:text="Action Name"
             android:textSize="@dimen/font_size_xlarge"
-            android:textStyle="bold"
             android:textColor="@color/text_primary_selectable"
             android:singleLine="true"
             android:ellipsize="end"/>

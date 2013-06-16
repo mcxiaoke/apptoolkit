@@ -11,7 +11,7 @@ import com.google.gson.annotations.Expose;
  * Time: 下午9:20
  */
 public class AppInfo extends BaseModel {
-    public static final String SYSTEM_PATH_PREFIX = "/system/";
+
     @Expose
     public String mainName;
     @Expose
@@ -42,6 +42,12 @@ public class AppInfo extends BaseModel {
     public long createdAt;
     @Expose
     public long updatedAt;
+    @Expose
+    public int domain;
+    @Expose
+    public int type;
+    @Expose
+    public boolean backup;
 
     public AppInfo() {
     }
@@ -62,6 +68,9 @@ public class AppInfo extends BaseModel {
         this.size = in.readLong();
         this.createdAt = in.readLong();
         this.updatedAt = in.readLong();
+        this.domain = in.readInt();
+        this.type = in.readInt();
+        this.backup = (in.readByte() == 1);
 
     }
 
@@ -82,6 +91,9 @@ public class AppInfo extends BaseModel {
         dest.writeLong(this.size);
         dest.writeLong(this.createdAt);
         dest.writeLong(this.updatedAt);
+        dest.writeInt(this.domain);
+        dest.writeInt(this.type);
+        dest.writeByte((byte) (this.backup ? 1 : 0));
     }
 
     public static final Creator<AppInfo> CREATOR = new Creator<AppInfo>() {
@@ -114,6 +126,9 @@ public class AppInfo extends BaseModel {
         sb.append(", size=").append(size);
         sb.append(", createdAt=").append(createdAt);
         sb.append(", updatedAt=").append(updatedAt);
+        sb.append(", domain=").append(domain);
+        sb.append(", type=").append(type);
+        sb.append(", backup=").append(backup);
         sb.append('}');
         return sb.toString();
     }

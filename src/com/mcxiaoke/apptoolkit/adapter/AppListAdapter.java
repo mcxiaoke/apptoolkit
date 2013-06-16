@@ -10,7 +10,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.mcxiaoke.apptoolkit.R;
-import com.mcxiaoke.apptoolkit.cache.AppIconCache;
+import com.mcxiaoke.apptoolkit.cache.CacheManager;
 import com.mcxiaoke.apptoolkit.model.AppInfo;
 import com.mcxiaoke.apptoolkit.util.Utils;
 
@@ -25,13 +25,13 @@ import java.util.List;
  */
 public class AppListAdapter extends MultiChoiceArrayAdapter<AppInfo> {
     private PackageManager mPackageManager;
-    private AppIconCache mIconCache;
+    private CacheManager mIconCache;
     private int mActivateBgResId;
 
     public AppListAdapter(Context context, List<AppInfo> objects) {
         super(context, objects);
         mPackageManager = context.getPackageManager();
-        mIconCache = AppIconCache.getInstance();
+        mIconCache = CacheManager.getInstance();
         mActivateBgResId = R.drawable.list_item_activated;
     }
 
@@ -59,8 +59,11 @@ public class AppListAdapter extends MultiChoiceArrayAdapter<AppInfo> {
             holder = (ViewHolder) convertView.getTag();
         }
 
+        final int index = position;
         final AppInfo app = getItem(position);
         final boolean checked = isChecked(position);
+        final View view = convertView;
+
         holder.appName.setText(app.appName);
         holder.sourceDir.setText(app.sourceDir);
         holder.version.setText(app.versionName);
@@ -71,27 +74,31 @@ public class AppListAdapter extends MultiChoiceArrayAdapter<AppInfo> {
             holder.icon.setImageDrawable(icon);
         }
 
-        final int index = position;
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 setChecked(index, isChecked);
                 onChecked(index, isChecked);
+                changeBackground(view, isChecked);
             }
         });
         holder.checkBox.setChecked(checked);
 
-        if (checked) {
-            convertView.setBackgroundResource(mActivateBgResId);
-        } else {
-            convertView.setBackgroundResource(0);
-        }
-//        convertView.setBackgroundColor(checked ? mActivateColor : 0);
+        changeBackground(convertView, checked);
+
         return convertView;
     }
 
+    private void changeBackground(View view, boolean checked) {
+        if (checked) {
+            view.setBackgroundResource(mActivateBgResId);
+        } else {
+            view.setBackgroundResource(0);
+        }
+    }
+
     private Drawable getIcon(final AppInfo app) {
-        return mIconCache.get(app.packageName);
+        return mIconCache.getIcon(app.packageName);
     }
 
     static class ViewHolder {

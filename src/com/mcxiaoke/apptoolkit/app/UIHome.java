@@ -1,9 +1,10 @@
 package com.mcxiaoke.apptoolkit.app;
 
 import android.os.Bundle;
+import com.mcxiaoke.apptoolkit.AppConfig;
 import com.mcxiaoke.apptoolkit.R;
-import com.mcxiaoke.apptoolkit.cache.AppIconCache;
-import com.mcxiaoke.apptoolkit.fragment.AppListFragment;
+import com.mcxiaoke.apptoolkit.cache.CacheManager;
+import com.mcxiaoke.apptoolkit.fragment.AppsFragment;
 import com.mcxiaoke.apptoolkit.fragment.BaseFragment;
 import com.mcxiaoke.apptoolkit.receiver.PackageCallback;
 import com.mcxiaoke.apptoolkit.receiver.PackageMonitor;
@@ -29,6 +30,7 @@ public class UIHome extends UIBaseSupport implements PackageCallback {
         super.onCreate(savedInstanceState);
         mContext = this;
         setContentView(R.layout.main);
+        hideProgressIndicator();
         debug("onCreate()");
         mPackageMonitor = new PackageMonitor();
         mPackageMonitor.register(this, this, false);
@@ -48,29 +50,30 @@ public class UIHome extends UIBaseSupport implements PackageCallback {
 
     private void addAppListFragment() {
         debug("addAppListFragment()");
-        mFragment = new AppListFragment();
+        mFragment = AppsFragment.newInstance(AppConfig.TYPE_USER_APP_MANAGER, false);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, mFragment).commit();
     }
 
     @Override
     public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
         debug("onCreateOptionsMenu()");
-        menu.clear();
+        return super.onCreateOptionsMenu(menu);
+/*        menu.clear();
         getSupportMenuInflater().inflate(R.menu.menu_home, menu);
         if (isRefreshing()) {
             menu.findItem(R.id.menu_refresh).setActionView(
                     R.layout.action_bar_indeterminate_progress);
         }
-        return true;
+        return true;*/
     }
 
     @Override
     public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
-        switch (item.getItemId()) {
+/*        switch (item.getItemId()) {
             case R.id.menu_refresh:
                 refresh();
                 return true;
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 
@@ -104,7 +107,7 @@ public class UIHome extends UIBaseSupport implements PackageCallback {
             mPackageMonitor.unregister();
             mPackageMonitor = null;
         }
-        AppIconCache.getInstance().clear();
+        CacheManager.getInstance().clear();
     }
 
     @Override

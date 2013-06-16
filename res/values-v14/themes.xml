@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-<!--    <style name="AppThemeLight" parent="android:Theme.Holo.Light.DarkActionBar">
+    <style name="AppThemeLight" parent="android:Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
-        <item name="android:actionModeStyle">@style/Widget.Styled.ActionMode</item>
-    </style>-->
+        <item name="android:actionBarWidgetTheme">@style/Widget.Styled.ActionBarWidget</item>
+    </style>
 
     <style name="Widget.Styled.ActionBar" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:indeterminateProgressStyle">@style/IndeterminateProgress</item>
     </style>
 
-    <style name="Widget.Styled.ActionMode" parent="android:Widget.Holo.Light.ActionMode.Inverse">
+    <style name="Widget.Styled.ActionBarWidget" parent="android:Theme.Holo.Light">
+        <!-- ugly bug from sdk14, waste my all day-->
+        <!--@see http://daniel-codes.blogspot.com/2012/11/the-unknown-style-actionbarwidgettheme.html-->
     </style>
 
 </resources>

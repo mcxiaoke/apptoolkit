@@ -16,13 +16,13 @@
 
     <string name="dialog_backup_title">Backuping</string>
 
-    <string name="dialog_backup_all_title">Backup All</string>
-    <string name="dialog_backup_all_message">Are you sure backup all apps?</string>
+    <string name="dialog_backup_all_title">Backup Selected</string>
+    <string name="dialog_backup_all_message">Are you sure backup all selected apps?</string>
 
 
     <string name="dialog_backup_complete_title">Backup Complete</string>
-    <string name="dialog_backup_complete_message">All Apps are Backup to SDCARD, Total Backup Apps: %1$d, New Backup
-        Apps: %2$dd
+    <string name="dialog_backup_complete_message">All Apps are Backup to %1$s, Total Backup Apps: %2$d, New Backup
+        Apps: %3$dd
     </string>
     <string name="msg_backup_success">Backup Completed. Total Backup Apps: %1$d, New Backup Apps: %2$d</string>
 

@@ -9,26 +9,27 @@
     <!-- menu strings-->
     <string name="menu_mode_select_all">选择全部</string>
     <string name="menu_mode_unselect_all">取消选择</string>
-    <string name="menu_mode_delete">卸载所选应用</string>
-    <string name="menu_mode_backup_app">备份安装文件</string>
-    <string name="menu_mode_backup_data">备份应用数据</string>
+    <string name="menu_mode_delete">卸载应用</string>
+    <string name="menu_mode_backup_app">备份应用</string>
+    <string name="menu_mode_backup_data">备份数据</string>
 
     <string name="dialog_backup_title">正在备份</string>
 
-    <string name="dialog_backup_all_title">备份全部</string>
-    <string name="dialog_backup_all_message">确定备份全部应用到存储卡？</string>
+    <string name="dialog_backup_all_title">备份应用</string>
+    <string name="dialog_backup_all_message">确定备份选择的应用到存储卡？</string>
 
     <string name="dialog_backup_complete_title">备份完成</string>
-    <string name="dialog_backup_complete_message">应用已全部备份到存储卡，备份应用总数：%1$d，本次新增备份数量： %2$d</string>
+    <string name="dialog_backup_complete_message">应用已全部备份到%1$s，备份应用总数：%2$d，本次新增： %3$d</string>
 
     <!-- App Operations-->
-    <string name="action_view_appinfo">显示详细信息</string>
-    <string name="action_view_appsetting">进入应用管理</string>
-    <string name="action_backup_apk">备份到存储卡</string>
-    <string name="action_backup_data">备份数据到存储卡</string>
+    <string name="action_view_appinfo">进入应用管理</string>
+    <string name="action_view_appsetting">查看应用信息</string>
+    <string name="action_backup_apk">备份应用安装包</string>
+    <string name="action_backup_data">备份应用数据</string>
     <string name="action_restore_data">从存储卡恢复数据</string>
     <string name="action_view_data">显示应用数据</string>
-    <string name="action_clear_data">清除数据和缓存</string>
+    <string name="action_clear_data">清除数据文件</string>
+    <string name="action_clear_cache">清除缓存文件</string>
     <string name="action_install">安装应用</string>
     <string name="action_uninstall">卸载应用</string>
     <string name="action_slient_install">静默安装</string>
@@ -36,11 +37,11 @@
     <string name="action_disable_app">禁用此应用</string>
     <string name="action_enable_app">启用此应用</string>
     <string name="action_restart_package">结束应用</string>
-    <string name="action_kill_process">强制结束进程</string>
+    <string name="action_kill_process">结束进程</string>
     <string name="action_install_system">安装为系统应用</string>
     <string name="action_uninstall_system">删除系统应用</string>
-    <string name="action_view_playstore">查看市场信息</string>
-    <string name="action_copy_package">复制应用包名</string>
+    <string name="action_view_playstore">市场信息</string>
+    <string name="action_copy_package">复制包名</string>
     <string name="action_view_manifest">查看清单文件</string>
     <string name="action_view_resource">查看资源文件</string>
 

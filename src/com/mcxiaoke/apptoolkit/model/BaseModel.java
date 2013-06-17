@@ -22,6 +22,6 @@ public abstract class BaseModel implements Parcelable {
     }
 
     public String jsonString() {
-        return AppContext.getGson().toJson(this);
+        return AppContext.getApp().getGson().toJson(this);
     }
 }

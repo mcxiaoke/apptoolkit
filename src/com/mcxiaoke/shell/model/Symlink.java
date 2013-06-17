@@ -84,12 +84,12 @@ public class Symlink {
     public ArrayList<Symlink> getSymlinks(String path) throws Exception {
 
         // this command needs find
-        if (!Shell.Helper.hasFind()) {
+        if (!Shell.hasFind()) {
             throw new Exception("find command not found");
         }
 
         String findCommand = "find " + path + " -type l -exec ls -l {} \\; > /data/local/symlinks.txt;";
-        List<String> outputs = Shell.SU.run(findCommand);
+        List<String> outputs = Shell.runAsRoot(findCommand).output;
         ArrayList<Symlink> symlinks = getSymLinks();
         return symlinks;
     }

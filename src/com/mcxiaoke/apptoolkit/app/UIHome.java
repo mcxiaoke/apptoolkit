@@ -39,7 +39,7 @@ public class UIHome extends UIBaseSupport implements IPackageMonitor {
         new Thread() {
             @Override
             public void run() {
-                if (Shell.SU.available()) {
+                if (Shell.isRootAccessAvailable()) {
                     debug("Root Access Granted");
                 } else {
                     debug("Root Access Not Granted");

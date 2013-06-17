@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -43,9 +44,63 @@ import java.util.UUID;
  * Class providing functionality to execute commands in a (root) shell
  */
 public class Shell {
+    public static final String SHELL_SU = "su";
+    public static final String SHELL_SH = "sh";
+    public static final String SHELL_BASH = "bash";
+
+    private static final String CMD_CP = "cp";
+    private static final String CMD_MV = "mv";
+    private static final String BUSYBOX = "busybox";
+    private static final String CMD_SU = "su";
+    private static final String MOUNT = "mount";
+    private static final String CMD_FIND = "find";
+
+    /**
+     * class for shell command
+     */
+    public static final class ShellCommand {
+        // input
+        public List<String> commands = new ArrayList<String>();
+        public List<String> environments = new ArrayList<String>();
+        public boolean needRoot;
+        public boolean needStandError;
+        // output
+        public int exitValue;
+        public Exception exception;
+        public List<String> output = new ArrayList<String>();
+
+        public ShellCommand(String cmd, boolean root) {
+            this(Arrays.asList(new String[]{cmd}), root);
+        }
+
+        public ShellCommand(String[] cmds, boolean root) {
+            this(Arrays.asList(cmds), root);
+        }
+
+        public ShellCommand(List<String> cmds, boolean root) {
+            if (cmds != null) {
+                this.commands.addAll(cmds);
+            }
+            this.needRoot = root;
+        }
+
+        public void addCommand(String cmd) {
+            this.commands.add(cmd);
+        }
+
+        public void addEnvironment(String env) {
+            this.environments.add(env);
+        }
+
+        public void addOutput(String out) {
+            this.output.add(out);
+        }
+    }
+
+
     private static final String TAG = Shell.class.getSimpleName();
 
-    private static boolean sDebug;
+    private static boolean sDebug = true;
 
     public static boolean isDebug() {
         return sDebug;
@@ -141,6 +196,133 @@ public class Shell {
      * a deadlock does not occur if the shell produces massive output, the output is
      * still stored in a List&lt;String&gt;, and as such doing something like <em>'ls -lR /'</em>
      * will probably have you runCommand out of memory.</p>
+     */
+    private static ShellCommand runCommand(ShellCommand cmd) {
+        if (cmd == null || cmd.commands == null || cmd.commands.isEmpty()) {
+            return null;
+        }
+        String shell = cmd.needRoot ? SHELL_SU : SHELL_SH;
+
+        if (isDebug()) {
+            // check if we're running in the main thread, and if so, crash if we're in debug mode,
+            // to let the developer know attention is needed here.
+
+            if ((Looper.myLooper() != null) && (Looper.myLooper() == Looper.getMainLooper())) {
+                log(ShellOnMainThreadException.EXCEPTION_COMMAND);
+                throw new ShellOnMainThreadException(ShellOnMainThreadException.EXCEPTION_COMMAND);
+            }
+
+            log(String.format("[%s%%] START", shell));
+            log("runCommand.commands: " + listToString(cmd.commands));
+        }
+
+        List<String> res = Collections.synchronizedList(new ArrayList<String>());
+
+        try {
+            // Combine passed environment with system environment
+            String[] environments = new String[]{};
+            if (cmd.environments != null) {
+                Map<String, String> newEnvironment = new HashMap<String, String>();
+                newEnvironment.putAll(System.getenv());
+                int split;
+                for (String entry : cmd.environments) {
+                    if ((split = entry.indexOf("=")) >= 0) {
+                        newEnvironment.put(entry.substring(0, split), entry.substring(split + 1));
+                    }
+                }
+                int i = 0;
+                environments = new String[newEnvironment.size()];
+                for (Map.Entry<String, String> entry : newEnvironment.entrySet()) {
+                    environments[i] = entry.getKey() + "=" + entry.getValue();
+                    i++;
+                }
+            }
+
+            log("runCommand.environments: " + arrayToString(environments));
+
+            // setup our process, retrieve STDIN stream, and STDOUT/STDERR gobblers
+            Process process = Runtime.getRuntime().exec(shell, environments);
+            DataOutputStream STDIN = new DataOutputStream(process.getOutputStream());
+            StreamGobbler STDOUT = new StreamGobbler(shell + "-", process.getInputStream(), res);
+            StreamGobbler STDERR = new StreamGobbler(shell + "*", process.getErrorStream(), cmd.needStandError ? res : null);
+
+            // start gobbling and write our commands to the shell
+            STDOUT.start();
+            STDERR.start();
+            for (String write : cmd.commands) {
+                if (isDebug()) log(String.format("[%s+] %s", shell, write));
+                STDIN.writeBytes(write + "\n");
+                STDIN.flush();
+            }
+            STDIN.writeBytes("exit\n");
+            STDIN.flush();
+
+            // wait for our process to finish, while we gobble away in the background
+            process.waitFor();
+
+            // make sure our threads are done gobbling, our streams are closed, and the process is
+            // destroyed - while the latter two shouldn't be needed in theory, and may even produce
+            // warnings, in "normal" Java they are required for guaranteed cleanup of resources, so
+            // lets be safe and do this on Android as well
+            try {
+                STDIN.close();
+            } catch (IOException e) {
+            }
+            STDOUT.join();
+            STDERR.join();
+            process.destroy();
+
+            if (res != null && res.size() > 0) {
+                cmd.output.addAll(res);
+            }
+            cmd.exitValue = process.exitValue();
+            // in case of su, 255 usually indicates access denied
+//            if (shell.equals("su") && exitValue == 255) {
+//                res = null;
+//            }
+        } catch (InterruptedException e) {
+            cmd.exception = e;
+            e.printStackTrace();
+            error("runCommand,ex:" + e);
+        } catch (IOException e) {
+            cmd.exception = e;
+            error("runCommand,ex:" + e);
+            e.printStackTrace();
+        } catch (Exception e) {
+            cmd.exception = e;
+            error("runCommand,ex:" + e);
+        } finally {
+
+        }
+
+        if (isDebug()) {
+            log("runCommand.exitValue: " + cmd.exitValue);
+            log("runCommand.result: " + listToString(cmd.output));
+            log(String.format("[%s%%] END", shell));
+        }
+        return cmd;
+    }
+
+    /**
+     * <p>Runs commands using the supplied shell, and returns the output, or null in
+     * case of errors.</p>
+     * <p/>
+     * <p>Note that due to compatibility with older Android versions,
+     * wantSTDERR is not implemented using redirectErrorStream, but rather appended
+     * to the output. STDOUT and STDERR are thus not guaranteed to be in the correct
+     * order in the output.</p>
+     * <p/>
+     * <p>Note as well that this code will intentionally crash when runCommand in debug mode
+     * from the main thread of the application. You should always execute shell
+     * commands from a background thread.</p>
+     * <p/>
+     * <p>When in debug mode, the code will also excessively log the commands passed to
+     * and the output returned from the shell.</p>
+     * <p/>
+     * <p>Though this function uses background threads to gobble STDOUT and STDERR so
+     * a deadlock does not occur if the shell produces massive output, the output is
+     * still stored in a List&lt;String&gt;, and as such doing something like <em>'ls -lR /'</em>
+     * will probably have you runCommand out of memory.</p>
      *
      * @param shell       The shell to use for executing the commands
      * @param commands    The commands to execute
@@ -148,7 +330,7 @@ public class Shell {
      * @param wantSTDERR  Return STDERR in the output ?
      * @return Output of the commands, or null in case of an error
      */
-    private static List<String> runCommand(String shell, String[] commands, String[] environment, boolean wantSTDERR) throws IOException, InterruptedException {
+    private static List<String> run(String shell, String[] commands, String[] environment, boolean wantSTDERR) throws IOException, InterruptedException {
         String shellUpper = shell.toUpperCase();
 
         if (isDebug()) {
@@ -161,9 +343,11 @@ public class Shell {
             }
 
             log(String.format("[%s%%] START", shellUpper));
+            log("runCommand.commands: " + arrayToString(commands));
         }
 
         List<String> res = Collections.synchronizedList(new ArrayList<String>());
+        int exitValue = -1;
 
         try {
             // Combine passed environment with system environment
@@ -216,185 +400,327 @@ public class Shell {
             STDERR.join();
             process.destroy();
 
+            exitValue = process.exitValue();
             // in case of su, 255 usually indicates access denied
-            if (shell.equals("su") && (process.exitValue() == 255)) {
+            if (shell.equals("su") && exitValue == 255) {
                 res = null;
             }
-        }
-/*        catch (IOException e) {
-            if (isDebug()) {
-                error(e);
-            }
-            // shell probably not found
-            res = null;
-        } catch (InterruptedException e) {
-            // this should really be re-thrown
-            if (isDebug()) {
-                error(e);
-            }
-            res = null;
-        } catch (Exception e) {
-            if (isDebug()) {
-                error(e);
-            }
-            res = null;
-        } */ finally {
+        } finally {
 
         }
 
-        if (isDebug()) log(String.format("[%s%%] END", shell.toUpperCase()));
+        if (isDebug()) {
+            log("runCommand.exitValue: " + exitValue);
+            log("runCommand.result: " + listToString(res));
+            log(String.format("[%s%%] END", shell.toUpperCase()));
+        }
         return res;
     }
 
-    /**
-     * This class provides utility functions to easily execute commands using SH
-     */
-    public static class SH {
-        /**
-         * Runs command and return output
-         *
-         * @param command The command to runCommand
-         * @return Output of the command, or null in case of an error
-         */
-        public static List<String> run(String command) throws IOException, InterruptedException, Exception {
-            return Shell.runCommand("sh", new String[]{command}, null, false);
+    private static String arrayToString(String[] strings) {
+        StringBuilder builder = new StringBuilder();
+        if (strings == null || strings.length == 0) {
+            builder.append("null");
+        } else {
+            for (String str : strings) {
+                builder.append(" ").append(str).append(";");
+            }
         }
+        return builder.toString();
 
-        /**
-         * Runs commands and return output
-         *
-         * @param commands The commands to runCommand
-         * @return Output of the commands, or null in case of an error
-         */
-        public static List<String> run(List<String> commands) throws IOException, InterruptedException, Exception {
-            return Shell.runCommand("sh", commands.toArray(new String[commands.size()]), null, false);
-        }
+    }
 
-        /**
-         * Runs commands and return output
-         *
-         * @param commands The commands to runCommand
-         * @return Output of the commands, or null in case of an error
-         */
-        public static List<String> run(String[] commands) throws IOException, InterruptedException, Exception {
-            return Shell.runCommand("sh", commands, null, false);
+    private static String listToString(List<String> strings) {
+        StringBuilder builder = new StringBuilder();
+        if (strings == null || strings.isEmpty()) {
+            builder.append("null");
+        } else {
+            for (String str : strings) {
+                builder.append(" ").append(str).append(";");
+            }
         }
+        return builder.toString();
+
     }
 
     /**
-     * This class provides utility functions to easily execute commands using SU
-     * (root shell), as well as detecting whether or not root is available, and
-     * if so which version.
+     * Runs command and return output
+     *
+     * @param command The command to runCommand
+     * @return Output of the command, or null in case of an error
      */
-    public static class SU {
-        /**
-         * Runs command as root (if available) and return output
-         *
-         * @param command The command to runCommand
-         * @return Output of the command, or null if root isn't available or in case of an error
-         */
-        public static List<String> run(String command) throws IOException, InterruptedException {
-            return Shell.runCommand("su", new String[]{command}, null, false);
-        }
+    public static ShellCommand run(String command) {
+        ShellCommand cmd = new ShellCommand(new String[]{command}, false);
+        return Shell.runCommand(cmd);
+    }
 
-        /**
-         * Runs commands as root (if available) and return output
-         *
-         * @param commands The commands to runCommand
-         * @return Output of the commands, or null if root isn't available or in case of an error
-         */
-        public static List<String> run(List<String> commands) throws IOException, InterruptedException {
-            return Shell.runCommand("su", commands.toArray(new String[commands.size()]), null, false);
-        }
+    /**
+     * Runs commands and return output
+     *
+     * @param commands The commands to runCommand
+     * @return Output of the commands, or null in case of an error
+     */
+    public static ShellCommand run(List<String> commands) {
+        ShellCommand cmd = new ShellCommand(commands, false);
+        return Shell.runCommand(cmd);
+    }
 
-        /**
-         * Runs commands as root (if available) and return output
-         *
-         * @param commands The commands to runCommand
-         * @return Output of the commands, or null if root isn't available or in case of an error
-         */
-        public static List<String> run(String[] commands) throws IOException, InterruptedException {
-            return Shell.runCommand("su", commands, null, false);
-        }
+    /**
+     * Runs commands and return output
+     *
+     * @param commands The commands to runCommand
+     * @return Output of the commands, or null in case of an error
+     */
+    public static ShellCommand run(String[] commands) {
+        ShellCommand cmd = new ShellCommand(commands, false);
+        return Shell.runCommand(cmd);
+    }
 
-        /**
-         * Detects whether or not superuser access is available, by checking the output
-         * of the "id" command if available, checking if a shell runs at all otherwise
-         *
-         * @return True if superuser access available
-         */
-        public static boolean available() {
-            // this is only one of many ways this can be done
+    /**
+     * Runs command as root (if available) and return output
+     *
+     * @param command The command to runCommand
+     * @return Output of the command, or null if root isn't available or in case of an error
+     */
+    public static ShellCommand runAsRoot(String command) {
+        ShellCommand cmd = new ShellCommand(new String[]{command}, true);
+        return Shell.runCommand(cmd);
+    }
 
-            List<String> ret = null;
-            try {
-                ret = run(new String[]{
-                        "echo -BOC-",
-                        "id"
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
+    /**
+     * Runs commands as root (if available) and return output
+     *
+     * @param commands The commands to runCommand
+     * @return Output of the commands, or null if root isn't available or in case of an error
+     */
+    public static ShellCommand runAsRoot(List<String> commands) {
+        ShellCommand cmd = new ShellCommand(commands, true);
+        return Shell.runCommand(cmd);
+    }
+
+    /**
+     * Runs commands as root (if available) and return output
+     *
+     * @param commands The commands to runCommand
+     * @return Output of the commands, or null if root isn't available or in case of an error
+     */
+    public static ShellCommand runAsRoot(String[] commands) {
+        ShellCommand cmd = new ShellCommand(commands, true);
+        return Shell.runCommand(cmd);
+    }
+
+    /**
+     * Detects whether or not superuser access is available, by checking the output
+     * of the "id" command if available, checking if a shell runs at all otherwise
+     *
+     * @return True if superuser access available
+     */
+    public static boolean isRootAccessAvailable() {
+        // this is only one of many ways this can be done
+        ShellCommand cmd = runAsRoot(new String[]{
+                "echo -BOC-",
+                "id"
+        });
+
+        if (cmd == null || cmd.exitValue == 1 || cmd.exception != null) return false;
+
+        boolean echo_seen = false;
+
+        for (String line : cmd.output) {
+            if (line.contains("uid=")) {
+                // id command is working, let's see if we are actually root
+                return line.contains("uid=0");
+            } else if (line.contains("-BOC-")) {
+                // if we end up here, at least the su command starts some kind of shell,
+                // let's hope it has root privileges - no way to know without additional
+                // native binaries
+                echo_seen = true;
             }
-            if (ret == null) return false;
+        }
 
-            boolean echo_seen = false;
+        return echo_seen;
+    }
 
-            for (String line : ret) {
-                if (line.contains("uid=")) {
-                    // id command is working, let's see if we are actually root
-                    return line.contains("uid=0");
-                } else if (line.contains("-BOC-")) {
-                    // if we end up here, at least the su command starts some kind of shell,
-                    // let's hope it has root privileges - no way to know without additional
-                    // native binaries
-                    echo_seen = true;
+    /**
+     * <p>Detects the version of the su binary installed (if any), if supported by the binary.
+     * Most binaries support two different version numbers, the public version that is
+     * displayed to users, and an internal version number that is used for version number
+     * comparisons. Returns null if su not available or retrieving the version isn't supported.</p>
+     * <p/>
+     * <p>Note that su binary version and GUI (APK) version can be completely different.</p>
+     *
+     * @param internal Request human-readable version or application internal version
+     * @return String containing the su version or null
+     */
+    public static String getSuVersion(boolean internal) {
+        // we add an additional exit call, because the command
+        // line options are not available in all su versions,
+        // thus potentially launching a shell instead
+
+        ShellCommand cmd = run(new String[]{
+                internal ? "su -V" : "su -v",
+                "exit"
+        });
+
+        if (cmd == null || cmd.output.isEmpty()) return null;
+
+        for (String line : cmd.output) {
+            if (!internal) {
+                if (line.contains(".")) return line;
+            } else {
+                try {
+                    if (Integer.parseInt(line) > 0) return line;
+                } catch (NumberFormatException e) {
                 }
             }
+        }
+        return null;
+    }
 
-            return echo_seen;
+
+    /**
+     * Remount a path file as the type.
+     *
+     * @param path      the path you want to remount
+     * @param mountType the mount type, including, <i>"ro" means read only, "rw" means read and write</i>
+     * @return the operation result.
+     */
+    public static boolean remount(String path, String mountType) {
+        if (TextUtils.isEmpty(path) || TextUtils.isEmpty(mountType)) {
+            return false;
         }
 
-        /**
-         * <p>Detects the version of the su binary installed (if any), if supported by the binary.
-         * Most binaries support two different version numbers, the public version that is
-         * displayed to users, and an internal version number that is used for version number
-         * comparisons. Returns null if su not available or retrieving the version isn't supported.</p>
-         * <p/>
-         * <p>Note that su binary version and GUI (APK) version can be completely different.</p>
-         *
-         * @param internal Request human-readable version or application internal version
-         * @return String containing the su version or null
-         */
-        public static String version(boolean internal) {
-            // we add an additional exit call, because the command
-            // line options are not available in all su versions,
-            // thus potentially launching a shell instead
-
-            List<String> ret = null;
-            try {
-                ret = Shell.runCommand("sh", new String[]{
-                        internal ? "su -V" : "su -v",
-                        "exit"
-                }, null, false);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if (ret == null) return null;
-
-            for (String line : ret) {
-                if (!internal) {
-                    if (line.contains(".")) return line;
-                } else {
-                    try {
-                        if (Integer.parseInt(line) > 0) return line;
-                    } catch (NumberFormatException e) {
-                    }
-                }
-            }
-            return null;
+        if (mountType.equalsIgnoreCase("rw") || mountType.equalsIgnoreCase("ro")) {
+            return Remounter.remount(path, mountType);
+        } else {
+            return false;
         }
+
+    }
+
+    public static boolean isBinaryInstalled(String binary) {
+        for (String path : SU_BINARY_PATH) {
+            File file = new File(path, binary);
+            if (file.exists()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean hasUtil(String binary) {
+        return isBinaryInstalled(binary);
+    }
+
+    public static boolean hasBusyBox() {
+        return isBinaryInstalled(BUSYBOX);
+    }
+
+    public static boolean hasSu() {
+        return isBinaryInstalled(CMD_SU);
+    }
+
+    public static boolean hasCp() {
+        return isBinaryInstalled(CMD_CP);
+    }
+
+    public static boolean hasMount() {
+        return isBinaryInstalled(MOUNT);
+    }
+
+    public static boolean hasFind() {
+        return isBinaryInstalled(CMD_FIND);
+    }
+
+    public static void reboot() {
+        runAsRoot("reboot");
+    }
+
+    public static void fastReboot() {
+        killProcess("system_server zygote");
+    }
+
+    public static void killProcess(String processName) {
+        String fastRebootCommand;
+        if (hasBusyBox()) {
+            fastRebootCommand = "busybox killall " + processName;
+        } else {
+            fastRebootCommand = "killall " + processName;
+        }
+        runAsRoot(fastRebootCommand);
+    }
+
+    public static boolean copyFile(String src, String dest, boolean needRemount) throws Exception {
+        boolean result = false;
+
+        String mountedAs = Remounter.getMountedAs(dest);
+        if (needRemount) {
+            remount(dest, "rw");
+        }
+
+        List<String> commands = new ArrayList<String>();
+
+        String mkdirsCommand = "mkdir -p " + dest;
+        commands.add(mkdirsCommand);
+
+        String cpCommand;
+        if (hasCp()) {
+            cpCommand = "cp -rf " + src + " " + dest;
+        } else if (hasBusyBox()) {
+            cpCommand = "busybox cp -rf " + src + " " + dest;
+        } else {
+            cpCommand = "cat " + src + " > " + dest;
+        }
+        commands.add(cpCommand);
+
+        ShellCommand cmd = runAsRoot(commands);
+
+        if (!cmd.output.isEmpty()) {
+            result = true;
+        }
+
+        if (needRemount) {
+            remount(dest, mountedAs);
+        }
+        return result;
+    }
+
+    public static boolean moveFile(String src, String dest, boolean needRemount) throws Exception {
+        boolean result = false;
+
+        String mountedAs = Remounter.getMountedAs(dest);
+        if (needRemount) {
+            remount(dest, "rw");
+        }
+
+        String mvCommand;
+        if (hasCp()) {
+            mvCommand = "mv " + src + " " + dest;
+        } else if (hasBusyBox()) {
+            mvCommand = "mv " + src + " " + dest;
+        } else {
+            return false;
+        }
+
+        ShellCommand cmd = runAsRoot(mvCommand);
+
+        if (!cmd.output.isEmpty()) {
+            result = true;
+        }
+
+        remount(dest, mountedAs);
+        return result;
+    }
+
+    /**
+     * This will launch the Android market looking for BusyBox
+     *
+     * @param activity pass in your Activity
+     */
+    public void offerBusyBox(Activity activity) {
+        Intent i = new Intent(Intent.ACTION_VIEW,
+                Uri.parse("market://details?id=stericson.busybox"));
+        activity.startActivity(i);
     }
 
     /**
@@ -1291,164 +1617,6 @@ public class Shell {
                 reader.close();
             } catch (IOException e) {
             }
-        }
-    }
-
-
-    public static class Helper {
-        private static final String CMD_CP = "cp";
-        private static final String CMD_MV = "mv";
-        private static final String BUSYBOX = "busybox";
-        private static final String CMD_SU = "su";
-        private static final String MOUNT = "mount";
-        private static final String CMD_FIND = "find";
-
-        /**
-         * Remount a path file as the type.
-         *
-         * @param path      the path you want to remount
-         * @param mountType the mount type, including, <i>"ro" means read only, "rw" means read and write</i>
-         * @return the operation result.
-         */
-        public static boolean remount(String path, String mountType) {
-            if (TextUtils.isEmpty(path) || TextUtils.isEmpty(mountType)) {
-                return false;
-            }
-
-            if (mountType.equalsIgnoreCase("rw") || mountType.equalsIgnoreCase("ro")) {
-                return Remounter.remount(path, mountType);
-            } else {
-                return false;
-            }
-
-        }
-
-        public static boolean isBinaryInstalled(String binary) {
-            for (String path : SU_BINARY_PATH) {
-                File file = new File(path, binary);
-                if (file.exists()) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public static boolean hasUtil(String binary) {
-            return isBinaryInstalled(binary);
-        }
-
-        public static boolean hasBusyBox() {
-            return isBinaryInstalled(BUSYBOX);
-        }
-
-        public static boolean hasSu() {
-            return isBinaryInstalled(CMD_SU);
-        }
-
-        public static boolean hasCp() {
-            return isBinaryInstalled(CMD_CP);
-        }
-
-        public static boolean hasMount() {
-            return isBinaryInstalled(MOUNT);
-        }
-
-        public static boolean hasFind() {
-            return isBinaryInstalled(CMD_FIND);
-        }
-
-        public static void restartAndroid() {
-//            RootTools.log("Restart Android");
-            killProcess("zygote");
-        }
-
-        public static void fastReboot() {
-            String fastRebootCommand;
-            if (hasBusyBox()) {
-                fastRebootCommand = "busybox killall system_server zygote";
-            } else {
-                fastRebootCommand = "killall system_server zygote";
-            }
-            try {
-                List<String> output = SU.run(fastRebootCommand);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        public static void killProcess(String processName) {
-
-        }
-
-        public static boolean copyFile(String src, String dest, boolean needRemount) throws Exception {
-            boolean result = false;
-
-            String mountedAs = Remounter.getMountedAs(dest);
-            if (needRemount) {
-                remount(dest, "rw");
-            }
-
-            List<String> commands = new ArrayList<String>();
-
-            String mkdirsCommand = "mkdirs " + dest;
-            commands.add(mkdirsCommand);
-
-            String cpCommand;
-            if (hasCp()) {
-                cpCommand = "cp -rf " + src + " " + dest;
-            } else if (hasBusyBox()) {
-                cpCommand = "busybox cp -rf " + src + " " + dest;
-            } else {
-                cpCommand = "cat " + src + " > " + dest;
-            }
-            commands.add(cpCommand);
-
-            List<String> output = SU.run(commands);
-
-            if (output != null && output.size() > 0) {
-                result = true;
-            }
-
-            remount(dest, mountedAs);
-            return result;
-        }
-
-        public static boolean moveFile(String src, String dest, boolean needRemount) throws Exception {
-            boolean result = false;
-
-            String mountedAs = Remounter.getMountedAs(dest);
-            if (needRemount) {
-                remount(dest, "rw");
-            }
-
-            String cpCommand;
-            if (hasCp()) {
-                cpCommand = "mv " + src + " " + dest;
-            } else if (hasBusyBox()) {
-                cpCommand = "mv " + src + " " + dest;
-            } else {
-                return false;
-            }
-
-            List<String> output = SU.run(cpCommand);
-
-            if (output != null && output.size() > 0) {
-                result = true;
-            }
-
-            remount(dest, mountedAs);
-            return result;
-        }
-
-        /**
-         * This will launch the Android market looking for BusyBox
-         *
-         * @param activity pass in your Activity
-         */
-        public void offerBusyBox(Activity activity) {
-            Intent i = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("market://details?id=stericson.busybox"));
-            activity.startActivity(i);
         }
     }
 

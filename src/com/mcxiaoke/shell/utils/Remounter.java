@@ -70,10 +70,10 @@ public class Remounter {
             String mountPath = mountPoint.getDevice().getAbsolutePath()
                     + " " + mountPoint.getMountPoint().getAbsolutePath();
             String mountCommand = "";
-            if (Shell.Helper.hasMount()) {
+            if (Shell.hasMount()) {
                 mountCommand = "mount -o remount,"
                         + mountType.toLowerCase() + " " + mountPath;
-            } else if (Shell.Helper.hasBusyBox()) {
+            } else if (Shell.hasBusyBox()) {
                 mountCommand = "busybox mount -o remount," + mountType.toLowerCase()
                         + " " + mountPath;
             } else {
@@ -81,13 +81,7 @@ public class Remounter {
                         + mountType.toLowerCase() + " " + mountPath;
             }
 
-            try {
-                List<String> output = Shell.SU.run(mountCommand);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            Shell.ShellCommand cmd = Shell.runAsRoot(mountCommand);
         }
         mountPoint = getMountPoint(file);
 

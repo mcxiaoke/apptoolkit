@@ -28,6 +28,7 @@ import com.mcxiaoke.apptoolkit.callback.IPackageMonitor;
 import com.mcxiaoke.apptoolkit.model.AppInfo;
 import com.mcxiaoke.apptoolkit.task.AsyncTaskCallback;
 import com.mcxiaoke.apptoolkit.task.BackupAppsApkTask;
+import com.mcxiaoke.apptoolkit.task.BackupAppsDataTask;
 import com.mcxiaoke.apptoolkit.task.LoadAppsTask;
 import com.mcxiaoke.apptoolkit.task.TaskMessage;
 import com.mcxiaoke.apptoolkit.util.Utils;
@@ -58,7 +59,8 @@ public class PackageListFragment extends BaseFragment implements AdapterView.OnI
     private ActionModeCallback mActionModeCallback;
     private LoadAppsTask mLoadAppsTask;
     private TaskMessage mLoadAppsTaskParam;
-    private BackupAppsApkTask mBackupTask;
+    private BackupAppsApkTask mBackupApkTask;
+    private BackupAppsDataTask mBackupDataTask;
 
     private ProgressDialog mProgressDialog;
     private ActionMode mActionMode;
@@ -238,12 +240,15 @@ public class PackageListFragment extends BaseFragment implements AdapterView.OnI
     private void onBackupApps() {
         List<AppInfo> checkedApps = mArrayAdapter.getCheckedItems();
         if (checkedApps != null && checkedApps.size() > 0) {
-            showBackupConfirmDialog(checkedApps);
+            showBackupConfirmDialog(checkedApps, false);
         }
     }
 
     private void onBackupData() {
-
+        List<AppInfo> checkedApps = mArrayAdapter.getCheckedItems();
+        if (checkedApps != null && checkedApps.size() > 0) {
+            showBackupConfirmDialog(checkedApps, true);
+        }
     }
 
     private boolean onActionItemClicked(ActionMode mode, MenuItem item) {
@@ -348,15 +353,15 @@ public class PackageListFragment extends BaseFragment implements AdapterView.OnI
     }
 
 
-    private void showBackupConfirmDialog(final List<AppInfo> apps) {
+    private void showBackupConfirmDialog(final List<AppInfo> apps, final boolean backupData) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.dialog_backup_all_title);
-        builder.setMessage(R.string.dialog_backup_all_message);
+        builder.setTitle(backupData ? R.string.dialog_backup_all_data_title : R.string.dialog_backup_all_apk_title);
+        builder.setMessage(backupData ? R.string.dialog_backup_all_data_message : R.string.dialog_backup_all_apk_message);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                startBackup(apps);
+                startBackup(apps, backupData);
             }
         });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -368,11 +373,11 @@ public class PackageListFragment extends BaseFragment implements AdapterView.OnI
         builder.create().show();
     }
 
-    private void showBackupCompleteDialog(int count, int totalCount) {
-        String backupDir = Utils.getBackupAppsDir().getPath();
-        String message = String.format(getString(R.string.dialog_backup_complete_message), backupDir, totalCount, count);
+    private void showBackupCompleteDialog(int count, int totalCount, boolean backupData) {
+        String backupDir = backupData ? Utils.getBackupDataDir().getPath() : Utils.getBackupAppsDir().getPath();
+        String message = String.format(getString(backupData ? R.string.dialog_backup_complete_data_message : R.string.dialog_backup_complete_apk_message), backupDir, totalCount, count);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.dialog_backup_complete_title);
+        builder.setTitle(backupData ? R.string.dialog_backup_complete_data_title : R.string.dialog_backup_all_apk_title);
         builder.setMessage(message);
         builder.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
@@ -384,7 +389,7 @@ public class PackageListFragment extends BaseFragment implements AdapterView.OnI
         builder.create().show();
     }
 
-    private void startBackup(List<AppInfo> apps) {
+    private void startBackup(final List<AppInfo> apps, final boolean backupData) {
         if (isBackuping) {
             return;
         }
@@ -394,14 +399,13 @@ public class PackageListFragment extends BaseFragment implements AdapterView.OnI
 
         final int totalCount = apps.size();
         AppContext.v("startBackup");
-        stopBackup();
         isBackuping = true;
-        mBackupTask = new BackupAppsApkTask(getActivity(), new AsyncTaskCallback<AppInfo, Integer>() {
+        final AsyncTaskCallback<AppInfo, Integer> callback = new AsyncTaskCallback<AppInfo, Integer>() {
 
             @Override
             public void onTaskProgress(int code, AppInfo app) {
                 AppContext.v("BackupAsyncTask.onTaskProgress " + app.appName);
-                updateProgressDialog(Utils.buildProgressText(app));
+                updateProgressDialog(Utils.buildProgressText(app, backupData));
             }
 
             @Override
@@ -409,7 +413,7 @@ public class PackageListFragment extends BaseFragment implements AdapterView.OnI
                 AppContext.v("BackupAsyncTask.onTaskSuccess backup count is " + integer);
                 int backuped = integer == null ? 0 : integer;
                 dismissProgressDialog();
-                showBackupCompleteDialog(backuped, totalCount);
+                showBackupCompleteDialog(backuped, totalCount, backupData);
                 isBackuping = false;
             }
 
@@ -419,9 +423,17 @@ public class PackageListFragment extends BaseFragment implements AdapterView.OnI
                 isBackuping = false;
                 dismissProgressDialog();
             }
-        });
+        };
+        if (backupData) {
+            stopBackupData();
+            mBackupDataTask = new BackupAppsDataTask(getActivity(), callback);
+            mBackupDataTask.start(apps);
+        } else {
+            stopBackupApk();
+            mBackupApkTask = new BackupAppsApkTask(getActivity(), callback);
+            mBackupApkTask.start(apps);
+        }
 
-        mBackupTask.start(apps);
         if (mActionMode != null) {
             mActionMode.finish();
         }
@@ -430,10 +442,24 @@ public class PackageListFragment extends BaseFragment implements AdapterView.OnI
     }
 
     private void stopBackup() {
-        if (mBackupTask != null) {
+        stopBackupApk();
+        stopBackupData();
+    }
+
+    private void stopBackupApk() {
+        if (mBackupApkTask != null) {
             AppContext.v("stopBackup");
-            mBackupTask.stop();
-            mBackupTask = null;
+            mBackupApkTask.stop();
+            mBackupApkTask = null;
+            isBackuping = false;
+        }
+    }
+
+    private void stopBackupData() {
+        if (mBackupApkTask != null) {
+            AppContext.v("stopBackup");
+            mBackupApkTask.stop();
+            mBackupApkTask = null;
             isBackuping = false;
         }
     }

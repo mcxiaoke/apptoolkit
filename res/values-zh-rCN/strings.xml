@@ -15,11 +15,15 @@
 
     <string name="dialog_backup_title">正在备份</string>
 
-    <string name="dialog_backup_all_title">备份应用</string>
-    <string name="dialog_backup_all_message">确定备份选择的应用到存储卡？</string>
+    <string name="dialog_backup_all_apk_title">备份应用</string>
+    <string name="dialog_backup_all_data_title">备份数据</string>
+    <string name="dialog_backup_all_apk_message">确定备份所选应用的安装文件到存储卡？</string>
+    <string name="dialog_backup_all_data_message">确定备份所选应用的数据到存储卡？</string>
 
-    <string name="dialog_backup_complete_title">备份完成</string>
-    <string name="dialog_backup_complete_message">应用已全部备份到%1$s，备份应用总数：%2$d，本次新增： %3$d</string>
+    <string name="dialog_backup_complete_apk_title">应用备份完成</string>
+    <string name="dialog_backup_complete_apk_message">应用已全部备份到%1$s，备份应用总数：%2$d，本次新增： %3$d</string>
+    <string name="dialog_backup_complete_data_title">数据备份完成</string>
+    <string name="dialog_backup_complete_data_message">数据已全部备份到%1$s，备份应用数据总数：%2$d，本次新增： %3$d</string>
 
     <!-- App Operations-->
     <string name="action_view_appinfo">进入应用管理</string>

@@ -1,10 +1,9 @@
 package com.mcxiaoke.apptoolkit.task;
 
 import android.content.Context;
-import android.os.Environment;
-import com.mcxiaoke.apptoolkit.AppConfig;
 import com.mcxiaoke.apptoolkit.model.AppInfo;
 import com.mcxiaoke.apptoolkit.util.Utils;
+import com.mcxiaoke.shell.Shell;
 
 import java.io.File;
 import java.util.List;
@@ -53,21 +52,16 @@ public class BackupAppsDataTask extends AsyncTaskBase<List<AppInfo>, AppInfo, In
         }
 
         List<AppInfo> apps = params[0];
-        File sdcard = Environment.getExternalStorageDirectory();
-        File backupDir = new File(sdcard, AppConfig.BACKUP_APPS_DIR);
-        if (!backupDir.exists()) {
-            backupDir.mkdirs();
-        }
+        File backupDir = Utils.getBackupDataDir();
         int backupCount = 0;
         for (AppInfo app : apps) {
             if (isUserCancelled()) {
                 break;
             }
-            String fileName = Utils.buildApkName(app);
-            File src = new File(app.sourceDir);
-            File dest = new File(backupDir, fileName);
-            if (src.exists() && src.canRead() && !dest.exists()) {
-                boolean success = Utils.copyFile(src, dest);
+            File src = new File(app.dataDir);
+            File dest = new File(backupDir, app.packageName);
+            if (src.exists() && src.canRead()) {
+                boolean success = Shell.copyFile(src.getPath(), dest.getPath(), false, true);
                 if (success) {
                     backupCount++;
                 }

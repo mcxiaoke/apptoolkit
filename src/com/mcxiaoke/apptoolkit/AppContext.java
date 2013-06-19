@@ -2,6 +2,8 @@ package com.mcxiaoke.apptoolkit;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 import com.google.gson.Gson;
@@ -21,6 +23,7 @@ public class AppContext extends Application {
     private static final boolean DEBUG = true;
 
     private static AppContext sInstance;
+    private Handler mUiHandler;
     private Gson mGson;
     private ExecutorService mExecutor;
     private boolean mRootGranted;
@@ -30,6 +33,7 @@ public class AppContext extends Application {
     public void onCreate() {
         super.onCreate();
         sInstance = this;
+        mUiHandler = new Handler(Looper.getMainLooper());
         mExecutor = Executors.newCachedThreadPool();
     }
 
@@ -86,6 +90,26 @@ public class AppContext extends Application {
 
     public static void showToast(Context context, CharSequence text) {
         Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+    }
+
+    public static void postShowToast(final int resId) {
+        final AppContext app = getApp();
+        app.mUiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                showToast(app, resId);
+            }
+        });
+    }
+
+    public static void postShowToast(final String text) {
+        final AppContext app = getApp();
+        app.mUiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                showToast(app, text);
+            }
+        });
     }
 
     private static final String DEFAULT_TAG = "AppToolkit";

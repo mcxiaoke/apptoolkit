@@ -311,7 +311,10 @@ public final class Utils {
     }
 
 
-    public static String buildProgressText(AppInfo app) {
+    public static String buildProgressText(AppInfo app, boolean data) {
+        if (data) {
+            return app.dataDir;
+        }
         return new StringBuilder().append(app.appName).append(" v").append(app.versionName).append("\n").append(app.sourceDir).toString();
 
     }

@@ -4,6 +4,7 @@ import com.mcxiaoke.apptoolkit.AppConfig;
 import com.mcxiaoke.apptoolkit.AppContext;
 import com.mcxiaoke.apptoolkit.model.AppInfo;
 import com.mcxiaoke.apptoolkit.util.AppUtils;
+import com.mcxiaoke.apptoolkit.util.Utils;
 
 /**
  * Project: apptoolkit
@@ -52,12 +53,20 @@ public class SimpleCommandTask extends SimpleAsyncTask {
 
     private boolean doBackupAppApk(AppInfo app) throws Exception {
         AppContext.v("doBackupAppApk name=" + app.appName);
-        return AppUtils.backupAppApk(app);
+        boolean result = AppUtils.backupAppApk(app);
+        if (result) {
+            AppContext.postShowToast(app.appName + "的安装文件已成功备份到" + Utils.getBackupAppsDir());
+        }
+        return result;
     }
 
     private boolean doBackupAppData(AppInfo app) throws Exception {
         AppContext.v("doBackupAppData name=" + app.appName);
-        return AppUtils.backupAppData(app);
+        boolean result = AppUtils.backupAppData(app);
+        if (result) {
+            AppContext.postShowToast(app.appName + "的数据已成功备份到" + Utils.getBackupDataDir());
+        }
+        return result;
     }
 
     @Override

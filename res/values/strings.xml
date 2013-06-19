@@ -16,14 +16,18 @@
 
     <string name="dialog_backup_title">Backuping</string>
 
-    <string name="dialog_backup_all_title">Backup Selected</string>
-    <string name="dialog_backup_all_message">Are you sure backup all selected apps?</string>
+    <string name="dialog_backup_all_apk_title">Backup Apks</string>
+    <string name="dialog_backup_all_data_title">Backup Data</string>
+    <string name="dialog_backup_all_apk_message">Are you sure backup all selected apps\' apk?</string>
+    <string name="dialog_backup_all_data_message">Are you sure backup all selected apps\' data?</string>
 
 
-    <string name="dialog_backup_complete_title">Backup Complete</string>
-    <string name="dialog_backup_complete_message">All Apps are Backup to %1$s, Total Backup Apps: %2$d, New Backup
-        Apps: %3$dd
-    </string>
+    <string name="dialog_backup_complete_apk_title">Backup Apk Complete</string>
+    <string name="dialog_backup_complete_apk_message">All Apps\' apk are Backup to %1$s, Total Backup Apps: %2$d, New Backup Apps: %3$d</string>
+    <string name="dialog_backup_complete_data_title">Backup Data Complete</string>
+    <string name="dialog_backup_complete_data_message">All Apps\' data are Backup to %1$s, Total Backup Apps: %2$d, New Backup Apps: %3$d</string>
+
+
     <string name="msg_backup_success">Backup Completed. Total Backup Apps: %1$d, New Backup Apps: %2$d</string>
 
 

@@ -9,7 +9,7 @@ package com.mcxiaoke.apptoolkit;
  */
 public class AppConfig {
 
-    public static final String APP_TOOL_DIR = "AppToolKit";
+    public static final String APP_TOOL_DIR = "AppToolkit";
     public static final String BACKUP_APPS_DIR = "apps";
     public static final String BACKUP_DATA_DIR = "data";
 

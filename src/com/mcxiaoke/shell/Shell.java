@@ -651,7 +651,6 @@ public class Shell {
     }
 
     public static boolean copyFile(String src, String dest, boolean needRemount, boolean override) throws Exception {
-        boolean result = false;
 
         String mountedAs = Remounter.getMountedAs(dest);
         if (needRemount) {
@@ -665,8 +664,8 @@ public class Shell {
             commands.add(deleteCommand);
         }
 
-        String parentDir=new File(dest).getParent();
-        if(parentDir!=null){
+        String parentDir = new File(dest).getParent();
+        if (parentDir != null) {
             String mkdirsCommand = "mkdir -p " + parentDir;
             commands.add(mkdirsCommand);
         }
@@ -683,18 +682,17 @@ public class Shell {
 
         ShellCommand cmd = runAsRoot(commands);
 
-        if (!cmd.output.isEmpty()) {
-            result = true;
+        if (isDebug()) {
+            log("copyFile() exitValue is " + cmd.exitValue + " output is " + listToString(cmd.output));
         }
 
         if (needRemount) {
             remount(dest, mountedAs);
         }
-        return result;
+        return cmd.exitValue == 0 && cmd.exception == null;
     }
 
     public static boolean moveFile(String src, String dest, boolean needRemount) throws Exception {
-        boolean result = false;
 
         String mountedAs = Remounter.getMountedAs(dest);
         if (needRemount) {
@@ -712,12 +710,10 @@ public class Shell {
 
         ShellCommand cmd = runAsRoot(mvCommand);
 
-        if (!cmd.output.isEmpty()) {
-            result = true;
+        if (needRemount) {
+            remount(dest, mountedAs);
         }
-
-        remount(dest, mountedAs);
-        return result;
+        return cmd.exitValue == 0 && cmd.exception == null;
     }
 
     /**

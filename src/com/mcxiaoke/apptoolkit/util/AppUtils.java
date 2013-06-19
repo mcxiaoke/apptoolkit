@@ -66,7 +66,7 @@ public final class AppUtils {
     public static boolean backupAppData(AppInfo app) throws Exception {
         String src = app.dataDir;
         String dest = new File(Utils.getBackupDataDir(), app.packageName).getPath();
-        return Shell.copyFile(src, dest, false);
+        return Shell.copyFile(src, dest, false, true);
 
     }
 

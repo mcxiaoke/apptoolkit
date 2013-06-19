@@ -650,7 +650,7 @@ public class Shell {
         runAsRoot(fastRebootCommand);
     }
 
-    public static boolean copyFile(String src, String dest, boolean needRemount) throws Exception {
+    public static boolean copyFile(String src, String dest, boolean needRemount, boolean override) throws Exception {
         boolean result = false;
 
         String mountedAs = Remounter.getMountedAs(dest);
@@ -660,8 +660,16 @@ public class Shell {
 
         List<String> commands = new ArrayList<String>();
 
-        String mkdirsCommand = "mkdir -p " + dest;
-        commands.add(mkdirsCommand);
+        if (override) {
+            String deleteCommand = "rm -rf " + dest;
+            commands.add(deleteCommand);
+        }
+
+        String parentDir=new File(dest).getParent();
+        if(parentDir!=null){
+            String mkdirsCommand = "mkdir -p " + parentDir;
+            commands.add(mkdirsCommand);
+        }
 
         String cpCommand;
         if (hasCp()) {

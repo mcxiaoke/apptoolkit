@@ -1,5 +1,6 @@
 package com.mcxiaoke.apptoolkit.app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import com.mcxiaoke.apptoolkit.AppConfig;
 import com.mcxiaoke.apptoolkit.R;
@@ -62,6 +63,10 @@ public class UIHome extends UIBaseSupport implements IPackageMonitor {
             case R.id.menu_refresh:
                 refresh();
                 return true;
+            case R.id.menu_settings:
+                showSettings();
+                return true;
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -71,11 +76,21 @@ public class UIHome extends UIBaseSupport implements IPackageMonitor {
         return super.onPrepareOptionsMenu(menu);
     }
 
+
+    @Override
+    protected void onHomeClick() {
+    }
+
     private void refresh() {
         if (mFragment != null && mFragment.isVisible()) {
             debug("refresh()");
             mFragment.refresh();
         }
+    }
+
+    private void showSettings() {
+        Intent intent = new Intent(this, UISettings.class);
+        startActivity(intent);
     }
 
     @Override

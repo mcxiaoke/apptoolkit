@@ -3,6 +3,7 @@ package com.mcxiaoke.apptoolkit.app;
 import android.os.Bundle;
 import android.os.Looper;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import com.mcxiaoke.apptoolkit.AppContext;
 
@@ -91,6 +92,18 @@ public class UIBaseSupport extends SherlockFragmentActivity {
         super.onContentChanged();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (android.R.id.home == item.getItemId()) {
+            onHomeClick();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    protected void onHomeClick() {
+        onBackPressed();
+    }
 
     private boolean mRefreshing;
 

@@ -2,6 +2,8 @@ package com.mcxiaoke.apptoolkit;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -28,6 +30,9 @@ public class AppContext extends Application {
     private ExecutorService mExecutor;
     private boolean mRootGranted;
     private boolean mBusyboxInstalled;
+    private static String sVersionName;
+    private static int sVersionCode;
+    private static String sPackageName;
 
     @Override
     public void onCreate() {
@@ -35,6 +40,29 @@ public class AppContext extends Application {
         sInstance = this;
         mUiHandler = new Handler(Looper.getMainLooper());
         mExecutor = Executors.newCachedThreadPool();
+
+        PackageManager pm = getPackageManager();
+        try {
+            sPackageName = getPackageName();
+            PackageInfo info = pm.getPackageInfo(sPackageName, 0);
+            sVersionName = info.versionName;
+            sVersionCode = info.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static String getVersionName() {
+        return sVersionName;
+    }
+
+    public static int getVersionCode() {
+        return sVersionCode;
+    }
+
+    public static String getPackage() {
+        return sPackageName;
     }
 
 

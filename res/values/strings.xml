@@ -93,4 +93,17 @@
     <string name="action_servicemanager">Service Manager</string>
 
     <string name="action_dialog_title">Choose Operation</string>
+
+
+    <!-- Preferences-->
+
+
+    <string name="pref_version_key">pref_version_key</string>
+    <string name="pref_version_title">App Info</string>
+    <string name="pref_version_summary">Current Version: %1$s</string>
+    <string name="pref_version_url">https://play.google.com/store/apps/details?id=com.mcxiaoke.apptoolkit</string>
+
+    <string name="pref_github_key">pref_github_key</string>
+    <string name="pref_github_title">Project Page</string>
+    <string name="pref_github_summary">https://github.com/mcxiaoke/apptoolkit</string>
 </resources>

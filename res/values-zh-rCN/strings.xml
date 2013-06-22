@@ -28,6 +28,9 @@
     <string name="dialog_backup_complete_data_title">数据备份完成</string>
     <string name="dialog_backup_complete_data_message">数据已全部备份到%1$s，备份应用数据总数：%2$d，本次新增： %3$d</string>
 
+    <string name="msg_backup_app_success">%1$s的安装文件已成功备份到%2$s</string>
+    <string name="msg_backup_data_success">%1$s的数据已成功备份到%2$s</string>
+
     <!-- App Operations-->
     <string name="action_view_appinfo">进入应用管理</string>
     <string name="action_view_appsetting">查看应用详情</string>

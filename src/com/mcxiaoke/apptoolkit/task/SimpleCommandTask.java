@@ -1,7 +1,9 @@
 package com.mcxiaoke.apptoolkit.task;
 
+import android.content.Context;
 import com.mcxiaoke.apptoolkit.AppConfig;
 import com.mcxiaoke.apptoolkit.AppContext;
+import com.mcxiaoke.apptoolkit.R;
 import com.mcxiaoke.apptoolkit.model.AppInfo;
 import com.mcxiaoke.apptoolkit.util.AppUtils;
 import com.mcxiaoke.apptoolkit.util.Utils;
@@ -14,9 +16,11 @@ import com.mcxiaoke.apptoolkit.util.Utils;
  * Time: 下午8:29
  */
 public class SimpleCommandTask extends SimpleAsyncTask {
+    private Context mContext;
 
-    public SimpleCommandTask() {
+    public SimpleCommandTask(Context context) {
         super();
+        mContext = context;
     }
 
     @Override
@@ -54,9 +58,8 @@ public class SimpleCommandTask extends SimpleAsyncTask {
     private boolean doBackupAppApk(AppInfo app) throws Exception {
         AppContext.v("doBackupAppApk name=" + app.appName);
         boolean result = AppUtils.backupAppApk(app);
-        if (result) {
-            AppContext.postShowToast(app.appName + "的安装文件已成功备份到" + Utils.getBackupAppsDir());
-        }
+        String text = String.format(mContext.getString(R.string.msg_backup_app_success), app.appName, Utils.getBackupAppsDir());
+        AppContext.postShowToast(text);
         return result;
     }
 
@@ -64,7 +67,8 @@ public class SimpleCommandTask extends SimpleAsyncTask {
         AppContext.v("doBackupAppData name=" + app.appName);
         boolean result = AppUtils.backupAppData(app);
         if (result) {
-            AppContext.postShowToast(app.appName + "的数据已成功备份到" + Utils.getBackupDataDir());
+            String text = String.format(mContext.getString(R.string.msg_backup_data_success), app.appName, Utils.getBackupDataDir());
+            AppContext.postShowToast(text);
         }
         return result;
     }

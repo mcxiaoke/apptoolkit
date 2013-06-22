@@ -22,7 +22,7 @@ import java.util.concurrent.Executors;
  * Time: 下午9:15
  */
 public class AppContext extends Application {
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     private static AppContext sInstance;
     private Handler mUiHandler;

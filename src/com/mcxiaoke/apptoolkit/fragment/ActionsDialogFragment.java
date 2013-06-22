@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import com.mcxiaoke.apptoolkit.AppConfig;
+import com.mcxiaoke.apptoolkit.AppContext;
 import com.mcxiaoke.apptoolkit.R;
 import com.mcxiaoke.apptoolkit.adapter.AppActionsAdapter;
 import com.mcxiaoke.apptoolkit.adapter.BaseArrayAdapter;
@@ -100,13 +101,13 @@ public class ActionsDialogFragment extends BaseDialogFragment implements Adapter
                 case R.id.action_backup_apk: {
                     TaskMessage tm = new TaskMessage(AppConfig.CMD_BACKUP_APP_ONE, true);
                     tm.object = app;
-                    new SimpleCommandTask().start(tm);
+                    new SimpleCommandTask(AppContext.getApp()).start(tm);
                 }
                 break;
                 case R.id.action_backup_data: {
                     TaskMessage tm = new TaskMessage(AppConfig.CMD_BACKUP_DATA_ONE, true);
                     tm.object = app;
-                    new SimpleCommandTask().start(tm);
+                    new SimpleCommandTask(AppContext.getApp()).start(tm);
                 }
                 break;
                 case R.id.action_restore_data:

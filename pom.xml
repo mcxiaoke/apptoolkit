@@ -42,6 +42,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.google.android.analytics</groupId>
+            <artifactId>analytics</artifactId>
+            <version>3</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.2.4</version>

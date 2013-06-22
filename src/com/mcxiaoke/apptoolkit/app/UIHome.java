@@ -2,6 +2,7 @@ package com.mcxiaoke.apptoolkit.app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.mcxiaoke.apptoolkit.AppConfig;
 import com.mcxiaoke.apptoolkit.R;
 import com.mcxiaoke.apptoolkit.cache.CacheManager;
@@ -101,6 +102,18 @@ public class UIHome extends UIBaseSupport implements IPackageMonitor {
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this);
     }
 
     @Override

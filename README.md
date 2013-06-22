@@ -9,8 +9,8 @@ App Tookit ÊÇÒ»¸ö¼ò½àµÄÓ¦ÓÃ¹ÜÀí¹¤¾ß£¬¿ÉÒÔ±¸·İÓ¦ÓÃµÄ°²×°ÎÄ¼şºÍÊı¾İ£¬Ö§³ÖÅúÁ¿±¸·İ¡
 </pre>
 <pre>
 *  ±¸·İÄ³¸öÓ¦ÓÃµÄ°²×°ÎÄ¼şµ½SD¿¨
+*  ÅúÁ¿±¸·İÒÑ°²×°Ó¦ÓÃµÄ°²×°°üµ½SD¿¨
 *  ±¸·İÄ³¸öÓ¦ÓÃµÄÊı¾İµ½SD¿¨ (ĞèÒªROOTÈ¨ÏŞ)
-*  ÅúÁ¿±¸·İÒÑ°²×°Ó¦ÓÃµÄ°²×°°üµ½SD¿¨ (ĞèÒªROOTÈ¨ÏŞ)
 *  ÅúÁ¿±¸·İÒÑ°²×°Ó¦ÓÃµÄÊı¾İµ½SD¿¨ (ĞèÒªROOTÈ¨ÏŞ)
 *  ²é¿´Ó¦ÓÃµÄÏêÏ¸ĞÅÏ¢
 *  Ğ¶ÔØÒÑ°²×°µÄÓ¦ÓÃ
@@ -23,8 +23,8 @@ it is under Apache License 2.0.
 current version include following features:
 <pre>
 *  Backup app's apk file to sdcard
+*  Batch backup apks to sdcard
 *  Backup app's data to sdcard (need root)
-*  Batch backup apks to sdcard (need root)
 *  Batch backup data to sdcard (need root)
 *  View installed app's detail
 *  Uninstall installed app

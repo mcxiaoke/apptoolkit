@@ -11,7 +11,7 @@ public interface Refreshable {
 
     public void refresh();
 
-    public void showProgressIndicator();
+    public void showProgress();
 
-    public void hideProgressIndicator();
+    public void hideProgress();
 }

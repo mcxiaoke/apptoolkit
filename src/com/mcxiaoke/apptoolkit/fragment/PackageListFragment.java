@@ -124,6 +124,9 @@ public class PackageListFragment extends BaseFragment implements AdapterView.OnI
     @Override
     public void refresh() {
         AppContext.v("AppListFragment refresh()");
+        if (mActionMode != null) {
+            mActionMode.finish();
+        }
         startLoadAppsTask();
     }
 
@@ -147,7 +150,7 @@ public class PackageListFragment extends BaseFragment implements AdapterView.OnI
             @Override
             public void onTaskSuccess(int code, List<AppInfo> appInfos) {
                 AppContext.v("AppListFragment onTaskSuccess() size is " + (appInfos == null ? "null" : appInfos.size()));
-                hideProgressIndicator();
+                hideProgress();
                 isAppLoading = false;
                 mArrayAdapter.addAll(appInfos);
             }
@@ -155,13 +158,13 @@ public class PackageListFragment extends BaseFragment implements AdapterView.OnI
             @Override
             public void onTaskFailure(int code, Throwable e) {
                 AppContext.v("AppListFragment onTaskFailure()");
-                hideProgressIndicator();
+                hideProgress();
                 isAppLoading = false;
             }
         });
 
         mLoadAppsTask.start(mLoadAppsTaskParam);
-        showProgressIndicator();
+        showProgress();
     }
 
     private void showDialog(AppInfo app) {
@@ -220,8 +223,8 @@ public class PackageListFragment extends BaseFragment implements AdapterView.OnI
             if (checkedCount == 0) {
                 mActionMode.finish();
             } else {
-                mActionMode.setTitle("选择应用");
-                mActionMode.setSubtitle("已选择" + checkedCount + "项");
+                mActionMode.setTitle(R.string.menu_mode_title);
+                mActionMode.setSubtitle(String.format(getString(R.string.menu_mode_subtitle), checkedCount));
             }
         }
     }

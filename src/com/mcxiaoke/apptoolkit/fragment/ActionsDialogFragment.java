@@ -155,8 +155,6 @@ public class ActionsDialogFragment extends BaseDialogFragment implements Adapter
                 actions.add(action);
                 action = new AppAction(R.id.action_backup_data, getString(R.string.action_backup_data));
                 actions.add(action);
-                action = new AppAction(R.id.action_clear_data, getString(R.string.action_clear_data));
-                actions.add(action);
                 action = new AppAction(R.id.action_uninstall, getString(R.string.action_uninstall));
                 actions.add(action);
             }

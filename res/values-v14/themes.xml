@@ -8,6 +8,7 @@
 
     <style name="Widget.Styled.ActionBar" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:indeterminateProgressStyle">@style/IndeterminateProgress</item>
+        <item name="android:logo">@drawable/icon</item>
     </style>
 
     <style name="Widget.Styled.ActionBarWidget" parent="android:Theme.Holo.Light">

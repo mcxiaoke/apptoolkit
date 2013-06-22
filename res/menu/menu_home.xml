@@ -4,8 +4,14 @@
 
     <item
             android:id="@id/menu_refresh"
-            android:showAsAction="always"
+            android:showAsAction="ifRoom"
             android:icon="@drawable/ic_navigation_refresh"
             android:title="@string/menu_refresh"/>
+
+    <item
+            android:id="@id/menu_settings"
+            android:showAsAction="ifRoom"
+            android:icon="@drawable/ic_action_settings"
+            android:title="@string/menu_settings"/>
 
 </menu>

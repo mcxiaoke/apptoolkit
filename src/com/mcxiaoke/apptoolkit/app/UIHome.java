@@ -4,11 +4,10 @@ import android.os.Bundle;
 import com.mcxiaoke.apptoolkit.AppConfig;
 import com.mcxiaoke.apptoolkit.R;
 import com.mcxiaoke.apptoolkit.cache.CacheManager;
+import com.mcxiaoke.apptoolkit.callback.IPackageMonitor;
 import com.mcxiaoke.apptoolkit.fragment.BaseFragment;
 import com.mcxiaoke.apptoolkit.fragment.PackageListFragment;
-import com.mcxiaoke.apptoolkit.callback.IPackageMonitor;
 import com.mcxiaoke.apptoolkit.receiver.PackageMonitor;
-import com.mcxiaoke.shell.Shell;
 
 /**
  * Project: filemanager
@@ -36,16 +35,6 @@ public class UIHome extends UIBaseSupport implements IPackageMonitor {
         mPackageMonitor = new PackageMonitor();
         mPackageMonitor.register(this, this, false);
         addAppListFragment();
-        new Thread() {
-            @Override
-            public void run() {
-                if (Shell.isRootAccessAvailable()) {
-                    debug("Root Access Granted");
-                } else {
-                    debug("Root Access Not Granted");
-                }
-            }
-        }.start();
 
     }
 
@@ -58,23 +47,22 @@ public class UIHome extends UIBaseSupport implements IPackageMonitor {
     @Override
     public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
         debug("onCreateOptionsMenu()");
-        return super.onCreateOptionsMenu(menu);
-/*        menu.clear();
+        menu.clear();
         getSupportMenuInflater().inflate(R.menu.menu_home, menu);
         if (isRefreshing()) {
             menu.findItem(R.id.menu_refresh).setActionView(
                     R.layout.action_bar_indeterminate_progress);
         }
-        return true;*/
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
-/*        switch (item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.menu_refresh:
                 refresh();
                 return true;
-        }*/
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -109,6 +97,11 @@ public class UIHome extends UIBaseSupport implements IPackageMonitor {
             mPackageMonitor = null;
         }
         CacheManager.getInstance().clear();
+    }
+
+    @Override
+    protected boolean hasRefreshAction() {
+        return true;
     }
 
     @Override

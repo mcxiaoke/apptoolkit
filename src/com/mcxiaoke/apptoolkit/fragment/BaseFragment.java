@@ -25,13 +25,13 @@ public abstract class BaseFragment extends SherlockFragment implements Refreshab
     }
 
     @Override
-    public void hideProgressIndicator() {
-        mBaseSupport.hideProgressIndicator();
+    public void hideProgress() {
+        mBaseSupport.hideProgress();
     }
 
     @Override
-    public void showProgressIndicator() {
-        mBaseSupport.showProgressIndicator();
+    public void showProgress() {
+        mBaseSupport.showProgress();
     }
 
 }

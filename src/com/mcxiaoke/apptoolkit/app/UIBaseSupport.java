@@ -98,26 +98,41 @@ public class UIBaseSupport extends SherlockFragmentActivity {
         return mRefreshing;
     }
 
-    public void showActionBarProgress() {
+    private void showActionBarProgress() {
         ensureMainThread();
         mRefreshing = true;
         invalidateOptionsMenu();
-        showProgressIndicator();
     }
 
-    public void hideActionBarProgress() {
+    private void hideActionBarProgress() {
         ensureMainThread();
         mRefreshing = false;
         invalidateOptionsMenu();
-        hideProgressIndicator();
     }
 
-    public void showProgressIndicator() {
+    protected void showProgressIndicator() {
         setSupportProgressBarIndeterminateVisibility(true);
     }
 
-    public void hideProgressIndicator() {
+    protected void hideProgressIndicator() {
         setSupportProgressBarIndeterminateVisibility(false);
+    }
+
+
+    public void showProgress() {
+        if (hasRefreshAction()) {
+            showActionBarProgress();
+        } else {
+            showProgressIndicator();
+        }
+    }
+
+    public void hideProgress() {
+        if (hasRefreshAction()) {
+            hideActionBarProgress();
+        } else {
+            hideProgressIndicator();
+        }
     }
 
     protected void ensureMainThread() {
@@ -125,5 +140,9 @@ public class UIBaseSupport extends SherlockFragmentActivity {
         if (looper != null && looper != getMainLooper()) {
             throw new IllegalStateException("Only call this from your main thread.");
         }
+    }
+
+    protected boolean hasRefreshAction() {
+        return false;
     }
 }

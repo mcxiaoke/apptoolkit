@@ -9,6 +9,7 @@
 
     <style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
         <item name="indeterminateProgressStyle">@style/IndeterminateProgress</item>
+        <item name="logo">@drawable/icon</item>
     </style>
 
     <style name="Widget.Styled.ActionMode" parent="Widget.Sherlock.Light.ActionMode">

@@ -25,6 +25,7 @@ import com.mcxiaoke.apptoolkit.R;
 import com.mcxiaoke.apptoolkit.adapter.AppListAdapter;
 import com.mcxiaoke.apptoolkit.adapter.MultiChoiceArrayAdapter;
 import com.mcxiaoke.apptoolkit.callback.IPackageMonitor;
+import com.mcxiaoke.apptoolkit.exception.NoPermissionException;
 import com.mcxiaoke.apptoolkit.model.AppInfo;
 import com.mcxiaoke.apptoolkit.task.AsyncTaskCallback;
 import com.mcxiaoke.apptoolkit.task.BackupAppsApkTask;
@@ -425,6 +426,9 @@ public class PackageListFragment extends BaseFragment implements AdapterView.OnI
                 AppContext.v("BackupAsyncTask.onTaskFailure ex is " + e);
                 isBackuping = false;
                 dismissProgressDialog();
+                if (e instanceof NoPermissionException) {
+                    AppContext.showToast(getActivity(), R.string.msg_backup_failed_no_permission);
+                }
             }
         };
         if (backupData) {

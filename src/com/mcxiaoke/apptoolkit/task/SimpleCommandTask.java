@@ -4,6 +4,7 @@ import android.content.Context;
 import com.mcxiaoke.apptoolkit.AppConfig;
 import com.mcxiaoke.apptoolkit.AppContext;
 import com.mcxiaoke.apptoolkit.R;
+import com.mcxiaoke.apptoolkit.exception.NoPermissionException;
 import com.mcxiaoke.apptoolkit.model.AppInfo;
 import com.mcxiaoke.apptoolkit.util.AppUtils;
 import com.mcxiaoke.apptoolkit.util.Utils;
@@ -65,10 +66,13 @@ public class SimpleCommandTask extends SimpleAsyncTask {
 
     private boolean doBackupAppData(AppInfo app) throws Exception {
         AppContext.v("doBackupAppData name=" + app.appName);
+
         boolean result = AppUtils.backupAppData(app);
         if (result) {
             String text = String.format(mContext.getString(R.string.msg_backup_data_success), app.appName, Utils.getBackupDataDir());
             AppContext.postShowToast(text);
+        } else {
+            throw new NoPermissionException();
         }
         return result;
     }
@@ -84,5 +88,8 @@ public class SimpleCommandTask extends SimpleAsyncTask {
         super.onPostExecuteFailure(exception);
         AppContext.v("onPostExecuteFailure exception=" + exception.toString());
         exception.printStackTrace();
+        if (exception instanceof NoPermissionException) {
+            AppContext.showToast(mContext, R.string.msg_backup_failed_no_permission);
+        }
     }
 }

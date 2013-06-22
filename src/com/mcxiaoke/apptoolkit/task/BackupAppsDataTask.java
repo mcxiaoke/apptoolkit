@@ -1,6 +1,7 @@
 package com.mcxiaoke.apptoolkit.task;
 
 import android.content.Context;
+import com.mcxiaoke.apptoolkit.exception.NoPermissionException;
 import com.mcxiaoke.apptoolkit.model.AppInfo;
 import com.mcxiaoke.apptoolkit.util.Utils;
 import com.mcxiaoke.shell.Shell;
@@ -51,6 +52,10 @@ public class BackupAppsDataTask extends AsyncTaskBase<List<AppInfo>, AppInfo, In
             throw new NullPointerException("params is null");
         }
 
+        if (!Shell.isRootAccessAvailable()) {
+            throw new NoPermissionException();
+        }
+
         List<AppInfo> apps = params[0];
         File backupDir = Utils.getBackupDataDir();
         int backupCount = 0;
@@ -64,6 +69,8 @@ public class BackupAppsDataTask extends AsyncTaskBase<List<AppInfo>, AppInfo, In
                 boolean success = Shell.copyFile(src.getPath(), dest.getPath(), false, true);
                 if (success) {
                     backupCount++;
+                } else {
+                    break;
                 }
             }
             publishProgress(app);

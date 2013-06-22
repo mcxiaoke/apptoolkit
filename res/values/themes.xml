@@ -12,7 +12,7 @@
         <item name="logo">@drawable/icon</item>
     </style>
 
-    <style name="Widget.Styled.ActionMode" parent="Widget.Sherlock.Light.ActionMode">
+    <style name="Widget.Styled.ActionMode" parent="Widget.Sherlock.Light.ActionMode.Inverse">
     </style>
 
     <style name="Widget.Styled.ActionBarWidget" parent="Theme.Sherlock.Light">

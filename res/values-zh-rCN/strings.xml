@@ -30,6 +30,7 @@
 
     <string name="msg_backup_app_success">%1$s的安装文件已成功备份到%2$s</string>
     <string name="msg_backup_data_success">%1$s的数据已成功备份到%2$s</string>
+    <string name="msg_backup_failed_no_permission">Root权限获取失败，无法备份数据.</string>
 
     <!-- App Operations-->
     <string name="action_view_appinfo">进入应用管理</string>

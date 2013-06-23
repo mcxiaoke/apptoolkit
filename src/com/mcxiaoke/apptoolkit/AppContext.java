@@ -158,5 +158,23 @@ public class AppContext extends Application {
         Log.e(DEFAULT_TAG, "Exception: " + t);
     }
 
+    public static void v(String tag, String message) {
+        Log.v(tag, message);
+    }
+
+    public static void e(String tag, String message) {
+        Log.e(tag, message);
+    }
+
+    public static void e(String tag, Throwable t) {
+        Log.e(tag, "Exception: " + t);
+    }
+
+    public static void v(String... messages) {
+        for (String message : messages) {
+            Log.v(DEFAULT_TAG, message);
+        }
+    }
+
 
 }

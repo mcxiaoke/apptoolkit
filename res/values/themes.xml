@@ -16,8 +16,25 @@
     </style>
 
     <style name="Widget.Styled.ActionBarWidget" parent="Theme.Sherlock.Light">
+        <item name="actionDropDownStyle">@style/Widget.Styled.Spinner</item>
+        <item name="spinnerItemStyle">@style/Widget.Styled.SpinnerItem</item>
+        <item name="spinnerDropDownItemStyle">@style/Widget.Styled.SpinnerItem</item>
         <!-- ugly bug from sdk14, waste my all day-->
         <!--@see http://daniel-codes.blogspot.com/2012/11/the-unknown-style-actionbarwidgettheme.html-->
+    </style>
+
+
+    <style name="Widget.Styled.Spinner" parent="Widget.Sherlock.Spinner.DropDown.ActionBar">
+        <item name="android:background">@color/light_grey</item>
+        <item name="android:popupBackground">@color/light_grey</item>
+    </style>
+
+    <style name="Widget.Styled.SpinnerItem" parent="Widget.Sherlock.TextView.SpinnerItem">
+        <item name="android:textAppearance">@style/Widget.Styled.SpinnerTextStyle</item>
+    </style>
+
+    <style name="Widget.Styled.SpinnerTextStyle" parent="Widget">
+        <item name="android:textColor">@color/magazines_primary</item>
     </style>
 
 

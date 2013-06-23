@@ -1,15 +1,23 @@
 package com.mcxiaoke.apptoolkit.app;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import com.actionbarsherlock.app.ActionBar;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.mcxiaoke.apptoolkit.AppConfig;
 import com.mcxiaoke.apptoolkit.R;
+import com.mcxiaoke.apptoolkit.adapter.BaseArrayAdapter;
 import com.mcxiaoke.apptoolkit.cache.CacheManager;
 import com.mcxiaoke.apptoolkit.callback.IPackageMonitor;
 import com.mcxiaoke.apptoolkit.fragment.BaseFragment;
 import com.mcxiaoke.apptoolkit.fragment.PackageListFragment;
 import com.mcxiaoke.apptoolkit.receiver.PackageMonitor;
+
+import java.util.List;
 
 /**
  * Project: filemanager
@@ -18,7 +26,7 @@ import com.mcxiaoke.apptoolkit.receiver.PackageMonitor;
  * Date: 13-6-10
  * Time: 下午9:18
  */
-public class UIHome extends UIBaseSupport implements IPackageMonitor {
+public class UIHome extends UIBaseSupport implements IPackageMonitor, ActionBar.OnNavigationListener {
     private static final int MSG_PACKAGE_REMOVED = 0;
     private BaseFragment mFragment;
     private UIHome mContext;
@@ -34,10 +42,25 @@ public class UIHome extends UIBaseSupport implements IPackageMonitor {
         setContentView(R.layout.main);
         hideProgressIndicator();
         debug("onCreate()");
+//        setActionBar();
         mPackageMonitor = new PackageMonitor();
         mPackageMonitor.register(this, this, false);
         addAppListFragment();
+//        new LoadRunningProcessTask(this, null).start(new TaskMessage());
 
+    }
+
+    private void setActionBar() {
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayShowHomeEnabled(true);
+        ab.setDisplayShowTitleEnabled(false);
+
+        Context context = ab.getThemedContext();
+        ArrayAdapter<CharSequence> list = ArrayAdapter.createFromResource(context, R.array.navigation, android.R.layout.simple_spinner_item);
+        list.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        ab.setListNavigationCallbacks(list, this);
     }
 
     private void addAppListFragment() {
@@ -163,5 +186,22 @@ public class UIHome extends UIBaseSupport implements IPackageMonitor {
     @Override
     public void onUidRemoved(int uid) {
         debug("onUidRemoved() uid=" + uid);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+        return true;
+    }
+
+    static class ListNavigationAdapter extends BaseArrayAdapter<String> {
+
+        ListNavigationAdapter(Context context, List<String> objects) {
+            super(context, objects);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            return null;
+        }
     }
 }

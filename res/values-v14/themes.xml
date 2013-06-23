@@ -4,6 +4,8 @@
     <style name="AppThemeLight" parent="android:Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
         <item name="android:actionBarWidgetTheme">@style/Widget.Styled.ActionBarWidget</item>
+        <!--        <item name="android:actionDropDownStyle">@style/Widget.Styled.Spinner</item>
+                <item name="android:spinnerDropDownItemStyle">@style/Widget.Styled.SpinnerItem</item>-->
     </style>
 
     <style name="Widget.Styled.ActionBar" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
@@ -12,6 +14,9 @@
     </style>
 
     <style name="Widget.Styled.ActionBarWidget" parent="android:Theme.Holo.Light">
+        <item name="android:actionDropDownStyle">@style/Widget.Styled.Spinner</item>
+        <item name="android:spinnerItemStyle">@style/Widget.Styled.SpinnerItem</item>
+        <item name="android:spinnerDropDownItemStyle">@style/Widget.Styled.SpinnerItem</item>
         <!-- ugly bug from sdk14, waste my all day-->
         <!--@see http://daniel-codes.blogspot.com/2012/11/the-unknown-style-actionbarwidgettheme.html-->
     </style>

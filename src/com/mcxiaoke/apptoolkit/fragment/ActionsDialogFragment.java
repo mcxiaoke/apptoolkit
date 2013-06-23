@@ -121,7 +121,7 @@ public class ActionsDialogFragment extends BaseDialogFragment implements Adapter
                 case R.id.action_uninstall: {
                     Uri packageUri = Uri.parse("package:" + app.packageName);
                     Intent uninstallIntent =
-                            new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
+                            new Intent(Intent.ACTION_DELETE, packageUri);
                     startActivity(uninstallIntent);
                 }
                 break;

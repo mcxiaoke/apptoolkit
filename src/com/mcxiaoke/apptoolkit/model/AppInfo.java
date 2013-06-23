@@ -48,6 +48,14 @@ public class AppInfo extends BaseModel {
     public int type;
     @Expose
     public boolean backup;
+    @Expose
+    public int pid;
+    @Expose
+    public int flags;
+    @Expose
+    public int importance;
+    @Expose
+    public int lru;
 
     public AppInfo() {
     }
@@ -71,6 +79,10 @@ public class AppInfo extends BaseModel {
         this.domain = in.readInt();
         this.type = in.readInt();
         this.backup = (in.readByte() == 1);
+        this.pid = in.readInt();
+        this.flags = in.readInt();
+        this.importance = in.readInt();
+        this.lru = in.readInt();
 
     }
 
@@ -94,6 +106,10 @@ public class AppInfo extends BaseModel {
         dest.writeInt(this.domain);
         dest.writeInt(this.type);
         dest.writeByte((byte) (this.backup ? 1 : 0));
+        dest.writeInt(this.pid);
+        dest.writeInt(this.flags);
+        dest.writeInt(this.importance);
+        dest.writeInt(this.lru);
     }
 
     public static final Creator<AppInfo> CREATOR = new Creator<AppInfo>() {
@@ -129,6 +145,9 @@ public class AppInfo extends BaseModel {
         sb.append(", domain=").append(domain);
         sb.append(", type=").append(type);
         sb.append(", backup=").append(backup);
+        sb.append(", pid=").append(pid);
+        sb.append(", flags=").append(flags);
+        sb.append(", importance=").append(importance);
         sb.append('}');
         return sb.toString();
     }

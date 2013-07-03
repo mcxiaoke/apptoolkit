@@ -57,16 +57,17 @@
     <string name="action_view_resource">查看资源文件</string>
 
     <!-- Common Operations -->
-    <string name="action_shutdown">关机</string>
-    <string name="action_restart">重启</string>
-    <string name="action_processmanager">进程管理</string>
-    <string name="action_filemanager">文件管理</string>
-    <string name="action_backupmanager">数据备份</string>
-    <string name="action_networkmanager">网络防火墙</string>
-    <string name="action_appmanager">应用管理</string>
-    <string name="action_cachemanager">缓存清理</string>
-    <string name="action_receivermanager">自启动管理</string>
-    <string name="action_servicemanager">服务管理</string>
+    <string name="menu_appmanager">应用管理</string>
+    <string name="menu_backupmanager">备份管理</string>
+    <string name="menu_processmanager">进程管理</string>
+    <string name="menu_componentmanager">组件管理</string>
+    <string name="menu_receivermanager">启动管理</string>
+    <string name="menu_servicemanager">服务管理</string>
+    <string name="menu_filemanager">文件管理</string>
+    <string name="menu_cachemanager">缓存清理</string>
+    <string name="menu_networkmanager">网络防火墙</string>
+    <string name="menu_toolkit">工具箱</string>
+    <string name="menu_about">关于应用</string>
 
     <string name="action_dialog_title">选择操作</string>
 

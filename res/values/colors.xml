@@ -70,4 +70,12 @@
     <color name="multi_primary_transparent">#20585858</color>
     <color name="multi_secondary">#ff4d4d4d</color>
 
+    <color name="selector_list_color_light_pressed">#FF33B5E5</color>
+
+    <color name="selector_header_color_light_default">#FFE0E0E0</color>
+    <color name="selector_header_color_light_pressed">#6633B5E5</color>
+
+    <color name="selector_drawer_menu_color_checked">#FFE0E0E0</color>
+    <color name="selector_drawer_menu_color_pressed">#8033B5E5</color>
+
 </resources>

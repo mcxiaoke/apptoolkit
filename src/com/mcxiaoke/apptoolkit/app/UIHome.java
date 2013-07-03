@@ -1,23 +1,20 @@
 package com.mcxiaoke.apptoolkit.app;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.support.v4.widget.DrawerLayout;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import com.actionbarsherlock.app.ActionBar;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.mcxiaoke.apptoolkit.AppConfig;
 import com.mcxiaoke.apptoolkit.R;
-import com.mcxiaoke.apptoolkit.adapter.BaseArrayAdapter;
 import com.mcxiaoke.apptoolkit.cache.CacheManager;
 import com.mcxiaoke.apptoolkit.callback.IPackageMonitor;
 import com.mcxiaoke.apptoolkit.fragment.BaseFragment;
 import com.mcxiaoke.apptoolkit.fragment.PackageListFragment;
+import com.mcxiaoke.apptoolkit.menu.MenuCallback;
+import com.mcxiaoke.apptoolkit.menu.MenuFragment;
+import com.mcxiaoke.apptoolkit.menu.MenuItemResource;
 import com.mcxiaoke.apptoolkit.receiver.PackageMonitor;
-
-import java.util.List;
 
 /**
  * Project: filemanager
@@ -26,10 +23,13 @@ import java.util.List;
  * Date: 13-6-10
  * Time: 下午9:18
  */
-public class UIHome extends UIBaseSupport implements IPackageMonitor, ActionBar.OnNavigationListener {
+public class UIHome extends UIBaseSupport implements IPackageMonitor, MenuCallback {
     private static final int MSG_PACKAGE_REMOVED = 0;
     private BaseFragment mFragment;
     private UIHome mContext;
+    private DrawerLayout mDrawerLayout;
+    private ViewGroup mDrawer;
+    private ViewGroup mContainer;
     private PackageMonitor mPackageMonitor;
 
     /**
@@ -45,28 +45,20 @@ public class UIHome extends UIBaseSupport implements IPackageMonitor, ActionBar.
 //        setActionBar();
         mPackageMonitor = new PackageMonitor();
         mPackageMonitor.register(this, this, false);
-        addAppListFragment();
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawer = (ViewGroup) findViewById(R.id.left_drawer);
+        mContainer = (ViewGroup) findViewById(R.id.container);
+        addFragment();
 //        new LoadRunningProcessTask(this, null).start(new TaskMessage());
 
     }
 
-    private void setActionBar() {
-        ActionBar ab = getSupportActionBar();
-        ab.setDisplayShowHomeEnabled(true);
-        ab.setDisplayShowTitleEnabled(false);
-
-        Context context = ab.getThemedContext();
-        ArrayAdapter<CharSequence> list = ArrayAdapter.createFromResource(context, R.array.navigation, android.R.layout.simple_spinner_item);
-        list.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        ab.setListNavigationCallbacks(list, this);
-    }
-
-    private void addAppListFragment() {
+    private void addFragment() {
         debug("addAppListFragment()");
         mFragment = PackageListFragment.newInstance(AppConfig.TYPE_USER_APP_MANAGER, false);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, mFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.left_drawer, new MenuFragment()).commit();
     }
 
     @Override
@@ -100,6 +92,9 @@ public class UIHome extends UIBaseSupport implements IPackageMonitor, ActionBar.
         return super.onPrepareOptionsMenu(menu);
     }
 
+    @Override
+    public void onMenuItemSelected(int position, MenuItemResource menuItem) {
+    }
 
     @Override
     protected void onHomeClick() {
@@ -188,20 +183,4 @@ public class UIHome extends UIBaseSupport implements IPackageMonitor, ActionBar.
         debug("onUidRemoved() uid=" + uid);
     }
 
-    @Override
-    public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-        return true;
-    }
-
-    static class ListNavigationAdapter extends BaseArrayAdapter<String> {
-
-        ListNavigationAdapter(Context context, List<String> objects) {
-            super(context, objects);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            return null;
-        }
-    }
 }

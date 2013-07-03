@@ -83,16 +83,17 @@
     <string name="action_view_manifest">View AndroidManifest File</string>
     <string name="action_view_resource">View Resources</string>
     <!-- Common Operations -->
-    <string name="action_shutdown">Shutdown</string>
-    <string name="action_restart">Restart</string>
-    <string name="action_processmanager">Process Manager</string>
-    <string name="action_filemanager">File Manager</string>
-    <string name="action_backupmanager">Backup Manager</string>
-    <string name="action_networkmanager">Network Firewall</string>
-    <string name="action_appmanager">App Manager</string>
-    <string name="action_cachemanager">Cache Manager</string>
-    <string name="action_receivermanager">Start Manager</string>
-    <string name="action_servicemanager">Service Manager</string>
+    <string name="menu_appmanager">App Manager</string>
+    <string name="menu_backupmanager">Backup Manager</string>
+    <string name="menu_processmanager">Process Manager</string>
+    <string name="menu_componentmanager">Component Manager</string>
+    <string name="menu_receivermanager">Start Manager</string>
+    <string name="menu_servicemanager">Service Manager</string>
+    <string name="menu_filemanager">File Manager</string>
+    <string name="menu_cachemanager">Cache Manager</string>
+    <string name="menu_networkmanager">Network Tools</string>
+    <string name="menu_toolkit">System Tools</string>
+    <string name="menu_about">About App</string>
 
     <string name="action_dialog_title">Choose Operation</string>
 

@@ -60,4 +60,18 @@
     <item type="id" name="action_view_manifest"/>
     <item type="id" name="action_view_resource"/>
 
+
+    <!--DRAWER Menus Items-->
+    <item type="id" name="menu_app"/>
+    <item type="id" name="menu_backup"/>
+    <item type="id" name="menu_process"/>
+    <item type="id" name="menu_component"/>
+    <item type="id" name="menu_receiver"/>
+    <item type="id" name="menu_service"/>
+    <item type="id" name="menu_file"/>
+    <item type="id" name="menu_cache"/>
+    <item type="id" name="menu_network"/>
+    <item type="id" name="menu_toolkit"/>
+    <item type="id" name="menu_about"/>
+
 </resources>

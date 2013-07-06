@@ -1,5 +1,13 @@
 App Toolkit
 ===========================
+
+Play Store Link: https://play.google.com/store/apps/details?id=com.mcxiaoke.apptoolkit
+
+<a href="https://play.google.com/store/apps/details?id=com.mcxiaoke.apptoolkit">
+  <img alt="Get it on Google Play"
+       src="https://developer.android.com/images/brand/en_generic_rgb_wo_60.png" />
+</a>
+
 <pre>
 App Tookit 是一个简洁的应用管理工具，可以备份应用的安装文件和数据，支持批量备份。
 </pre>

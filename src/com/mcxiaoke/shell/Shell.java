@@ -677,10 +677,11 @@ public class Shell {
             commands.add(mkdirsCommand);
         }
 
+        boolean hasBusyBox = hasBusyBox();
+
         String cpCommand;
-        if (hasCp()) {
-            cpCommand = "cp -rf ";
-        } else if (hasBusyBox()) {
+
+        if (hasBusyBox) {
             cpCommand = "busybox cp -rf ";
         } else {
             cpCommand = "cp -rf ";
@@ -690,17 +691,25 @@ public class Shell {
         commands.add(cpCommand + src + "/files " + dest + "/files");
 
         String chownCommand;
-        if (hasCp()) {
-            chownCommand = "chown -R " + uid + ":" + uid + " ";
-        } else if (hasBusyBox()) {
+        if (hasBusyBox) {
             chownCommand = "busybox chown -R " + uid + ":" + uid + " ";
         } else {
-            chownCommand = "chown -R " + uid + ":" + uid + " ";
+            chownCommand = "chown " + uid + ":" + uid + " ";
         }
 
         commands.add(chownCommand + dest + "/databases");
         commands.add(chownCommand + dest + "/shared_prefs");
         commands.add(chownCommand + dest + "/files");
+
+        String chmodCommand;
+        if (hasBusyBox) {
+            chmodCommand = "busybox chmod 755 -R ";
+        } else {
+            chmodCommand = "chmod 755 -R ";
+        }
+        commands.add(chmodCommand + dest + "/databases");
+        commands.add(chmodCommand + dest + "/shared_prefs");
+        commands.add(chmodCommand + dest + "/files");
 
         ShellCommand cmd = runAsRoot(commands);
 
@@ -735,9 +744,7 @@ public class Shell {
         }
 
         String cpCommand;
-        if (hasCp()) {
-            cpCommand = "cp -rf ";
-        } else if (hasBusyBox()) {
+        if (hasBusyBox()) {
             cpCommand = "busybox cp -rf ";
         } else {
             cpCommand = "cp -rf ";
@@ -779,12 +786,10 @@ public class Shell {
         }
 
         String cpCommand;
-        if (hasCp()) {
-            cpCommand = "cp -rf " + src + " " + dest;
-        } else if (hasBusyBox()) {
+        if (hasBusyBox()) {
             cpCommand = "busybox cp -rf " + src + " " + dest;
         } else {
-            cpCommand = "cat " + src + " > " + dest;
+            cpCommand = "cp -rf " + src + " > " + dest;
         }
         commands.add(cpCommand);
 

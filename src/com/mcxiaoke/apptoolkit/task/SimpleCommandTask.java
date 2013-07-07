@@ -37,8 +37,13 @@ public class SimpleCommandTask extends SimpleAsyncTask {
             case AppConfig.CMD_BACKUP_APP_ONE:
                 result = doBackupAppApk(app);
                 break;
+            case AppConfig.CMD_RESTORE_APP_ONE:
+                break;
             case AppConfig.CMD_BACKUP_DATA_ONE:
                 result = doBackupAppData(app);
+                break;
+            case AppConfig.CMD_RESTORE_DATA_ONE:
+                result = doRestoreAppData(app);
                 break;
             case AppConfig.CMD_SILENT_INSTAlL_ONE:
                 break;
@@ -59,6 +64,7 @@ public class SimpleCommandTask extends SimpleAsyncTask {
     private boolean doBackupAppApk(AppInfo app) throws Exception {
         AppContext.v("doBackupAppApk name=" + app.appName);
         boolean result = AppUtils.backupAppApk(app);
+        app.apkBackup = true;
         String text = String.format(mContext.getString(R.string.msg_backup_app_success), app.appName, Utils.getBackupAppsDir());
         AppContext.postShowToast(text);
         return result;
@@ -69,7 +75,22 @@ public class SimpleCommandTask extends SimpleAsyncTask {
 
         boolean result = AppUtils.backupAppData(app);
         if (result) {
+            AppContext.getApp().getDB().addBackup(app.packageName);
+            app.dataBackup = true;
             String text = String.format(mContext.getString(R.string.msg_backup_data_success), app.appName, Utils.getBackupDataDir());
+            AppContext.postShowToast(text);
+        } else {
+            throw new NoPermissionException();
+        }
+        return result;
+    }
+
+    private boolean doRestoreAppData(AppInfo app) throws Exception {
+        AppContext.v("doRestoreAppData name=" + app.appName);
+
+        boolean result = AppUtils.restoreAppData(app);
+        if (result) {
+            String text = String.format(mContext.getString(R.string.msg_restore_data_success), app.appName);
             AppContext.postShowToast(text);
         } else {
             throw new NoPermissionException();

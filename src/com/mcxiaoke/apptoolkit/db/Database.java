@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
-import android.util.Pair;
 import com.mcxiaoke.apptoolkit.AppContext;
 
 import java.util.ArrayList;
@@ -68,8 +67,8 @@ public class Database {
         return count;
     }
 
-    public List<Pair<String, Long>> getBackupApps() {
-        List<Pair<String, Long>> list = new ArrayList<Pair<String, Long>>();
+    public List<String> getBackupApps() {
+        List<String> list = new ArrayList<String>();
         SQLiteDatabase db = mHelper.getReadableDatabase();
         Cursor cursor = null;
         try {
@@ -79,8 +78,9 @@ public class Database {
                 int createdAtIndex = cursor.getColumnIndexOrThrow(Columns.CREATED);
                 while (cursor.moveToNext()) {
                     String packageName = cursor.getString(packageIndex);
-                    long createdAt = cursor.getLong(createdAtIndex);
-                    list.add(new Pair<String, Long>(packageName, createdAt));
+//                    long createdAt = cursor.getLong(createdAtIndex);
+                    list.add(packageName);
+//                    list.add(new Pair<String, Long>(packageName, createdAt));
                 }
             }
         } catch (SQLiteException e) {

@@ -37,6 +37,7 @@
 
     <string name="msg_backup_app_success">%1$s\'s apk is backuped to %2$s</string>
     <string name="msg_backup_data_success">%1$s\'s data is backuped to %2$s</string>
+    <string name="msg_restore_data_success">%1$s\'s data is restored from backup.</string>
     <string name="msg_backup_failed_no_permission">Root access not granted, backup failed.</string>
 
 
@@ -64,7 +65,7 @@
     <string name="action_view_appsetting">View App Setting</string>
     <string name="action_backup_apk">Backup Apk to sdcard</string>
     <string name="action_backup_data">Backup Data to sdcard</string>
-    <string name="action_restore_data">Restore Data from sdcard</string>
+    <string name="action_restore_data">Restore Data from backup</string>
     <string name="action_view_data">View App Data</string>
     <string name="action_clear_data">Clear App Data</string>
     <string name="action_clear_cache">Clear App Cache</string>

@@ -42,6 +42,9 @@ public class AppConfig {
     public static final int CMD_INSTALL_SYSTEM_APP_ONE = 62;
     public static final int CMD_UNINSTALL_SYSTEM_APP_ONE = 64;
 
+    public static final int CMD_RESTORE_APP_ONE = 70;
+    public static final int CMD_RESTORE_DATA_ONE = 71;
+
     public static final int DOMAIN_ANDROID = 101;
     public static final int DOMAIN_GOOGLE = 102;
     public static final int DOMAIN_WHITELIST = 103;

@@ -22,12 +22,15 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.nio.channels.FileChannel;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -371,6 +374,22 @@ public final class Utils {
             backupDir.mkdirs();
         }
         return backupDir;
+    }
+
+    public static List<String> getBackupApkFiles() {
+        File backupApkDir = getBackupAppsDir();
+        String[] allFiles = backupApkDir.list(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String filename) {
+                return filename.lastIndexOf(".apk") != -1;
+            }
+        });
+        return allFiles == null ? new ArrayList<String>() : Arrays.asList(allFiles);
+    }
+
+    public static boolean isBackupDataExists(String packageName) {
+        File file = new File(getBackupDataDir(), packageName);
+        return file.exists() && file.isDirectory();
     }
 
 }

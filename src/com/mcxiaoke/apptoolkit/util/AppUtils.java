@@ -66,8 +66,15 @@ public final class AppUtils {
     public static boolean backupAppData(AppInfo app) throws Exception {
         String src = app.dataDir;
         String dest = new File(Utils.getBackupDataDir(), app.packageName).getPath();
-        return Shell.copyFile(src, dest, false, true);
+        return Shell.backupAppData(src, dest, false, true);
 
+    }
+
+    public static boolean restoreAppData(AppInfo app) throws Exception {
+        File backupDataFile = new File(Utils.getBackupDataDir(), app.packageName);
+        String src = backupDataFile.getPath();
+        String dest = app.dataDir;
+        return Shell.restoreAppData(String.valueOf(app.uid), src, dest, false, false);
     }
 
     public static void showDataDir(Context context, AppInfo app) {

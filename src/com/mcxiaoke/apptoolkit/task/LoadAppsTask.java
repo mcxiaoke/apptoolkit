@@ -8,6 +8,7 @@ import android.util.Pair;
 import com.mcxiaoke.apptoolkit.AppConfig;
 import com.mcxiaoke.apptoolkit.AppContext;
 import com.mcxiaoke.apptoolkit.cache.CacheManager;
+import com.mcxiaoke.apptoolkit.db.Database;
 import com.mcxiaoke.apptoolkit.model.AppInfo;
 import com.mcxiaoke.apptoolkit.util.Utils;
 
@@ -46,32 +47,35 @@ public class LoadAppsTask extends AsyncTaskBase<TaskMessage, Pair<Integer, Integ
         AppContext.v("LoadAppsTask.onExecute() type=" + type + " includeSystemApp=" + includeSystemApp);
 
         int flags = PackageManager.GET_META_DATA;
-//        flags |= PackageManager.GET_SIGNATURES;
-//            flags |= PackageManager.GET_CONFIGURATIONS;
-//            flags |= PackageManager.GET_DISABLED_COMPONENTS;
-//            flags |= PackageManager.GET_GIDS;
-//            flags |= PackageManager.GET_INSTRUMENTATION;
-//            flags |= PackageManager.GET_INTENT_FILTERS;
-//            flags |= PackageManager.GET_PERMISSIONS;
-//            flags |= PackageManager.GET_ACTIVITIES;
-//            flags |= PackageManager.GET_SERVICES;
-//            flags |= PackageManager.GET_RECEIVERS;
-//            flags |= PackageManager.GET_PROVIDERS;
         List<AppInfo> apps = null;
         List<PackageInfo> installedPackages = mPackageManager.getInstalledPackages(flags);
         if (installedPackages != null && installedPackages.size() > 0) {
             apps = new ArrayList<AppInfo>(installedPackages.size());
+            List<String> backupDatas = new ArrayList<String>();
+
+            Database db = AppContext.getApp().getDB();
+            List<String> dbBackupDatas = db.getBackupApps();
+            if (dbBackupDatas != null) {
+                for (String packageName : dbBackupDatas) {
+                    if (Utils.isBackupDataExists(packageName)) {
+                        backupDatas.add(packageName);
+                    } else {
+                        db.removeBackup(packageName);
+                    }
+                }
+            }
+            List<String> backupApks = Utils.getBackupApkFiles();
 
             if (AppConfig.TYPE_USER_APP_MANAGER == type) {
                 for (PackageInfo info : installedPackages) {
                     if (includeSystemApp || !Utils.isSystemApp(info)) {
-                        AddToApps(apps, info);
+                        AddToApps(apps, backupDatas, backupApks, info);
                     }
                 }
             } else if (AppConfig.TYPE_SYSTEM_APP_MANAGER == type) {
                 for (PackageInfo info : installedPackages) {
                     if (Utils.isSystemApp(info)) {
-                        AddToApps(apps, info);
+                        AddToApps(apps, backupDatas, backupApks, info);
                     }
                 }
             }
@@ -79,8 +83,10 @@ public class LoadAppsTask extends AsyncTaskBase<TaskMessage, Pair<Integer, Integ
         return apps;
     }
 
-    private void AddToApps(List<AppInfo> apps, PackageInfo info) {
+    private void AddToApps(List<AppInfo> apps, List<String> backupDatas, List<String> backupApks, PackageInfo info) {
         AppInfo app = Utils.convert(mPackageManager, info);
+        app.apkBackup = backupApks.contains(Utils.buildApkName(app));
+        app.dataBackup = backupDatas.contains(app.packageName);
         apps.add(app);
         Drawable icon = info.applicationInfo.loadIcon(mPackageManager);
         CacheManager.getInstance().putIcon(info.packageName, icon);

@@ -110,8 +110,12 @@ public class PopupMenuFragment extends BaseDialogFragment implements AdapterView
                     new SimpleCommandTask(AppContext.getApp()).start(tm);
                 }
                 break;
-                case R.id.action_restore_data:
-                    break;
+                case R.id.action_restore_data: {
+                    TaskMessage tm = new TaskMessage(AppConfig.CMD_RESTORE_DATA_ONE, true);
+                    tm.object = app;
+                    new SimpleCommandTask(AppContext.getApp()).start(tm);
+                }
+                break;
                 case R.id.action_install: {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setDataAndType(Uri.fromFile(new File(app.sourceDir)), "application/vnd.android.package-archive");
@@ -156,6 +160,10 @@ public class PopupMenuFragment extends BaseDialogFragment implements AdapterView
                 actions.add(action);
                 action = new PopupMenuItem(R.id.action_backup_data, getString(R.string.action_backup_data));
                 actions.add(action);
+                if (app.dataBackup) {
+                    action = new PopupMenuItem(R.id.action_restore_data, getString(R.string.action_restore_data));
+                    actions.add(action);
+                }
                 action = new PopupMenuItem(R.id.action_uninstall, getString(R.string.action_uninstall));
                 actions.add(action);
             }
@@ -184,52 +192,6 @@ public class PopupMenuFragment extends BaseDialogFragment implements AdapterView
             case AppConfig.TYPE_FILE_MANAGER:
                 break;
         }
-
-//        AppAction action = new AppAction(R.id.action_view_appsetting, getString(R.string.action_view_appsetting));
-//        actions.add(action);
-//        action = new AppAction(R.id.action_view_appinfo, getString(R.string.action_view_appinfo));
-//        actions.add(action);
-//        action = new AppAction(R.id.action_backup_apk, getString(R.string.action_backup_apk));
-//        actions.add(action);
-//        action = new AppAction(R.id.action_backup_data, getString(R.string.action_backup_data));
-//        actions.add(action);
-//        action = new AppAction(R.id.action_restore_data, getString(R.string.action_restore_data));
-//        actions.add(action);
-//        action = new AppAction(R.id.action_view_data, getString(R.string.action_view_data));
-//        actions.add(action);
-//        action = new AppAction(R.id.action_clear_data, getString(R.string.action_clear_data));
-//        actions.add(action);
-//        action = new AppAction(R.id.action_restart_package, getString(R.string.action_restart_package));
-//        actions.add(action);
-//        action = new AppAction(R.id.action_kill_process, getString(R.string.action_kill_process));
-//        actions.add(action);
-
-/*        action = new AppAction(R.id.action_install, getString(R.string.action_install));
-        actions.add(action);*/
-//        action = new AppAction(R.id.action_uninstall, getString(R.string.action_uninstall));
-//        actions.add(action);
-//        action = new AppAction(R.id.action_slient_install, getString(R.string.action_slient_install));
-//        actions.add(action);
-//        action = new AppAction(R.id.action_silent_uninstall, getString(R.string.action_silent_uninstall));
-//        actions.add(action);
-//        action = new AppAction(R.id.action_disable_app, getString(R.string.action_disable_app));
-//        actions.add(action);
-//        action = new AppAction(R.id.action_enable_app, getString(R.string.action_enable_app));
-//        actions.add(action);
-
-//        action = new AppAction(R.id.action_install_system, getString(R.string.action_install_system));
-//        actions.add(action);
-//        action = new AppAction(R.id.action_uninstall_system, getString(R.string.action_uninstall_system));
-//        actions.add(action);
-//        action = new AppAction(R.id.action_view_playstore, getString(R.string.action_view_playstore));
-//        actions.add(action);
-//        action = new AppAction(R.id.action_copy_package, getString(R.string.action_copy_package));
-//        actions.add(action);
-//        action = new AppAction(R.id.action_view_manifest, getString(R.string.action_view_manifest));
-//        actions.add(action);
-//        action = new AppAction(R.id.action_view_resource, getString(R.string.action_view_resource));
-//        actions.add(action);
-
         return actions;
     }
 

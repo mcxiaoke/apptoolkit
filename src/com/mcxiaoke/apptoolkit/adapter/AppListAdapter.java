@@ -26,16 +26,14 @@ import java.util.List;
  */
 public class AppListAdapter extends MultiChoiceArrayAdapter<AppInfo> {
     private PackageManager mPackageManager;
-    private CacheManager mIconCache;
+    private CacheManager mCacheManager;
     private int mActivateBgResId;
-    private boolean mAdvancedMode;
 
     public AppListAdapter(Context context, List<AppInfo> objects) {
         super(context, objects);
         mPackageManager = context.getPackageManager();
-        mIconCache = CacheManager.getInstance();
+        mCacheManager = CacheManager.getInstance();
         mActivateBgResId = R.drawable.list_item_activated;
-        mAdvancedMode = false;
     }
 
     @Override
@@ -60,36 +58,20 @@ public class AppListAdapter extends MultiChoiceArrayAdapter<AppInfo> {
         final boolean checked = isChecked(position);
         final View view = convertView;
 
-        if (mAdvancedMode) {
-            holder.subtitle.setText(app.domain == AppConfig.DOMAIN_GOOGLE ? "Google" : "");
-            holder.subtitle.setVisibility(View.VISIBLE);
+        holder.subtitle.setText(app.domain == AppConfig.DOMAIN_GOOGLE ? "Google" : "");
+        holder.subtitle.setVisibility(View.GONE);
 
-            if (app.system) {
-                holder.text2.setText("system");
-                holder.text2.setVisibility(View.VISIBLE);
-            } else {
-                holder.text2.setVisibility(View.GONE);
-            }
+        holder.info1.setText("package:" + app.packageName);
+        holder.info1.setVisibility(View.GONE);
 
-            holder.info1.setText("package:" + app.packageName);
-            holder.info1.setVisibility(View.VISIBLE);
-
-            if (app.apkBackup) {
-                holder.info2.setText("Backup");
-                holder.info2.setVisibility(View.VISIBLE);
-            } else {
-                holder.info2.setVisibility(View.GONE);
-            }
-
-        } else {
-            holder.subtitle.setVisibility(View.GONE);
-            holder.text2.setVisibility(View.GONE);
-            holder.info1.setVisibility(View.GONE);
-            holder.info2.setVisibility(View.GONE);
-        }
+        holder.label1.setText("APK");
+        holder.label1.setVisibility(app.apkBackup ? View.VISIBLE : View.INVISIBLE);
+        holder.label2.setText("DATA");
+        holder.label2.setVisibility(app.dataBackup ? View.VISIBLE : View.INVISIBLE);
 
         holder.title.setText(app.appName);
-        holder.text1.setText(Utils.getHumanReadableByteCount(app.size) + " | v" + app.versionName);
+        String versionName = app.versionName == null ? "v1.0" : "v" + app.versionName;
+        holder.text1.setText(Utils.getHumanReadableByteCount(app.size) + " | " + versionName);
 
         Drawable icon = getIcon(app);
         if (icon != null) {
@@ -120,7 +102,7 @@ public class AppListAdapter extends MultiChoiceArrayAdapter<AppInfo> {
     }
 
     private Drawable getIcon(final AppInfo app) {
-        return mIconCache.getIcon(app.packageName);
+        return mCacheManager.getIcon(app.packageName);
     }
 
     static class ViewHolder {
@@ -129,9 +111,9 @@ public class AppListAdapter extends MultiChoiceArrayAdapter<AppInfo> {
         TextView title;
         TextView subtitle;
         TextView text1;
-        TextView text2;
+        TextView label1;
+        TextView label2;
         TextView info1;
-        TextView info2;
         CheckBox checkBox;
 
         ViewHolder(View convertView) {
@@ -139,9 +121,9 @@ public class AppListAdapter extends MultiChoiceArrayAdapter<AppInfo> {
             title = (TextView) convertView.findViewById(R.id.title);
             subtitle = (TextView) convertView.findViewById(R.id.subtitle);
             text1 = (TextView) convertView.findViewById(R.id.text1);
-            text2 = (TextView) convertView.findViewById(R.id.text2);
+            label1 = (TextView) convertView.findViewById(R.id.label1);
+            label2 = (TextView) convertView.findViewById(R.id.label2);
             info1 = (TextView) convertView.findViewById(R.id.info1);
-            info2 = (TextView) convertView.findViewById(R.id.info2);
             checkBox = (CheckBox) convertView.findViewById(R.id.checkbox);
         }
     }

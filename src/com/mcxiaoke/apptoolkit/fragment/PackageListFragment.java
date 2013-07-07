@@ -26,6 +26,7 @@ import com.mcxiaoke.apptoolkit.adapter.AppListAdapter;
 import com.mcxiaoke.apptoolkit.adapter.MultiChoiceArrayAdapter;
 import com.mcxiaoke.apptoolkit.callback.IPackageMonitor;
 import com.mcxiaoke.apptoolkit.exception.NoPermissionException;
+import com.mcxiaoke.apptoolkit.menu.PopupMenuFragment;
 import com.mcxiaoke.apptoolkit.model.AppInfo;
 import com.mcxiaoke.apptoolkit.task.AsyncTaskCallback;
 import com.mcxiaoke.apptoolkit.task.BackupAppsApkTask;
@@ -178,7 +179,7 @@ public class PackageListFragment extends BaseFragment implements AdapterView.OnI
                 ft.remove(prev);
             }
             ft.addToBackStack(null);
-            ActionsDialogFragment newFragment = ActionsDialogFragment.newInstance(app, mType);
+            PopupMenuFragment newFragment = PopupMenuFragment.newInstance(app, mType);
             newFragment.show(ft, DIALOG_TAG);
         }
     }

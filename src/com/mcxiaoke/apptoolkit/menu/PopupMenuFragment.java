@@ -1,4 +1,4 @@
-package com.mcxiaoke.apptoolkit.fragment;
+package com.mcxiaoke.apptoolkit.menu;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -15,7 +15,7 @@ import com.mcxiaoke.apptoolkit.AppContext;
 import com.mcxiaoke.apptoolkit.R;
 import com.mcxiaoke.apptoolkit.adapter.AppActionsAdapter;
 import com.mcxiaoke.apptoolkit.adapter.BaseArrayAdapter;
-import com.mcxiaoke.apptoolkit.model.AppAction;
+import com.mcxiaoke.apptoolkit.fragment.BaseDialogFragment;
 import com.mcxiaoke.apptoolkit.model.AppInfo;
 import com.mcxiaoke.apptoolkit.task.SimpleCommandTask;
 import com.mcxiaoke.apptoolkit.task.TaskMessage;
@@ -31,18 +31,18 @@ import java.util.List;
  * Date: 13-6-12
  * Time: 下午10:57
  */
-public class ActionsDialogFragment extends BaseDialogFragment implements AdapterView.OnItemClickListener {
+public class PopupMenuFragment extends BaseDialogFragment implements AdapterView.OnItemClickListener {
     private ListView mListView;
-    private BaseArrayAdapter<AppAction> mArrayAdapter;
+    private BaseArrayAdapter<PopupMenuItem> mArrayAdapter;
 
     private AppInfo app;
     private int type;
 
-    public static ActionsDialogFragment newInstance(AppInfo app, int type) {
+    public static PopupMenuFragment newInstance(AppInfo app, int type) {
         Bundle args = new Bundle();
         args.putParcelable(AppConfig.EXTRA_APPINFO, app);
         args.putInt(AppConfig.EXTRA_TYPE, type);
-        ActionsDialogFragment fragment = new ActionsDialogFragment();
+        PopupMenuFragment fragment = new PopupMenuFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -89,7 +89,7 @@ public class ActionsDialogFragment extends BaseDialogFragment implements Adapter
             return;
         }
         dismiss();
-        final AppAction action = mArrayAdapter.getItem(position);
+        final PopupMenuItem action = mArrayAdapter.getItem(position);
         if (action != null) {
             switch (action.id) {
                 case R.id.action_view_appsetting: {
@@ -145,31 +145,31 @@ public class ActionsDialogFragment extends BaseDialogFragment implements Adapter
         }
     }
 
-    private List<AppAction> buildAppActions(int type) {
-        List<AppAction> actions = new ArrayList<AppAction>();
+    private List<PopupMenuItem> buildAppActions(int type) {
+        List<PopupMenuItem> actions = new ArrayList<PopupMenuItem>();
 
         switch (type) {
             case AppConfig.TYPE_USER_APP_MANAGER: {
-                AppAction action = new AppAction(R.id.action_view_appsetting, getString(R.string.action_view_appsetting));
+                PopupMenuItem action = new PopupMenuItem(R.id.action_view_appsetting, getString(R.string.action_view_appsetting));
                 actions.add(action);
-                action = new AppAction(R.id.action_backup_apk, getString(R.string.action_backup_apk));
+                action = new PopupMenuItem(R.id.action_backup_apk, getString(R.string.action_backup_apk));
                 actions.add(action);
-                action = new AppAction(R.id.action_backup_data, getString(R.string.action_backup_data));
+                action = new PopupMenuItem(R.id.action_backup_data, getString(R.string.action_backup_data));
                 actions.add(action);
-                action = new AppAction(R.id.action_uninstall, getString(R.string.action_uninstall));
+                action = new PopupMenuItem(R.id.action_uninstall, getString(R.string.action_uninstall));
                 actions.add(action);
             }
             break;
             case AppConfig.TYPE_SYSTEM_APP_MANAGER: {
-                AppAction action = new AppAction(R.id.action_view_appsetting, getString(R.string.action_view_appsetting));
+                PopupMenuItem action = new PopupMenuItem(R.id.action_view_appsetting, getString(R.string.action_view_appsetting));
                 actions.add(action);
-                action = new AppAction(R.id.action_backup_apk, getString(R.string.action_backup_apk));
+                action = new PopupMenuItem(R.id.action_backup_apk, getString(R.string.action_backup_apk));
                 actions.add(action);
-                action = new AppAction(R.id.action_backup_data, getString(R.string.action_backup_data));
+                action = new PopupMenuItem(R.id.action_backup_data, getString(R.string.action_backup_data));
                 actions.add(action);
-                action = new AppAction(R.id.action_clear_data, getString(R.string.action_clear_data));
+                action = new PopupMenuItem(R.id.action_clear_data, getString(R.string.action_clear_data));
                 actions.add(action);
-                action = new AppAction(R.id.action_uninstall_system, getString(R.string.action_uninstall_system));
+                action = new PopupMenuItem(R.id.action_uninstall_system, getString(R.string.action_uninstall_system));
                 actions.add(action);
             }
             break;

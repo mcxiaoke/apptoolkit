@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.mcxiaoke.apptoolkit.R;
-import com.mcxiaoke.apptoolkit.model.AppAction;
+import com.mcxiaoke.apptoolkit.menu.PopupMenuItem;
 
 import java.util.List;
 
@@ -16,9 +16,9 @@ import java.util.List;
  * Date: 13-6-12
  * Time: 下午11:00
  */
-public class AppActionsAdapter extends BaseArrayAdapter<AppAction> {
+public class AppActionsAdapter extends BaseArrayAdapter<PopupMenuItem> {
 
-    public AppActionsAdapter(Context context, List<AppAction> objects) {
+    public AppActionsAdapter(Context context, List<PopupMenuItem> objects) {
         super(context, objects);
     }
 

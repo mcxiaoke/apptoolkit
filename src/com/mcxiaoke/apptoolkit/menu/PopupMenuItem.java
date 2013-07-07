@@ -1,4 +1,4 @@
-package com.mcxiaoke.apptoolkit.model;
+package com.mcxiaoke.apptoolkit.menu;
 
 /**
  * Project: filemanager
@@ -7,7 +7,7 @@ package com.mcxiaoke.apptoolkit.model;
  * Date: 13-6-12
  * Time: 下午11:01
  */
-public class AppAction {
+public class PopupMenuItem {
 
     public int id;
     public int type;
@@ -16,7 +16,7 @@ public class AppAction {
     public boolean root;
     public boolean advanced;
 
-    public AppAction(int id, String name) {
+    public PopupMenuItem(int id, String name) {
         this.id = id;
         this.name = name;
     }

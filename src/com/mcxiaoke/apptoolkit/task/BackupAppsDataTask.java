@@ -72,6 +72,7 @@ public class BackupAppsDataTask extends AsyncTaskBase<List<AppInfo>, AppInfo, In
             File dest = new File(backupDir, app.packageName);
             boolean success = Shell.backupAppData(src.getPath(), dest.getPath(), false, true);
             if (success) {
+                app.dataBackup=true;
                 backupPackages.add(app.packageName);
                 backupCount++;
             } else {

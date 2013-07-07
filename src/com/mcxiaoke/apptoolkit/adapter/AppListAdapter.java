@@ -74,7 +74,7 @@ public class AppListAdapter extends MultiChoiceArrayAdapter<AppInfo> {
             holder.info1.setText("package:" + app.packageName);
             holder.info1.setVisibility(View.VISIBLE);
 
-            if (app.backup) {
+            if (app.apkBackup) {
                 holder.info2.setText("Backup");
                 holder.info2.setVisibility(View.VISIBLE);
             } else {

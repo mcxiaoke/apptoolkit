@@ -90,7 +90,7 @@ public final class AppUtils {
     // show services/providers/receivers/permissions/activities
     // kill process, show memory, show cpuinfo
     // install binary, move to system, uninstall system
-    // backup app data, batch install /uninstall
+    // apkBackup app data, batch install /uninstall
     // shutdown, restart, remount, screenshot
     // kill notifications, kill auto start
     // disable component

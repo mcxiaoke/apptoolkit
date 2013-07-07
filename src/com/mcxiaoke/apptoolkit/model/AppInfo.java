@@ -1,7 +1,9 @@
 package com.mcxiaoke.apptoolkit.model;
 
+import android.content.ContentValues;
 import android.os.Parcel;
 import com.google.gson.annotations.Expose;
+import com.mcxiaoke.apptoolkit.db.Database;
 
 /**
  * Project: filemanager
@@ -47,15 +49,13 @@ public class AppInfo extends BaseModel {
     @Expose
     public int type;
     @Expose
-    public boolean backup;
+    public boolean apkBackup;
     @Expose
-    public int pid;
+    public long apkBackupTime;
     @Expose
-    public int flags;
+    public boolean dataBackup;
     @Expose
-    public int importance;
-    @Expose
-    public int lru;
+    public long dataBackupTime;
 
     public AppInfo() {
     }
@@ -78,11 +78,10 @@ public class AppInfo extends BaseModel {
         this.updatedAt = in.readLong();
         this.domain = in.readInt();
         this.type = in.readInt();
-        this.backup = (in.readByte() == 1);
-        this.pid = in.readInt();
-        this.flags = in.readInt();
-        this.importance = in.readInt();
-        this.lru = in.readInt();
+        this.apkBackup = (in.readByte() == 1);
+        this.apkBackupTime = in.readLong();
+        this.dataBackup = (in.readByte() == 1);
+        this.dataBackupTime = in.readLong();
 
     }
 
@@ -105,11 +104,10 @@ public class AppInfo extends BaseModel {
         dest.writeLong(this.updatedAt);
         dest.writeInt(this.domain);
         dest.writeInt(this.type);
-        dest.writeByte((byte) (this.backup ? 1 : 0));
-        dest.writeInt(this.pid);
-        dest.writeInt(this.flags);
-        dest.writeInt(this.importance);
-        dest.writeInt(this.lru);
+        dest.writeByte((byte) (this.apkBackup ? 1 : 0));
+        dest.writeLong(this.apkBackupTime);
+        dest.writeByte((byte) (this.dataBackup ? 1 : 0));
+        dest.writeLong(this.dataBackupTime);
     }
 
     public static final Creator<AppInfo> CREATOR = new Creator<AppInfo>() {
@@ -144,11 +142,10 @@ public class AppInfo extends BaseModel {
         sb.append(", updatedAt=").append(updatedAt);
         sb.append(", domain=").append(domain);
         sb.append(", type=").append(type);
-        sb.append(", backup=").append(backup);
-        sb.append(", pid=").append(pid);
-        sb.append(", flags=").append(flags);
-        sb.append(", importance=").append(importance);
+        sb.append(", apkBackup=").append(apkBackup);
+        sb.append(", dataBackup=").append(dataBackup);
         sb.append('}');
         return sb.toString();
     }
+
 }

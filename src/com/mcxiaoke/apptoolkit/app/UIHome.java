@@ -6,6 +6,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.ViewGroup;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.mcxiaoke.apptoolkit.AppConfig;
+import com.mcxiaoke.apptoolkit.AppContext;
 import com.mcxiaoke.apptoolkit.R;
 import com.mcxiaoke.apptoolkit.cache.CacheManager;
 import com.mcxiaoke.apptoolkit.callback.IPackageMonitor;
@@ -49,6 +50,10 @@ public class UIHome extends UIBaseSupport implements IPackageMonitor, MenuCallba
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawer = (ViewGroup) findViewById(R.id.left_drawer);
         mContainer = (ViewGroup) findViewById(R.id.container);
+
+        if (AppContext.isDebug()) {
+            getSupportActionBar().setTitle("DEBUG VERSION");
+        }
         addFragment();
 //        new LoadRunningProcessTask(this, null).start(new TaskMessage());
 

@@ -70,7 +70,7 @@ public class BackupAppsApkTask extends AsyncTaskBase<List<AppInfo>, AppInfo, Int
                         backupCount++;
                     }
                 }
-                app.backup = true;
+                app.apkBackup = true;
             }
             publishProgress(app);
         }

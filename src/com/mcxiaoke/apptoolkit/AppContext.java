@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mcxiaoke.apptoolkit.db.Database;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,11 +23,12 @@ import java.util.concurrent.Executors;
  * Time: 下午9:15
  */
 public class AppContext extends Application {
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     private static AppContext sInstance;
     private Handler mUiHandler;
     private Gson mGson;
+    private Database mDB;
     private ExecutorService mExecutor;
     private boolean mRootGranted;
     private boolean mBusyboxInstalled;
@@ -40,6 +42,7 @@ public class AppContext extends Application {
         sInstance = this;
         mUiHandler = new Handler(Looper.getMainLooper());
         mExecutor = Executors.newCachedThreadPool();
+        mDB = new Database(this);
 
         PackageManager pm = getPackageManager();
         try {
@@ -94,6 +97,13 @@ public class AppContext extends Application {
             mExecutor = Executors.newCachedThreadPool();
         }
         return mExecutor;
+    }
+
+    public Database getDB() {
+        if (mDB == null) {
+            mDB = new Database(this);
+        }
+        return mDB;
     }
 
     public void setRootGranted(boolean value) {

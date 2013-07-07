@@ -403,7 +403,7 @@ public class PackageListFragment extends BaseFragment implements AdapterView.OnI
         }
 
         final int totalCount = apps.size();
-        AppContext.v("startBackup");
+        AppContext.v("startBackup totalCount="+totalCount+" backupData="+backupData);
         isBackuping = true;
         final AsyncTaskCallback<AppInfo, Integer> callback = new AsyncTaskCallback<AppInfo, Integer>() {
 
@@ -415,7 +415,7 @@ public class PackageListFragment extends BaseFragment implements AdapterView.OnI
 
             @Override
             public void onTaskSuccess(int code, Integer integer) {
-                AppContext.v("BackupAsyncTask.onTaskSuccess backup count is " + integer);
+                AppContext.v("BackupAsyncTask.onTaskSuccess apkBackup count is " + integer);
                 int backuped = integer == null ? 0 : integer;
                 dismissProgressDialog();
                 showBackupCompleteDialog(backuped, totalCount, backupData);

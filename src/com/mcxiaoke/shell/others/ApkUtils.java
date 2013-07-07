@@ -445,7 +445,7 @@ public class ApkUtils {
 			}
 		}
 
-		// delete cache before backup
+		// delete cache before apkBackup
 		String cmd = String.format("rm -r /data/data/%s/cache", path);
 		RootUtils.runCommand(cmd, true, null);
 

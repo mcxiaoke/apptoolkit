@@ -23,6 +23,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
+import com.mcxiaoke.apptoolkit.AppContext;
 import com.mcxiaoke.shell.utils.Remounter;
 
 import java.io.BufferedReader;
@@ -82,6 +83,7 @@ public class Shell {
                 this.commands.addAll(cmds);
             }
             this.needRoot = root;
+            this.needStandError = true;
         }
 
         public void addCommand(String cmd) {
@@ -100,7 +102,7 @@ public class Shell {
 
     private static final String TAG = Shell.class.getSimpleName();
 
-    private static boolean sDebug = true;
+    private static boolean sDebug = AppContext.isDebug();
 
     public static boolean isDebug() {
         return sDebug;
@@ -238,7 +240,7 @@ public class Shell {
                 }
             }
 
-            log("runCommand.environments: " + arrayToString(environments));
+//            log("runCommand.environments: " + arrayToString(environments));
 
             // setup our process, retrieve STDIN stream, and STDOUT/STDERR gobblers
             Process process = Runtime.getRuntime().exec(shell, environments);
@@ -648,6 +650,50 @@ public class Shell {
             fastRebootCommand = "killall " + processName;
         }
         runAsRoot(fastRebootCommand);
+    }
+
+    public static boolean copyAppData(String src, String dest, boolean needRemount, boolean override) throws Exception {
+
+        String mountedAs = Remounter.getMountedAs(dest);
+        if (needRemount) {
+            remount(dest, "rw");
+        }
+
+        List<String> commands = new ArrayList<String>();
+
+        if (override) {
+            String deleteCommand = "rm -rf " + dest;
+            commands.add(deleteCommand);
+        }
+
+        File destDir = new File(dest);
+        if (!destDir.exists()) {
+            String mkdirsCommand = "mkdir -p " + destDir;
+            commands.add(mkdirsCommand);
+        }
+
+        String cpCommand;
+        if (hasCp()) {
+            cpCommand = "cp -rf ";
+        } else if (hasBusyBox()) {
+            cpCommand = "busybox cp -rf ";
+        } else {
+            cpCommand = "cp -rf ";
+        }
+        commands.add(cpCommand + src + "/databases " + dest + "/databases");
+        commands.add(cpCommand + src + "/shared_prefs " + dest + "/shared_prefs");
+        commands.add(cpCommand + src + "/files " + dest + "/files");
+
+        ShellCommand cmd = runAsRoot(commands);
+
+        if (isDebug()) {
+            log("copyAppData() exitValue is " + cmd.exitValue + " exception=" + cmd.exception + " output is " + listToString(cmd.output));
+        }
+
+        if (needRemount) {
+            remount(dest, mountedAs);
+        }
+        return cmd.exception == null;
     }
 
     public static boolean copyFile(String src, String dest, boolean needRemount, boolean override) throws Exception {

@@ -113,7 +113,7 @@ public final class Utils {
         app.system = isSystemApp(ainfo);
         app.type = 0;
         app.size = new File(app.sourceDir).length();
-        app.backup = isBackupAppExists(app);
+        app.apkBackup = isBackupAppExists(app);
 
         return app;
 

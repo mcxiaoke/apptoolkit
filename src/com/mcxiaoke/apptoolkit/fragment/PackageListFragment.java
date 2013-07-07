@@ -24,6 +24,7 @@ import com.mcxiaoke.apptoolkit.AppContext;
 import com.mcxiaoke.apptoolkit.R;
 import com.mcxiaoke.apptoolkit.adapter.AppListAdapter;
 import com.mcxiaoke.apptoolkit.adapter.MultiChoiceArrayAdapter;
+import com.mcxiaoke.apptoolkit.cache.CacheManager;
 import com.mcxiaoke.apptoolkit.callback.IPackageMonitor;
 import com.mcxiaoke.apptoolkit.exception.NoPermissionException;
 import com.mcxiaoke.apptoolkit.menu.PopupMenuFragment;
@@ -36,7 +37,6 @@ import com.mcxiaoke.apptoolkit.task.TaskMessage;
 import com.mcxiaoke.apptoolkit.util.Utils;
 
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Project: filemanager
@@ -56,7 +56,7 @@ public class PackageListFragment extends BaseFragment implements AdapterView.OnI
     private static final int MSG_PACKAGE_REMOVED = 1002;
 
     private ListView mListView;
-    private CopyOnWriteArrayList<AppInfo> mAppData;
+    private List<AppInfo> mAppData;
     private MultiChoiceArrayAdapter<AppInfo> mArrayAdapter;
     private ActionModeCallback mActionModeCallback;
     private LoadAppsTask mLoadAppsTask;
@@ -96,7 +96,7 @@ public class PackageListFragment extends BaseFragment implements AdapterView.OnI
             mSystem = args.getBoolean(AppConfig.EXTRA_SYSTEM, false);
         }
         mLoadAppsTaskParam = new TaskMessage(mType, mSystem);
-        mAppData = new CopyOnWriteArrayList<AppInfo>();
+        mAppData = CacheManager.getInstance().getAll();
         setHasOptionsMenu(true);
 
         mUiHandler = new Handler(Looper.getMainLooper());
@@ -403,7 +403,7 @@ public class PackageListFragment extends BaseFragment implements AdapterView.OnI
         }
 
         final int totalCount = apps.size();
-        AppContext.v("startBackup totalCount="+totalCount+" backupData="+backupData);
+        AppContext.v("startBackup totalCount=" + totalCount + " backupData=" + backupData);
         isBackuping = true;
         final AsyncTaskCallback<AppInfo, Integer> callback = new AsyncTaskCallback<AppInfo, Integer>() {
 

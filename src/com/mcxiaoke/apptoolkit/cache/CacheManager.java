@@ -1,8 +1,12 @@
 package com.mcxiaoke.apptoolkit.cache;
 
 import android.graphics.drawable.Drawable;
+import com.mcxiaoke.apptoolkit.model.AppInfo;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Project: apptoolkit
@@ -17,7 +21,7 @@ public class CacheManager {
     private final Object mLock = new Object();
 
     private HashMap<String, Drawable> mIconCache;
-    private HashMap<Long, Object> mObjectCache;
+    private List<AppInfo> mAppInfoCache;
 
     public static CacheManager getInstance() {
         return sInstance;
@@ -25,32 +29,26 @@ public class CacheManager {
 
     private CacheManager() {
         mIconCache = new HashMap<String, Drawable>();
-        mObjectCache = new HashMap<Long, Object>();
+        mAppInfoCache = new CopyOnWriteArrayList<AppInfo>();
     }
 
-    public boolean put(long key, Object object) {
-        if (object == null) {
+    public boolean addAll(Collection<AppInfo> apps) {
+        if (apps == null || apps.isEmpty()) {
             return false;
         }
         synchronized (mLock) {
-            mObjectCache.put(key, object);
+            mAppInfoCache.addAll(apps);
         }
         return true;
     }
 
-    public Object get(long key) {
-        Object object = mObjectCache.get(key);
-        if (object == null) {
-            synchronized (mLock) {
-                mObjectCache.remove(key);
-            }
-        }
-        return object;
+    public List<AppInfo> getAll() {
+        return mAppInfoCache;
     }
 
-    public Object remove(long key) {
+    public boolean remove(AppInfo app) {
         synchronized (mLock) {
-            return mObjectCache.remove(key);
+            return mAppInfoCache.remove(app);
         }
     }
 
@@ -80,7 +78,7 @@ public class CacheManager {
     public synchronized void clear() {
         synchronized (mLock) {
             mIconCache.clear();
-            mObjectCache.clear();
+            mAppInfoCache.clear();
         }
     }
 

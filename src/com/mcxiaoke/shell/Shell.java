@@ -51,6 +51,7 @@ public class Shell {
 
     private static final String CMD_CP = "cp";
     private static final String CMD_MV = "mv";
+    private static final String CMD_CHOWN = "chown";
     private static final String BUSYBOX = "busybox";
     private static final String CMD_SU = "su";
     private static final String MOUNT = "mount";
@@ -626,6 +627,10 @@ public class Shell {
         return isBinaryInstalled(CMD_CP);
     }
 
+    public static boolean hasChown() {
+        return isBinaryInstalled(CMD_CHOWN);
+    }
+
     public static boolean hasMount() {
         return isBinaryInstalled(MOUNT);
     }
@@ -652,7 +657,64 @@ public class Shell {
         runAsRoot(fastRebootCommand);
     }
 
-    public static boolean copyAppData(String src, String dest, boolean needRemount, boolean override) throws Exception {
+    public static boolean restoreAppData(String uid, String src, String dest, boolean needRemount, boolean override) throws Exception {
+
+        String mountedAs = Remounter.getMountedAs(dest);
+        if (needRemount) {
+            remount(dest, "rw");
+        }
+
+        List<String> commands = new ArrayList<String>();
+
+        if (override) {
+            String deleteCommand = "rm -rf " + dest;
+            commands.add(deleteCommand);
+        }
+
+        File destDir = new File(dest);
+        if (!destDir.exists()) {
+            String mkdirsCommand = "mkdir -p " + destDir;
+            commands.add(mkdirsCommand);
+        }
+
+        String cpCommand;
+        if (hasCp()) {
+            cpCommand = "cp -rf ";
+        } else if (hasBusyBox()) {
+            cpCommand = "busybox cp -rf ";
+        } else {
+            cpCommand = "cp -rf ";
+        }
+        commands.add(cpCommand + src + "/databases " + dest + "/databases");
+        commands.add(cpCommand + src + "/shared_prefs " + dest + "/shared_prefs");
+        commands.add(cpCommand + src + "/files " + dest + "/files");
+
+        String chownCommand;
+        if (hasCp()) {
+            chownCommand = "chown -R " + uid + ":" + uid + " ";
+        } else if (hasBusyBox()) {
+            chownCommand = "busybox chown -R " + uid + ":" + uid + " ";
+        } else {
+            chownCommand = "chown -R " + uid + ":" + uid + " ";
+        }
+
+        commands.add(chownCommand + dest + "/databases");
+        commands.add(chownCommand + dest + "/shared_prefs");
+        commands.add(chownCommand + dest + "/files");
+
+        ShellCommand cmd = runAsRoot(commands);
+
+        if (isDebug()) {
+            log("restoreAppData() exitValue is " + cmd.exitValue + " exception=" + cmd.exception + " output is " + listToString(cmd.output));
+        }
+
+        if (needRemount) {
+            remount(dest, mountedAs);
+        }
+        return cmd.exception == null;
+    }
+
+    public static boolean backupAppData(String src, String dest, boolean needRemount, boolean override) throws Exception {
 
         String mountedAs = Remounter.getMountedAs(dest);
         if (needRemount) {
@@ -687,7 +749,7 @@ public class Shell {
         ShellCommand cmd = runAsRoot(commands);
 
         if (isDebug()) {
-            log("copyAppData() exitValue is " + cmd.exitValue + " exception=" + cmd.exception + " output is " + listToString(cmd.output));
+            log("backupAppData() exitValue is " + cmd.exitValue + " exception=" + cmd.exception + " output is " + listToString(cmd.output));
         }
 
         if (needRemount) {
